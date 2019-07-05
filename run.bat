@@ -1,0 +1,1 @@
+C:\python\pricer\venv\Scripts\python.exe C:\python\pricer\run.py
