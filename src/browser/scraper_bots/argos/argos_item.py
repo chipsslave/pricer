@@ -37,6 +37,6 @@ class ArgosItem(object):
                     delta = delta
                 b = ItemPrice(date=self.date, time=self.time, item_id=db_item.id, item_price=self.price, item_delta=delta)
                 b.insert()
-                logger(self.__repr__, db_item.__repr__(), last_price.__repr__(), b.__repr__())
+                logger(str(self), db_item.__repr__(), last_price.__repr__(), b.__repr__())
 
 
