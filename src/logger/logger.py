@@ -13,10 +13,3 @@ def logger(msg1, msg2, msg3, msg4):
         file.write(msg3 + "\n")
         file.write("---- New Price Item: ----\n")
         file.write(msg4 + "\n")
-
-def unicorn():
-    pass
-
-
-if __name__ == '__main__':
-    logger('', '')
