@@ -1,4 +1,878 @@
 
 ###########################################################################################
-----  2019-07-05 22:24:25.717060  ----
+----  2019-07-06 09:28:13.170285  ----
 ---- Currently evaluating Item: ----
+Title: Casio G-Shock Gorillaz Remix Chronograph Watch DW-5600HRGRZ-1ER
+Price: 76.0
+Product ID: 100030691
+URL: https://www.watchshop.com/casio-watch-dw-5600hrgrz-1er-p100030691.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100030691/main/medium/DW-5600HR-1ERnewnest.jpg
+---- Database Item: ----
+Item id: 25399 
+Store id: 7 
+Store product id: 100030691 
+Item title: Casio G-Shock Gorillaz Remix Chronograph Watch DW-5600HRGRZ-1ER 
+Item url: https://www.watchshop.com/casio-watch-dw-5600hrgrz-1er-p100030691.html
+---- Last Price Item: ----
+ID: 46686
+Date: 2019-07-05
+Time: 8:12:00
+Item ID: 25399
+Price: 70.0
+Delta: -8
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:27
+Item ID: 25399
+Price: 76.0
+Delta: 8.6
+
+###########################################################################################
+----  2019-07-06 09:28:34.153418  ----
+---- Currently evaluating Item: ----
+Title: Unisex Guess Connect Bluetooth Hybrid Smartwatch Watch C0002M2
+Price: 201.47
+Product ID: 99990495
+URL: https://www.watchshop.com/unisex-guess-connect-bluetooth-hybrid-smartwatch-watch-c0002m2-p99990495.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/99990495/main/medium/c0002m2-1446546877-5924.jpg
+---- Database Item: ----
+Item id: 30121 
+Store id: 7 
+Store product id: 99990495 
+Item title: Unisex Guess Connect Bluetooth Hybrid Smartwatch Watch C0002M2 
+Item url: https://www.watchshop.com/unisex-guess-connect-bluetooth-hybrid-smartwatch-watch-c0002m2-p99990495.html
+---- Last Price Item: ----
+ID: 47106
+Date: 2019-07-06
+Time: 6:20:00
+Item ID: 30121
+Price: 236.0
+Delta: 5
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:27
+Item ID: 30121
+Price: 201.47
+Delta: -14.6
+
+###########################################################################################
+----  2019-07-06 09:28:54.914931  ----
+---- Currently evaluating Item: ----
+Title: Casio Collection Watch A700WEM-7AEF
+Price: 41.76
+Product ID: 100032442
+URL: https://www.watchshop.com/casio-collection-watch-a700wem-7aef-p100032442.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100032442/main/medium/A700WEM-7AEF.jpg
+---- Database Item: ----
+Item id: 38052 
+Store id: 7 
+Store product id: 100032442 
+Item title: Casio Collection Watch A700WEM-7AEF 
+Item url: https://www.watchshop.com/casio-collection-watch-a700wem-7aef-p100032442.html
+---- Last Price Item: ----
+ID: 46695
+Date: 2019-07-05
+Time: 8:12:00
+Item ID: 38052
+Price: 44.9
+Delta: 4
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:27
+Item ID: 38052
+Price: 41.76
+Delta: -7.0
+
+###########################################################################################
+----  2019-07-06 09:31:18.965024  ----
+---- Currently evaluating Item: ----
+Title: Ladies Swatch Something New Watch LB153
+Price: 40.0
+Product ID: 30450
+URL: https://www.watchshop.com/ladies-swatch-something-new-watch-lb153-p30450.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/30450/main/medium/sa01_lb153_original-1352736992-8089.jpg
+---- Database Item: ----
+Item id: 38040 
+Store id: 3 
+Store product id: 30450 
+Item title: Viktor & Rolf Bonbon Couture Eau De Parfum 30ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/viktor-and-rolf-bonbon-couture-30450.aspx
+---- Last Price Item: ----
+ID: 47288
+Date: 2019-07-06
+Time: 8:52:00
+Item ID: 38040
+Price: 59.5
+Delta: 49
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:31
+Item ID: 38040
+Price: 40.0
+Delta: -32.8
+
+###########################################################################################
+----  2019-07-06 09:35:12.018391  ----
+---- Currently evaluating Item: ----
+Title: Ladies Citizen Watch EW1272-01B
+Price: 88.89
+Product ID: 30734
+URL: https://www.watchshop.com/ladies-citizen-eco-drive-watch-ew1272-01b-p30734.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/30734/main/medium/detailed_image_30734_3271.jpg
+---- Database Item: ----
+Item id: 38045 
+Store id: 3 
+Store product id: 30734 
+Item title: HUGO BOSS BOSS Bottled Intense Eau De Parfum 100ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/hugo-boss-boss-bottled-intense-30734.aspx
+---- Last Price Item: ----
+ID: 47284
+Date: 2019-07-06
+Time: 8:45:00
+Item ID: 38045
+Price: 71.5
+Delta: -20
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:35
+Item ID: 38045
+Price: 88.89
+Delta: 24.3
+
+###########################################################################################
+----  2019-07-06 09:35:47.731750  ----
+---- Currently evaluating Item: ----
+Title: Ladies Citizen Watch EW1250-54A
+Price: 109.0
+Product ID: 30746
+URL: https://www.watchshop.com/ladies-citizen-eco-drive-watch-ew1250-54a-p30746.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/30746/main/medium/detailed_image_30746_3283.jpg
+---- Database Item: ----
+Item id: 38044 
+Store id: 3 
+Store product id: 30746 
+Item title: Juicy Couture I Love Juicy Couture Eau De Parfum 100ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/juicy-couture-i-love-juicy-couture-30746.aspx
+---- Last Price Item: ----
+ID: 47296
+Date: 2019-07-06
+Time: 8:55:00
+Item ID: 38044
+Price: 68.5
+Delta: -37
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:35
+Item ID: 38044
+Price: 109.0
+Delta: 59.1
+
+###########################################################################################
+----  2019-07-06 09:42:37.628675  ----
+---- Currently evaluating Item: ----
+Title: Skagen Freja Watch SKW2700
+Price: 77.0
+Product ID: 100023028
+URL: https://www.watchshop.com/ladies-skagen-freja-watch-skw2700-p100023028.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100023028/main/medium/SKW2700-main.jpg
+---- Database Item: ----
+Item id: 33225 
+Store id: 7 
+Store product id: 100023028 
+Item title: Skagen Freja Watch SKW2700 
+Item url: https://www.watchshop.com/ladies-skagen-freja-watch-skw2700-p100023028.html
+---- Last Price Item: ----
+ID: 40571
+Date: 2019-06-22
+Time: 14:14:00
+Item ID: 33225
+Price: 79.0
+Delta: 0
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:42
+Item ID: 33225
+Price: 77.0
+Delta: -2.5
+
+###########################################################################################
+----  2019-07-06 09:43:27.194968  ----
+---- Currently evaluating Item: ----
+Title: DKNY Ellington Watch NY2593
+Price: 141.0
+Product ID: 100022802
+URL: https://www.watchshop.com/ladies-dkny-ellington-watch-ny2593-p100022802.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100022802/main/medium/NY2593hl.jpg
+---- Database Item: ----
+Item id: 33473 
+Store id: 7 
+Store product id: 100022802 
+Item title: DKNY Ellington Watch NY2593 
+Item url: https://www.watchshop.com/ladies-dkny-ellington-watch-ny2593-p100022802.html
+---- Last Price Item: ----
+ID: 34015
+Date: 2019-06-16
+Time: 18:27:00
+Item ID: 33473
+Price: 119.2
+Delta: 0
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:43
+Item ID: 33473
+Price: 141.0
+Delta: 18.3
+
+###########################################################################################
+----  2019-07-06 09:44:22.750473  ----
+---- Currently evaluating Item: ----
+Title: Jack Wills Watch JW018FLBL
+Price: 52.0
+Product ID: 100031426
+URL: https://www.watchshop.com/jack-wills-watch-jw018flbl-p100031426.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100031426/main/medium/JW018FLBL.jpg
+---- Database Item: ----
+Item id: 33560 
+Store id: 7 
+Store product id: 100031426 
+Item title: Jack Wills Watch JW018FLBL 
+Item url: https://www.watchshop.com/jack-wills-watch-jw018flbl-p100031426.html
+---- Last Price Item: ----
+ID: 34102
+Date: 2019-06-16
+Time: 18:27:00
+Item ID: 33560
+Price: 65.0
+Delta: 0
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:44
+Item ID: 33560
+Price: 52.0
+Delta: -20.0
+
+###########################################################################################
+----  2019-07-06 09:53:54.820901  ----
+---- Currently evaluating Item: ----
+Title: Ladies Bering Classic Watch 10426-309-S
+Price: 143.0
+Product ID: 100017763
+URL: https://www.watchshop.com/ladies-bering-classic-watch-10426-309-s-p100017763.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100017763/main/medium/10426-309-s-1504190001-4245.jpg
+---- Database Item: ----
+Item id: 35401 
+Store id: 7 
+Store product id: 100017763 
+Item title: Ladies Bering Classic Watch 10426-309-S 
+Item url: https://www.watchshop.com/ladies-bering-classic-watch-10426-309-s-p100017763.html
+---- Last Price Item: ----
+ID: 40599
+Date: 2019-06-22
+Time: 14:39:00
+Item ID: 35401
+Price: 125.0
+Delta: -7
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:53
+Item ID: 35401
+Price: 143.0
+Delta: 14.4
+
+###########################################################################################
+----  2019-07-06 09:54:25.315700  ----
+---- Currently evaluating Item: ----
+Title: Mens Lacoste Moon Watch 2000987
+Price: 116.0
+Product ID: 100011353
+URL: https://www.watchshop.com/mens-lacoste-moon-watch-2000987-p100011353.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100011353/main/medium/2000987-1490868026-545.jpg
+---- Database Item: ----
+Item id: 35467 
+Store id: 7 
+Store product id: 100011353 
+Item title: Mens Lacoste Moon Watch 2000987 
+Item url: https://www.watchshop.com/mens-lacoste-moon-watch-2000987-p100011353.html
+---- Last Price Item: ----
+ID: 46024
+Date: 2019-07-03
+Time: 8:36:00
+Item ID: 35467
+Price: 111.0
+Delta: 14
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:54
+Item ID: 35467
+Price: 116.0
+Delta: 4.5
+
+###########################################################################################
+----  2019-07-06 09:57:19.009769  ----
+---- Currently evaluating Item: ----
+Title: Triwa Snow Klinga Watch KLST109-CL111512
+Price: 78.54
+Product ID: 100021388
+URL: https://www.watchshop.com/triwa-snow-klinga-watch-klst109-cl111512-p100021388.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100021388/main/medium/Snow-Klinga-Light-Gray-01-18-KLST109-CL111512.jpg
+---- Database Item: ----
+Item id: 31007 
+Store id: 7 
+Store product id: 100021388 
+Item title: Triwa Snow Klinga Watch KLST109-CL111512 
+Item url: https://www.watchshop.com/triwa-snow-klinga-watch-klst109-cl111512-p100021388.html
+---- Last Price Item: ----
+ID: 40321
+Date: 2019-06-21
+Time: 12:47:00
+Item ID: 31007
+Price: 79.54
+Delta: 1
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 10:57
+Item ID: 31007
+Price: 78.54
+Delta: -1.3
+
+###########################################################################################
+----  2019-07-06 10:56:25.304728  ----
+---- Currently evaluating Item: ----
+Title: HUGO BOSS BOSS Bottled Intense Eau De Parfum 100ml Spray
+Price: 71.5
+Product ID: 30734
+URL: https://www.thefragranceshop.co.uk/products/hugo-boss-boss-bottled-intense-30734.aspx
+Image URL: https://tfsassets.azureedge.net/products/30734_StockZoomed.JPG
+Promo: None
+Promo URL: None
+---- Database Item: ----
+Item id: 38045 
+Store id: 3 
+Store product id: 30734 
+Item title: HUGO BOSS BOSS Bottled Intense Eau De Parfum 100ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/hugo-boss-boss-bottled-intense-30734.aspx
+---- Last Price Item: ----
+ID: 47307
+Date: 2019-07-06
+Time: 10:35:00
+Item ID: 38045
+Price: 88.89
+Delta: 24
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 11:56
+Item ID: 38045
+Price: 71.5
+Delta: -19.6
+
+###########################################################################################
+----  2019-07-06 11:01:52.887407  ----
+---- Currently evaluating Item: ----
+Title: MudRunner: American Wilds Nintendo Switch Game
+Price: 19.99
+Product ID: 8042675
+URL: https://www.argos.co.uk/product/8042675
+Image URL: https://media.4rgos.it/s/Argos/8042675_R_SET?$Web$&$Main350$&w=270&h=270&qlt=70&fmt.jpeg.interlaced=true
+---- Database Item: ----
+Item id: 38038 
+Store id: 1 
+Store product id: 8042675 
+Item title: MudRunner: American Wilds Nintendo Switch Game 
+Item url: https://www.argos.co.uk/product/8042675
+---- Last Price Item: ----
+ID: 47298
+Date: 2019-07-06
+Time: 9:08:00
+Item ID: 38038
+Price: 95.0
+Delta: 375
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:01
+Item ID: 38038
+Price: 19.99
+Delta: -79.0
+
+###########################################################################################
+----  2019-07-06 11:04:14.178013  ----
+---- Currently evaluating Item: ----
+Title: Coach Coach Eau De Parfum 50ml Spray
+Price: 48.5
+Product ID: 30709
+URL: https://www.thefragranceshop.co.uk/products/coach-coach-30709.aspx
+Image URL: https://tfsassets.azureedge.net/products/30709_StockZoomed.JPG
+Promo: None
+Promo URL: None
+---- Database Item: ----
+Item id: 38043 
+Store id: 3 
+Store product id: 30709 
+Item title: Coach Coach Eau De Parfum 50ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/coach-coach-30709.aspx
+---- Last Price Item: ----
+ID: 47301
+Date: 2019-07-06
+Time: 9:19:00
+Item ID: 38043
+Price: 197.0
+Delta: 306
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:04
+Item ID: 38043
+Price: 48.5
+Delta: -75.4
+
+###########################################################################################
+----  2019-07-06 11:08:46.112212  ----
+---- Currently evaluating Item: ----
+Title: Lacoste Eau De Lacoste Pour Elle Elegant Eau De Toilette 50ml Spray
+Price: 32.0
+Product ID: 30463
+URL: https://www.thefragranceshop.co.uk/products/lacoste-eau-de-lacoste-pour-elle-elegant-30463.aspx
+Image URL: https://tfsassets.azureedge.net/products/30463_StockZoomed.JPG
+Promo: None
+Promo URL: None
+---- Database Item: ----
+Item id: 38041 
+Store id: 3 
+Store product id: 30463 
+Item title: Lacoste Eau De Lacoste Pour Elle Elegant Eau De Toilette 50ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/lacoste-eau-de-lacoste-pour-elle-elegant-30463.aspx
+---- Last Price Item: ----
+ID: 47299
+Date: 2019-07-06
+Time: 9:18:00
+Item ID: 38041
+Price: 40.0
+Delta: 25
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:08
+Item ID: 38041
+Price: 32.0
+Delta: -20.0
+
+###########################################################################################
+----  2019-07-06 11:10:51.475616  ----
+---- Currently evaluating Item: ----
+Title: Rotary Havana Ladies' Two Colour White Dial Watch
+Price: 95.0
+Product ID: 8042675
+URL: https://www.ernestjones.co.uk/webstore/d/8042675/rotary+havana+ladies%27+two+colour+white+dial+watch/
+Image URL: None
+Promo: None
+Promo URL: None
+---- Database Item: ----
+Item id: 38038 
+Store id: 1 
+Store product id: 8042675 
+Item title: MudRunner: American Wilds Nintendo Switch Game 
+Item url: https://www.argos.co.uk/product/8042675
+---- Last Price Item: ----
+ID: 47317
+Date: 2019-07-06
+Time: 12:01:00
+Item ID: 38038
+Price: 19.99
+Delta: -79
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:10
+Item ID: 38038
+Price: 95.0
+Delta: 375.2
+
+###########################################################################################
+----  2019-07-06 11:20:43.440201  ----
+---- Currently evaluating Item: ----
+Title: Mens Swatch Once Again Watch GB743
+Price: 40.0
+Product ID: 30463
+URL: https://www.watchshop.com/mens-swatch-once-again-watch-gb743-p30463.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/30463/main/medium/sa01_gb743_original-1352736269-4131.jpg
+---- Database Item: ----
+Item id: 38041 
+Store id: 3 
+Store product id: 30463 
+Item title: Lacoste Eau De Lacoste Pour Elle Elegant Eau De Toilette 50ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/lacoste-eau-de-lacoste-pour-elle-elegant-30463.aspx
+---- Last Price Item: ----
+ID: 47320
+Date: 2019-07-06
+Time: 12:08:00
+Item ID: 38041
+Price: 32.0
+Delta: -20
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:20
+Item ID: 38041
+Price: 40.0
+Delta: 25.0
+
+###########################################################################################
+----  2019-07-06 11:21:07.905769  ----
+---- Currently evaluating Item: ----
+Title: Mens Casio G-Shock Alarm Chronograph Watch GD-100MS-3ER
+Price: 80.0
+Product ID: 100005179
+URL: https://www.watchshop.com/mens-casio-g-shock-alarm-chronograph-watch-gd-100ms-3er-p100005179.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100005179/main/medium/gd-100ms-3er-1503571424-9036.jpg
+---- Database Item: ----
+Item id: 25718 
+Store id: 7 
+Store product id: 100005179 
+Item title: Mens Casio G-Shock Alarm Chronograph Watch GD-100MS-3ER 
+Item url: https://www.watchshop.com/mens-casio-g-shock-alarm-chronograph-watch-gd-100ms-3er-p100005179.html
+---- Last Price Item: ----
+ID: 45650
+Date: 2019-07-03
+Time: 6:30:00
+Item ID: 25718
+Price: 85.0
+Delta: 0
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:20
+Item ID: 25718
+Price: 80.0
+Delta: -5.9
+
+###########################################################################################
+----  2019-07-06 11:22:19.599709  ----
+---- Currently evaluating Item: ----
+Title: Mens Citizen Watch BM6552-52E
+Price: 197.0
+Product ID: 30709
+URL: https://www.watchshop.com/mens-citizen-eco-drive-watch-bm6552-52e-p30709.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/30709/main/medium/detailed_image_30709_3246.jpg
+---- Database Item: ----
+Item id: 38043 
+Store id: 3 
+Store product id: 30709 
+Item title: Coach Coach Eau De Parfum 50ml Spray 
+Item url: https://www.thefragranceshop.co.uk/products/coach-coach-30709.aspx
+---- Last Price Item: ----
+ID: 47318
+Date: 2019-07-06
+Time: 12:04:00
+Item ID: 38043
+Price: 48.5
+Delta: -75
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:22
+Item ID: 38043
+Price: 197.0
+Delta: 306.2
+
+###########################################################################################
+----  2019-07-06 11:22:24.725614  ----
+---- Currently evaluating Item: ----
+Title: Mens Skagen Signatur Watch SKW6374
+Price: 89.0
+Product ID: 100011283
+URL: https://www.watchshop.com/mens-skagen-signatur-watch-skw6374-p100011283.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100011283/main/medium/skw6374-1495035836-1413.jpg
+---- Database Item: ----
+Item id: 37325 
+Store id: 7 
+Store product id: 100011283 
+Item title: Mens Skagen Signatur Watch SKW6374 
+Item url: https://www.watchshop.com/mens-skagen-signatur-watch-skw6374-p100011283.html
+---- Last Price Item: ----
+ID: 46324
+Date: 2019-07-04
+Time: 7:54:00
+Item ID: 37325
+Price: 85.05
+Delta: -1
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:22
+Item ID: 37325
+Price: 89.0
+Delta: 4.6
+
+###########################################################################################
+----  2019-07-06 11:25:21.730337  ----
+---- Currently evaluating Item: ----
+Title: Mens Hugo Boss Companion Chronograph Watch 1513545
+Price: 251.0
+Product ID: 100013061
+URL: https://www.watchshop.com/mens-hugo-boss-companion-chronograph-watch-1513545-p100013061.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100013061/main/medium/1513545-1504522882-9725.jpg
+---- Database Item: ----
+Item id: 26787 
+Store id: 7 
+Store product id: 100013061 
+Item title: Mens Hugo Boss Companion Chronograph Watch 1513545 
+Item url: https://www.watchshop.com/mens-hugo-boss-companion-chronograph-watch-1513545-p100013061.html
+---- Last Price Item: ----
+ID: 45712
+Date: 2019-07-03
+Time: 6:38:00
+Item ID: 26787
+Price: 243.0
+Delta: 2
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:24
+Item ID: 26787
+Price: 251.0
+Delta: 3.3
+
+###########################################################################################
+----  2019-07-06 11:25:24.206437  ----
+---- Currently evaluating Item: ----
+Title: Ben Sherman Watch BS008B
+Price: 40.0
+Product ID: 100031215
+URL: https://www.watchshop.com/ben-sherman-watch-bs008b-p100031215.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100031215/main/medium/BenSherman20181125BS008B-front3.jpg
+---- Database Item: ----
+Item id: 26432 
+Store id: 7 
+Store product id: 100031215 
+Item title: Ben Sherman Watch BS008B 
+Item url: https://www.watchshop.com/ben-sherman-watch-bs008b-p100031215.html
+---- Last Price Item: ----
+ID: 40447
+Date: 2019-06-22
+Time: 13:03:00
+Item ID: 26432
+Price: 38.0
+Delta: -5
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:24
+Item ID: 26432
+Price: 40.0
+Delta: 5.3
+
+###########################################################################################
+----  2019-07-06 11:26:08.668319  ----
+---- Currently evaluating Item: ----
+Title: Mens Diesel Rasp Watch DZ1841
+Price: 119.0
+Product ID: 100018202
+URL: https://www.watchshop.com/mens-diesel-rasp-watch-dz1841-p100018202.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100018202/main/medium/dz1841-1505201250-6002.jpg
+---- Database Item: ----
+Item id: 26666 
+Store id: 7 
+Store product id: 100018202 
+Item title: Mens Diesel Rasp Watch DZ1841 
+Item url: https://www.watchshop.com/mens-diesel-rasp-watch-dz1841-p100018202.html
+---- Last Price Item: ----
+ID: 47146
+Date: 2019-07-06
+Time: 6:27:00
+Item ID: 26666
+Price: 134.0
+Delta: 13
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:25
+Item ID: 26666
+Price: 119.0
+Delta: -11.2
+
+###########################################################################################
+----  2019-07-06 11:27:54.616854  ----
+---- Currently evaluating Item: ----
+Title: Armani Exchange Watch AX1341
+Price: 116.0
+Product ID: 100030765
+URL: https://www.watchshop.com/armani-exchange-watch-ax1341-p100030765.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100030765/main/medium/AX1341.jpg
+---- Database Item: ----
+Item id: 36436 
+Store id: 7 
+Store product id: 100030765 
+Item title: Armani Exchange Watch AX1341 
+Item url: https://www.watchshop.com/armani-exchange-watch-ax1341-p100030765.html
+---- Last Price Item: ----
+ID: 46357
+Date: 2019-07-04
+Time: 8:07:00
+Item ID: 36436
+Price: 129.0
+Delta: 2
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:27
+Item ID: 36436
+Price: 116.0
+Delta: -10.1
+
+###########################################################################################
+----  2019-07-06 11:30:25.999671  ----
+---- Currently evaluating Item: ----
+Title: Michael Kors Watch MK8642
+Price: 203.0
+Product ID: 100029054
+URL: https://www.watchshop.com/michael-kors-watch-mk8642-p100029054.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100029054/main/medium/MK8642_main.jpg
+---- Database Item: ----
+Item id: 27847 
+Store id: 7 
+Store product id: 100029054 
+Item title: Michael Kors Watch MK8642 
+Item url: https://www.watchshop.com/michael-kors-watch-mk8642-p100029054.html
+---- Last Price Item: ----
+ID: 46368
+Date: 2019-07-04
+Time: 8:12:00
+Item ID: 27847
+Price: 239.0
+Delta: 3
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:30
+Item ID: 27847
+Price: 203.0
+Delta: -15.1
+
+###########################################################################################
+----  2019-07-06 11:32:17.129964  ----
+---- Currently evaluating Item: ----
+Title: Jack Wills Watch JW009JWPK
+Price: 48.0
+Product ID: 100031434
+URL: https://www.watchshop.com/jack-wills-watch-jw009jwpk-p100031434.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100031434/main/medium/JW009JWPK.jpg
+---- Database Item: ----
+Item id: 28016 
+Store id: 7 
+Store product id: 100031434 
+Item title: Jack Wills Watch JW009JWPK 
+Item url: https://www.watchshop.com/jack-wills-watch-jw009jwpk-p100031434.html
+---- Last Price Item: ----
+ID: 28555
+Date: 2019-06-16
+Time: 17:47:00
+Item ID: 28016
+Price: 60.0
+Delta: 0
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:31
+Item ID: 28016
+Price: 48.0
+Delta: -20.0
+
+###########################################################################################
+----  2019-07-06 11:38:09.996127  ----
+---- Currently evaluating Item: ----
+Title: Mens Nixon Watch A1058-2982
+Price: 100.0
+Product ID: 100026654
+URL: https://www.watchshop.com/mens-nixon-watch-a1058-2982-p100026654.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100026654/main/medium/A1058-2982-view1.jpg
+---- Database Item: ----
+Item id: 29573 
+Store id: 7 
+Store product id: 100026654 
+Item title: Mens Nixon Watch A1058-2982 
+Item url: https://www.watchshop.com/mens-nixon-watch-a1058-2982-p100026654.html
+---- Last Price Item: ----
+ID: 42709
+Date: 2019-06-27
+Time: 5:48:00
+Item ID: 29573
+Price: 87.0
+Delta: -13
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 12:37
+Item ID: 29573
+Price: 100.0
+Delta: 14.9
+
+###########################################################################################
+----  2019-07-06 17:04:00.536148  ----
+---- Currently evaluating Item: ----
+Title: Limit - Men's brown analogue strap watch
+Price: 12.5
+Product ID: 10701_10001_061011206173_-1
+URL: https://www.debenhams.com/webapp/wcs/stores/servlet/prod_10701_10001_061011206173_-1
+Image URL: https://debenhams.scene7.com/is/image/Debenhams/061011206173?wid=333&hei=333&qlt=80&op_usm=1.1,0.5,0,0&fmt=webp
+---- Database Item: ----
+Item id: 25343 
+Store id: 5 
+Store product id: 10701_10001_061011206173_-1 
+Item title: Limit - Men's brown analogue strap watch 
+Item url: https://www.debenhams.com/webapp/wcs/stores/servlet/prod_10701_10001_061011206173_-1
+---- Last Price Item: ----
+ID: 25877
+Date: 2019-06-16
+Time: 11:35:00
+Item ID: 25343
+Price: 17.5
+Delta: 0
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 18:03
+Item ID: 25343
+Price: 12.5
+Delta: -28.6
+
+###########################################################################################
+----  2019-07-06 17:09:27.887027  ----
+---- Currently evaluating Item: ----
+Title: Infinite - Silver Mesh Strap Analogue Watch
+Price: 15.0
+Product ID: 10701_10001_061010312294_-1
+URL: https://www.debenhams.com/webapp/wcs/stores/servlet/prod_10701_10001_061010312294_-1
+Image URL: https://debenhams.scene7.com/is/image/Debenhams/061010312294?wid=333&hei=333&qlt=80&op_usm=1.1,0.5,0,0&fmt=webp
+---- Database Item: ----
+Item id: 21549 
+Store id: 5 
+Store product id: 10701_10001_061010312294_-1 
+Item title: Infinite - Silver Mesh Strap Analogue Watch 
+Item url: https://www.debenhams.com/webapp/wcs/stores/servlet/prod_10701_10001_061010312294_-1
+---- Last Price Item: ----
+ID: 43606
+Date: 2019-06-28
+Time: 7:48:00
+Item ID: 21549
+Price: 16.8
+Delta: -20
+---- New Price Item: ----
+ID: 0
+Date: 2019-07-06
+Time: 18:09
+Item ID: 21549
+Price: 15.0
+Delta: -10.7
