@@ -64,7 +64,7 @@ class ShopItem(object):
         ItemPromo(item_id=self.check_if_exists.id, promo=self.promo, promo_url=self.promo_url).insert()
 
     def calculate_delta(self):
-        delta = float(self.price / self.item_last_price)
+        delta = float(self.price / self.item_last_price.price)
         if delta < 1:
             delta = round((1 - delta) * 100, 1)
             delta = delta * (-1)
@@ -77,7 +77,7 @@ class ShopItem(object):
         if self.check_if_exists is None:
             self.insert_new_item()
         elif self.check_if_exists is not None:
-            if self.item_last_price != self.price:
+            if self.item_last_price.price != self.price:
                 self.insert_new_item_price()
                 logger(str(self), self.check_if_exists.__repr__(), self.item_last_price.__repr__())
 
@@ -85,29 +85,29 @@ class ShopItem(object):
             self.evaluate_promo()
 
     def evaluate_promo(self):
-        if self.promo != self.item_last_promo.promo:
-            if self.item_last_promo is not None:
-                try:
-                    self.item_last_promo.delete()
-                    ItemPromo.delete_by_item_id(self.check_if_exists.id)
-                except:
-                    pass
-            elif self.item_last_promo is None:
-                self.insert_new_item_promo()
+        if self.promo is None and self.item_last_promo is not None:
+            ItemPromo.delete_by_item_id(self.check_if_exists.id)
+            return
 
-            if self.promo is not None:
+        if self.promo is not None and self.item_last_promo is None:
+            self.insert_new_item_promo()
+            return
+
+        if self.promo is not None and self.item_last_promo is not None:
+            if self.promo != self.item_last_promo.promo:
+                ItemPromo.delete_by_item_id(self.check_if_exists.id)
                 self.insert_new_item_promo()
+                return
+            return
 
     def evaluate_picture(self):
-        if self.item_image != self.item_last_image.image_src:
-            if self.item_last_image is not None:
-                try:
-                    self.item_last_image.delete()
-                    ItemImage.delete_by_item_id(self.check_if_exists.id)
-                except:
-                    pass
-            elif self.item_last_image is None:
-                self.insert_new_item_image()
+        if self.item_image is not None and self.item_last_image is None:
+            self.insert_new_item_image()
+            return
 
-            if self.item_image is not None:
+        if self.item_image is not None and self.item_last_image is not None:
+            if self.item_image != self.item_last_image.image_src:
+                ItemImage.delete_by_item_id(self.check_if_exists.id)
                 self.insert_new_item_image()
+                return
+            return

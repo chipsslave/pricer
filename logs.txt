@@ -2,3 +2,47 @@
 ###########################################################################################
 ----  2019-07-05 22:24:25.717060  ----
 ---- Currently evaluating Item: ----
+
+###########################################################################################
+----  2019-07-06 21:18:09.694104  ----
+---- Currently evaluating Item: ----
+Title: Casio Men's LCD Black Resin Strap Watch
+Price: 9.99
+Product ID: 2533393
+URL: https://www.argos.co.uk/product/2533393
+Image URL: https://media.4rgos.it/s/Argos/2533393_R_SET?$Web$&$Main350$&w=270&h=270&qlt=70&fmt.jpeg.interlaced=true
+---- Database Item: ----
+Item id: 2190 
+Store id: 1 
+Store product id: 2533393 
+Item title: Casio Men's LCD Black Resin Strap Watch 
+Item url: https://www.argos.co.uk/product/2533393
+---- Last Price Item: ----
+ID: 47621
+Date: 2019-07-06
+Time: 22:17:00
+Item ID: 2190
+Price: 9.99
+Delta: 1
+
+###########################################################################################
+----  2019-07-06 21:18:34.728401  ----
+---- Currently evaluating Item: ----
+Title: Mens Casio G-Shock Mudmaster Master Of G Alarm Chronograph Watch GG-1000-1A3ER
+Price: 255.0
+Product ID: 100019778
+URL: https://www.watchshop.com/mens-casio-g-shock-mudmaster-master-of-g-watch-gg-1000-1a3er-p100019778.html
+Image URL: https://d1rkccsb0jf1bk.cloudfront.net/products/100019778/main/medium/gg-1000-1a3er-1509976747-7817.jpg
+---- Database Item: ----
+Item id: 25406 
+Store id: 7 
+Store product id: 100019778 
+Item title: Mens Casio G-Shock Mudmaster Master Of G Alarm Chronograph Watch GG-1000-1A3ER 
+Item url: https://www.watchshop.com/mens-casio-g-shock-mudmaster-master-of-g-watch-gg-1000-1a3er-p100019778.html
+---- Last Price Item: ----
+ID: 47622
+Date: 2019-07-06
+Time: 22:18:00
+Item ID: 25406
+Price: 255.0
+Delta: 1
