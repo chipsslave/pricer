@@ -24,36 +24,90 @@ class ShopItem(object):
                                                                                      self.store_product_id, self.url,
                                                                                      self.item_image)
 
-    def evaluate(self):
-        db_item = Item.find_by_store_product_id(self.store_product_id, self.url)
-        if db_item is None:
-            item_id = Item(id=None, store_id=self.store_id, store_product_id=self.store_product_id,
-                           title=self.title, url=self.url).insert()
-            ItemImage(item_id=item_id, img_src=self.item_image).insert()
-            ItemPrice(date=self.date, time=self.time, item_id=item_id, item_price=self.price).insert()
-        elif db_item is not None:
-            last_price = ItemPrice.find_by_item_id(db_item.id)
-            if last_price.price != self.price:
-                delta = float(self.price / last_price.price)
-                if delta < 1:
-                    delta = round((1 - delta) * 100, 1)
-                    delta = delta * (-1)
-                elif delta > 1:
-                    delta = round((delta - 1) * 100, 1)
-                    delta = delta
-                b = ItemPrice(date=self.date, time=self.time, item_id=db_item.id, item_price=self.price,
-                              item_delta=delta)
-                b.insert()
-                logger(str(self), db_item.__repr__(), last_price.__repr__(), b.__repr__())
+    @property
+    def check_if_exists(self):
+        return Item.find_by_store_product_id(self.store_product_id, self.url)
 
-            last_promo = ItemPromo.find_by_item_id(db_item.id)
-            if last_promo is None:
-                if self.promo is not None:
-                    ItemPromo(item_id=db_item.id, promo=self.promo, promo_url=self.promo_url).insert()
-            if last_promo is not None:
-                if self.promo is None:
-                    ItemPromo.delete_by_item_id(db_item.id)
-                if self.promo is not None:
-                    # if last_promo.promo != self.promo:
-                    ItemPromo.delete_by_item_id(db_item.id)
-                    ItemPromo(item_id=db_item.id, promo=self.promo, promo_url=self.promo_url).insert()
+    @property
+    def item_last_price(self):
+        if self.check_if_exists is not None:
+            return ItemPrice.find_by_item_id(self.check_if_exists.id)
+        return None
+
+    @property
+    def item_last_promo(self):
+        if self.check_if_exists is not None:
+            return ItemPromo.find_by_item_id(self.check_if_exists.id)
+        return None
+
+    @property
+    def item_last_image(self):
+        if self.check_if_exists is not None:
+            return ItemImage.find_by_item_id(self.check_if_exists.id)
+        return None
+
+    def insert_new_item(self):
+        item_id = Item(id=None, store_id=self.store_id, store_product_id=self.store_product_id,
+                       title=self.title, url=self.url).insert()
+        ItemImage(item_id=item_id, img_src=self.item_image).insert()
+        ItemPrice(date=self.date, time=self.time, item_id=item_id, item_price=self.price).insert()
+
+    def insert_new_item_price(self):
+        delta = self.calculate_delta()
+        ItemPrice(date=self.date, time=self.time, item_id=self.check_if_exists.id, item_price=self.price,
+                  item_delta=delta).insert()
+
+    def insert_new_item_image(self):
+        ItemImage(item_id=self.check_if_exists.id, img_src=self.item_image).insert()
+
+    def insert_new_item_promo(self):
+        ItemPromo(item_id=self.check_if_exists.id, promo=self.promo, promo_url=self.promo_url).insert()
+
+    def calculate_delta(self):
+        delta = float(self.price / self.item_last_price)
+        if delta < 1:
+            delta = round((1 - delta) * 100, 1)
+            delta = delta * (-1)
+        elif delta > 1:
+            delta = round((delta - 1) * 100, 1)
+            delta = delta
+        return delta
+
+    def evaluate(self):
+        if self.check_if_exists is None:
+            self.insert_new_item()
+        elif self.check_if_exists is not None:
+            if self.item_last_price != self.price:
+                self.insert_new_item_price()
+                logger(str(self), self.check_if_exists.__repr__(), self.item_last_price.__repr__())
+
+            self.evaluate_picture()
+            self.evaluate_promo()
+
+    def evaluate_promo(self):
+        if self.promo != self.item_last_promo.promo:
+            if self.item_last_promo is not None:
+                try:
+                    self.item_last_promo.delete()
+                    ItemPromo.delete_by_item_id(self.check_if_exists.id)
+                except:
+                    pass
+            elif self.item_last_promo is None:
+                self.insert_new_item_promo()
+
+            if self.promo is not None:
+                self.insert_new_item_promo()
+
+    def evaluate_picture(self):
+        if self.item_image != self.item_last_image.image_src:
+            if self.item_last_image is not None:
+                try:
+                    self.item_last_image.delete()
+                    ItemImage.delete_by_item_id(self.check_if_exists.id)
+                except:
+                    pass
+            elif self.item_last_image is None:
+                self.insert_new_item_image()
+
+            if self.item_image is not None:
+                self.insert_new_item_image()

@@ -50,7 +50,10 @@ class ItemPromo(object):
             cursor.execute(sql, (item_id,))
 
     def delete(self):
-        db.delete(ItemImage.db_table, 'id', self.id)
+        with DatabaseConnection() as connection:
+            cursor = connection.cursor()
+            sql = 'DELETE FROM {} WHERE item_id=%s'.format(ItemPromo.db_table)
+            cursor.execute(sql, (self.item_id,))
 
 
 if __name__ == '__main__':
