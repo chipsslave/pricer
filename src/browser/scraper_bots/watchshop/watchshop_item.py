@@ -1,6 +1,7 @@
 from src.db_models.item import Item
 from src.db_models.item_image import ItemImage
 from src.db_models.item_price import ItemPrice
+from src.logger.logger import logger
 
 
 class WatchShopItem(object):
@@ -34,4 +35,6 @@ class WatchShopItem(object):
                 elif delta > 1:
                     delta = round((delta - 1) * 100, 1)
                     delta = delta
-                ItemPrice(date=self.date, time=self.time, item_id=db_item.id, item_price=self.price, item_delta=delta).insert()
+                b = ItemPrice(date=self.date, time=self.time, item_id=db_item.id, item_price=self.price, item_delta=delta)
+                b.insert()
+                logger(str(self), db_item.__repr__(), last_price.__repr__(), b.__repr__())
