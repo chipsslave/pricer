@@ -31,11 +31,11 @@ class Item(object):
             return last_row_id
 
     @classmethod
-    def find_by_store_product_id(cls, store_product_id):
+    def find_by_store_product_id(cls, store_product_id, url):
         with DatabaseConnection() as connection:
             cursor = connection.cursor(buffered=True)
-            sql = 'SELECT * FROM {} WHERE store_product_id=%s'.format(Item.db_table)
-            cursor.execute(sql, (store_product_id,))
+            sql = 'SELECT * FROM {} WHERE store_product_id=%s AND url=%s'.format(Item.db_table)
+            cursor.execute(sql, (store_product_id, url,))
             item = cursor.fetchone()
             return cls(*item) if item is not None else None
 
