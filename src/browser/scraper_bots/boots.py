@@ -1,9 +1,8 @@
 import datetime
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.by import By
 
-from src.browser.scraper_bots.boots.boots_item import BootsItem
+from src.browser.scraper_bots.ShopItem import ShopItem
 
 
 class Boots(object):
@@ -49,7 +48,7 @@ class Boots(object):
                 promo = None
                 promo_url = None
 
-            item = BootsItem(title, price, store_product_id, url, item_image, 3, self.date, self.time, promo, promo_url)
+            item = ShopItem(title, price, store_product_id, url, item_image, 3, self.date, self.time, promo, promo_url)
             print(item)
             yield item
 

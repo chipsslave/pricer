@@ -1,13 +1,13 @@
 import datetime
 from time import sleep
 
-from src.browser.scraper_bots.argos.argos import Argos
-from src.browser.scraper_bots.debenhams.debenhams_watches import DebenhamsWatchesShop
-from src.browser.scraper_bots.ernestjones.ernestjones import ErnestJonesShop
-from src.browser.scraper_bots.fragranceshop.fragranceshop import FragranceShop
-from src.browser.scraper_bots.hsamuel.hsamuel import HSamuelShop
-from src.browser.scraper_bots.superdrug.superdrug import Superdrug
-from src.browser.scraper_bots.watchshop.watchshopshop import WatchShopShop
+from src.browser.scraper_bots.argos import Argos
+from src.browser.scraper_bots.debenhams_watches import DebenhamsWatchesShop
+from src.browser.scraper_bots.ernestjones import ErnestJonesShop
+from src.browser.scraper_bots.fragranceshop import FragranceShop
+from src.browser.scraper_bots.hsamuel import HSamuelShop
+from src.browser.scraper_bots.superdrug import Superdrug
+from src.browser.scraper_bots.watchshopshop import WatchShopShop
 from src.browser.webdriver import WebDriver
 from src.db_models.store_urls import StoreURL
 

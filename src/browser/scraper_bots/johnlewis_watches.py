@@ -1,14 +1,11 @@
-import datetime
 from time import sleep
 
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from src.browser.scraper_bots.debenhams.debenhams_item import DebenhamsItem
+from src.browser.scraper_bots.ShopItem import ShopItem
 
 
-class DebenhamsWatchesShop(object):
+class JohnLewisWatchesShop(object):
     def __init__(self, driver, store_id, date, time):
         self.driver = driver
         self.store_id = store_id
@@ -17,11 +14,14 @@ class DebenhamsWatchesShop(object):
 
     @property
     def item_boxes(self):
-        class_name = 't-product-list__product'
+        class_name = 'product-card'
+        self.driver.find_element_by_tag_name('html').send_keys(Keys.END)
+        sleep(20)
         elements = self.driver.find_elements_by_class_name(class_name)
         print(len(elements))
-        for item in elements:
-            yield item
+        return elements
+        # for item in elements:
+        #     yield item
 
     def scrape_products(self):
 
@@ -46,8 +46,9 @@ class DebenhamsWatchesShop(object):
                 promo = None
                 promo_url = None
 
-                item = DebenhamsItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time, promo, promo_url)
-                #print(item)
+                item = ShopItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time,
+                                promo, promo_url)
+                print(item)
             except:
                 continue
             yield item

@@ -1,9 +1,8 @@
 import datetime
-from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 
-from src.browser.scraper_bots.superdrug.superdrug_item import SuperdrugItem
+from src.browser.scraper_bots.ShopItem import ShopItem
 
 
 class Superdrug(object):
@@ -54,7 +53,8 @@ class Superdrug(object):
 
             if item_image is None:
                 item_image = ' https://www.superdrug.com' + item.find_element_by_css_selector(image_css).get_attribute('data-src')
-            item = SuperdrugItem(title, price_text_split_sliced_price_float, store_product_id, url, item_image, self.store_id, self.date, self.time, promo, promo_url)
+            item = ShopItem(title, price_text_split_sliced_price_float, store_product_id, url, item_image,
+                            self.store_id, self.date, self.time, promo, promo_url)
             #print(item)
             yield item
 

@@ -1,11 +1,6 @@
 import datetime
-from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import ActionChains
-
-from src.browser.scraper_bots.argos.argos_item import ArgosItem
-from src.browser.scraper_bots.watchshop.watchshop_item import WatchShopItem
 
 
 class Watches2uShop(object):

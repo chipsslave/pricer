@@ -2,7 +2,7 @@ import datetime
 
 from selenium.common.exceptions import NoSuchElementException
 
-from src.browser.scraper_bots.argos.argos_item import ArgosItem
+from src.browser.scraper_bots.ShopItem import ShopItem
 
 
 class Argos(object):
@@ -43,10 +43,7 @@ class Argos(object):
                 store_product_id = item.get_attribute('data-product-id')
                 url = item.find_element_by_xpath(product_url).get_attribute('href')
                 item_image = item.find_element_by_css_selector(img_src).get_attribute('src')
-                item = ArgosItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time)
-                if item.store_product_id == '8042675':
-                    print('This is what was found on the web:')
-                    print(item)
+                item = ShopItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time)
                 yield item
             except:
                 continue

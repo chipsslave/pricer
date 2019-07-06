@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -5,8 +7,11 @@ from selenium.webdriver.chrome.options import Options
 class WebDriver(object):
     def __init__(self):
         chrome_options = Options()
+        root_folder = Path(__file__).parents[2]
+        chrome_driver = root_folder / "chromedriver.exe"
+        chrome_driver = str(chrome_driver)
         #chrome_options.add_argument("--headless")
-        self.driver = webdriver.Chrome(executable_path='C:/python/chromedriver.exe',
+        self.driver = webdriver.Chrome(executable_path=chrome_driver,
                                        chrome_options=chrome_options, keep_alive=True)
         self.driver.maximize_window()
 
