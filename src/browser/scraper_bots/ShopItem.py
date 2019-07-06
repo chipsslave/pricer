@@ -5,8 +5,9 @@ from src.db_models.item_promo import ItemPromo
 from src.logger.logger import logger
 
 
-class DebenhamsItem(object):
-    def __init__(self, title, price, store_product_id, url, item_image, store_id, date, time, promo, promo_url):
+class ShopItem(object):
+    def __init__(self, title, price, store_product_id, url, item_image, store_id, date, time, promo=None,
+                 promo_url=None):
         self.title = title
         self.price = price
         self.store_product_id = store_product_id
@@ -19,7 +20,9 @@ class DebenhamsItem(object):
         self.promo_url = promo_url
 
     def __repr__(self):
-        return "Title: {}\nPrice: {}\nProduct ID: {}\nURL: {}\nImage URL: {}\nPromo: {}\nPromo URL: {}".format(self.title, self.price, self.store_product_id, self.url, self.item_image, self.promo, self.promo_url)
+        return "Title: {}\nPrice: {}\nProduct ID: {}\nURL: {}\nImage URL: {}".format(self.title, self.price,
+                                                                                     self.store_product_id, self.url,
+                                                                                     self.item_image)
 
     def evaluate(self):
         db_item = Item.find_by_store_product_id(self.store_product_id)
@@ -38,7 +41,8 @@ class DebenhamsItem(object):
                 elif delta > 1:
                     delta = round((delta - 1) * 100, 1)
                     delta = delta
-                b = ItemPrice(date=self.date, time=self.time, item_id=db_item.id, item_price=self.price, item_delta=delta)
+                b = ItemPrice(date=self.date, time=self.time, item_id=db_item.id, item_price=self.price,
+                              item_delta=delta)
                 b.insert()
                 logger(str(self), db_item.__repr__(), last_price.__repr__(), b.__repr__())
 
@@ -50,11 +54,6 @@ class DebenhamsItem(object):
                 if self.promo is None:
                     ItemPromo.delete_by_item_id(db_item.id)
                 if self.promo is not None:
-                    #if last_promo.promo != self.promo:
+                    # if last_promo.promo != self.promo:
                     ItemPromo.delete_by_item_id(db_item.id)
                     ItemPromo(item_id=db_item.id, promo=self.promo, promo_url=self.promo_url).insert()
-
-
-if __name__ == '__main__':
-    a = ItemPromo.find_by_item_id(5)
-    print(a)

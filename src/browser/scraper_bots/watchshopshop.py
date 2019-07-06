@@ -1,11 +1,8 @@
 import datetime
-from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import ActionChains
 
-from src.browser.scraper_bots.argos.argos_item import ArgosItem
-from src.browser.scraper_bots.watchshop.watchshop_item import WatchShopItem
+from src.browser.scraper_bots.ShopItem import ShopItem
 
 
 class WatchShopShop(object):
@@ -48,7 +45,7 @@ class WatchShopShop(object):
             if item_image.endswith('.gif'):
                 item_image = None
             url = item.find_element_by_class_name(img_src_class).find_element_by_css_selector('a:nth-child(1)').get_attribute('href')
-            item = WatchShopItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time)
+            item = ShopItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time)
             #print(item)
             yield item
 

@@ -1,11 +1,7 @@
 import datetime
 from time import sleep
 
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.by import By
-
-from src.browser.scraper_bots.boots.boots_item import BootsItem
-from src.browser.scraper_bots.fragranceshop.fragranceshop_item import FragranceShopItem
+from src.browser.scraper_bots.ShopItem import ShopItem
 
 
 class FragranceShop(object):
@@ -46,7 +42,8 @@ class FragranceShop(object):
                 promo_url = None
             except:
                 continue
-            item = FragranceShopItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time, promo, promo_url)
+            item = ShopItem(title, price, store_product_id, url, item_image, self.store_id, self.date, self.time, promo,
+                            promo_url)
             #print(item)
             yield item
 

@@ -1,1 +1,1 @@
-C:\python\pricer\venv\Scripts\python.exe C:\python\pricer\run.py
+%CD%\venv\Scripts\python.exe %CD%\run.py
