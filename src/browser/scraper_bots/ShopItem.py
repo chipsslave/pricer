@@ -25,7 +25,7 @@ class ShopItem(object):
                                                                                      self.item_image)
 
     def evaluate(self):
-        db_item = Item.find_by_store_product_id(self.store_product_id)
+        db_item = Item.find_by_store_product_id(self.store_product_id, self.url)
         if db_item is None:
             item_id = Item(id=None, store_id=self.store_id, store_product_id=self.store_product_id,
                            title=self.title, url=self.url).insert()

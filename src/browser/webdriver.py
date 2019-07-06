@@ -3,6 +3,9 @@ from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+# TODO: allow multiple instances of driver to run at the same time
+#   Currently drivers will pick up same URL
+
 
 class WebDriver(object):
     def __init__(self):
