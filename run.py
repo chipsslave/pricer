@@ -20,7 +20,6 @@ while True:
     print('Plus 60 minutes: ', store_url.utc_time() + datetime.timedelta(minutes=120))
     if store_url.utc_time() + datetime.timedelta(minutes=120) < datetime.datetime.utcnow():
         print('URL older than 20 minutes\n{}'.format(store_url.url))
-
         if web_driver is None:
             web_driver = WebDriver()
 
