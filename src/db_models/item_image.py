@@ -40,7 +40,7 @@ class ItemImage(object):
 
     @staticmethod
     def delete_by_id(item_image_id):
-        sql = "DELETE FROM {} WHERE id=%s".format(ItemImage.db_table)
+        sql = "DELETE FROM {} WHERE item_id=%s".format(ItemImage.db_table)
         return mutation(sql, (item_image_id,))
 
     def delete(self):

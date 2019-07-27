@@ -41,7 +41,7 @@ class ItemPromo(object):
 
     @staticmethod
     def delete_by_item_id(item_id):
-        sql = "DELETE FROM {} WHERE id=%s".format(ItemPromo.db_table)
+        sql = "DELETE FROM {} WHERE item_id=%s".format(ItemPromo.db_table)
         return mutation(sql, (item_id,))
 
     def delete(self):
