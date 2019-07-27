@@ -73,6 +73,11 @@ class HSamuelShop(object):
                 sleep(0.5)
 
         while True:
+            last_height = self.driver.execute_script("return document.body.scrollHeight")
+            parts = int(last_height / 200)
+            for x in range(parts):
+                self.driver.execute_script("window.scrollTo(0, {});".format(x * 200))
+
             for item in self.scrape_products():
                 item.evaluate()
             if self.next_page() is not None:
