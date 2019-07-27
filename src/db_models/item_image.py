@@ -39,7 +39,7 @@ class ItemImage(object):
         return [cls(*elem) for elem in items] if items is not None else None
 
     @staticmethod
-    def delete_by_id(item_image_id):
+    def delete_by_item_id(item_image_id):
         sql = "DELETE FROM {} WHERE item_id=%s".format(ItemImage.db_table)
         return mutation(sql, (item_image_id,))
 

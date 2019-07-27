@@ -79,7 +79,8 @@ class ShopItem(object):
         elif self.check_if_exists is not None:
             if self.item_last_price.price != self.price:
                 self.insert_new_item_price()
-                logger(str(self), self.check_if_exists.__repr__(), self.item_last_price.__repr__())
+
+                # logger(str(self), self.check_if_exists.__repr__(), self.item_last_price.__repr__())
 
             self.evaluate_picture()
             self.evaluate_promo()
