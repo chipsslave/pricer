@@ -140,6 +140,7 @@ dmypy.json
 
 *.exe
 config.py
+logs.txt
 
 # End of https://www.gitignore.io/api/python
 
