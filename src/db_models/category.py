@@ -1,6 +1,4 @@
-from common.database.database_mysql import Database
-
-db = Database()
+from common.database.database_connection import query_one, query_all, query_many, mutation
 
 
 class Category(object):
@@ -15,28 +13,13 @@ class Category(object):
         return ', '.join(tuple(self.__dict__.keys()))
 
     @property
-    def tuple_values(self):
-        return tuple(self.__dict__.values())
+    def q_marks(self):
+        return ', '.join(['%s'] * len(self.__dict__.keys()))
 
     def insert(self):
-        db.insert(Category.db_table, self.tuple_keys, self.tuple_values)
-
-    @classmethod
-    def find_by_id(cls, category_id):
-        item = db.select_one(Category.db_table, 'id', category_id)
-        return cls(*item) if item is not None else None
-
-    @classmethod
-    def find_all(cls):
-        items = db.select_all(Category.db_table)
-        return [cls(*elem) for elem in items] if items is not None else None
-
-    @staticmethod
-    def delete_by_id(category_id):
-        db.delete(Category.db_table, 'id', category_id)
-
-    def delete(self):
-        db.delete(Category.db_table, 'id', self.id)
+        sql = 'INSERT INTO {} ({}) VALUES ({})'.format(Category.db_table, self.tuple_keys, self.q_marks)
+        last_row_id = mutation(sql, (self.id, self.category,)).lastrowid
+        return last_row_id
 
 
 if __name__ == '__main__':

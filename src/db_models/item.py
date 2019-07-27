@@ -1,4 +1,4 @@
-from common.database.database_connection import DatabaseConnection
+from common.database.database_connection import query_one, query_all, query_many, mutation
 
 
 class Item(object):
@@ -23,48 +23,25 @@ class Item(object):
         return ', '.join(['%s'] * len(self.__dict__.keys()))
 
     def insert(self):
-        with DatabaseConnection() as connection:
-            cursor = connection.cursor()
-            sql = 'INSERT INTO {} ({}) VALUES ({})'.format(Item.db_table, self.tuple_keys, self.q_marks)
-            cursor.execute(sql, (self.id, self.store_id, self.store_product_id, self.title, self.url,))
-            last_row_id = cursor.lastrowid
-            return last_row_id
+        sql = 'INSERT INTO {} ({}) VALUES ({})'.format(Item.db_table, self.tuple_keys, self.q_marks)
+        last_row_id = mutation(sql, (self.id, self.store_id, self.store_product_id, self.title, self.url)).lastrowid
+        return last_row_id
 
     @classmethod
     def find_by_store_product_id(cls, store_product_id, url):
-        with DatabaseConnection() as connection:
-            cursor = connection.cursor(buffered=True)
-            sql = 'SELECT * FROM {} WHERE store_product_id=%s AND url=%s'.format(Item.db_table)
-            cursor.execute(sql, (store_product_id, url,))
-            item = cursor.fetchone()
-            return cls(*item) if item is not None else None
+        sql = 'SELECT * FROM {} WHERE store_product_id=%s AND url=%s'.format(Item.db_table)
+        item = query_one(sql, (store_product_id, url))
+        return cls(*item) if item is not None else None
 
     @classmethod
     def find_by_item_id(cls, item_id):
-        with DatabaseConnection() as connection:
-            cursor = connection.cursor(buffered=True)
-            sql = 'SELECT * FROM {} WHERE id=%s'.format(Item.db_table)
-            cursor.execute(sql, (item_id,))
-            item = cursor.fetchone()
-            return cls(*item) if item is not None else None
-    #
-    # @classmethod
-    # def find_all(cls):
-    #     items = db.select_all(Item.db_table)
-    #     return [cls(*elem) for elem in items] if items is not None else None
-    #
-    # @staticmethod
-    # def delete_by_id(item_id):
-    #     db.delete(Item.db_table, 'id', item_id)
-    #
-    # def delete(self):
-    #     db.delete(Item.db_table, 'id', self.id)
+        sql = 'SELECT * FROM {} WHERE id=%s'.format(Item.db_table)
+        item = query_one(sql, (item_id,))
+        return cls(*item) if item is not None else None
 
 
 if __name__ == '__main__':
-    # item = Item(store_id='store_id_111', title='new_item_PHONE', store_product_id='store_product_id_444', url='url_555')
-    # print(item.tuple_keys)
-    # print(item.q_marks)
-
-    item = Item.find_by_store_product_id(9139886)
+    item = Item.find_by_store_product_id(43105, "https://www.thefragranceshop.co.uk/products/lancome-la-vie-est-belle-43105.aspx")
     print(item)
+    a = Item.find_by_item_id(41701)
+    print(a)
