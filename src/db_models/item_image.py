@@ -36,17 +36,30 @@ class ItemImage(object):
             item = cursor.fetchone()
         return cls(*item) if item is not None else None
 
-    @classmethod
-    def find_all(cls):
-        items = db.select_all(ItemImage.db_table)
-        return [cls(*elem) for elem in items] if items is not None else None
-
     @staticmethod
-    def delete_by_id(item_image_id):
-        db.delete(ItemImage.db_table, 'id', item_image_id)
+    def delete_by_item_id(item_id):
+        with DatabaseConnection() as connection:
+            cursor = connection.cursor()
+            sql = 'DELETE FROM {} WHERE item_id=%s'.format(ItemImage.db_table)
+            cursor.execute(sql, (item_id,))
 
     def delete(self):
-        db.delete(ItemImage.db_table, 'id', self.id)
+        with DatabaseConnection() as connection:
+            cursor = connection.cursor()
+            sql = 'DELETE FROM {} WHERE item_id=%s'.format(ItemImage.db_table)
+            cursor.execute(sql, (self.item_id,))
+
+    # @classmethod
+    # def find_all(cls):
+    #     items = db.select_all(ItemImage.db_table)
+    #     return [cls(*elem) for elem in items] if items is not None else None
+    #
+    # @staticmethod
+    # def delete_by_id(item_image_id):
+    #     db.delete(ItemImage.db_table, 'id', item_image_id)
+    #
+    # def delete(self):
+    #     db.delete(ItemImage.db_table, 'id', self.id)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import datetime
 
 
-def logger(msg1, msg2, msg3, msg4):
+def logger(msg1, msg2, msg3):
     with open('logs.txt', 'a') as file:
         file.write("\n###########################################################################################\n")
         file.write("----  " + str(datetime.datetime.utcnow()) + "  ----" + "\n")
@@ -11,5 +11,3 @@ def logger(msg1, msg2, msg3, msg4):
         file.write(msg2 + "\n")
         file.write("---- Last Price Item: ----\n")
         file.write(msg3 + "\n")
-        file.write("---- New Price Item: ----\n")
-        file.write(msg4 + "\n")
