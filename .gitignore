@@ -139,6 +139,7 @@ dmypy.json
 /nbproject/
 
 *.exe
+config.py
 
 # End of https://www.gitignore.io/api/python
 
