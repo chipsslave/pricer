@@ -58,20 +58,20 @@ class Argos(object):
             for item in self.scrape_products():
                 if item is not None:
                     item.evaluate()
-            if self.nex_page() is not None:
-                print(self.nex_page())
-                self.driver.get(self.nex_page())
+            if self.next_page() is not None:
+                print(self.next_page())
+                self.driver.get(self.next_page())
                 now = datetime.datetime.now()
                 self.date, self.time = now.strftime("%Y-%m-%d"), now.strftime("%H:%M")
-            elif self.nex_page() is None:
+            elif self.next_page() is None:
                 break
 
-    def nex_page(self):
-        pagination_buttons = '//*[@id="findability"]/div/div[4]/div[1]/div[2]/ul/li'
+    def next_page(self):
+        pagination_buttons = '//*[@id="findability"]/div/div[4]/div[1]/div[2]/nav/a'
         try:
             pagination_elements = self.driver.find_elements_by_xpath(pagination_buttons)
             last_element = pagination_elements[-1]
-            element = last_element.find_element_by_xpath('a').get_attribute('href')
+            element = last_element.get_attribute('href')
         except (NoSuchElementException, IndexError):
             element = None
         return element
