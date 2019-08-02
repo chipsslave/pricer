@@ -77,6 +77,7 @@ class ShopItem(object):
     def evaluate(self):
         if self.check_if_exists is None:
             self.insert_new_item()
+            self.evaluate_stats()
         elif self.check_if_exists is not None:
             if self.item_last_price.price != self.price:
                 self.insert_new_item_price()
