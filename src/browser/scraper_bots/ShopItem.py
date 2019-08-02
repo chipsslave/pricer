@@ -2,6 +2,7 @@ from src.db_models.item import Item
 from src.db_models.item_image import ItemImage
 from src.db_models.item_price import ItemPrice
 from src.db_models.item_promo import ItemPromo
+from src.db_models.item_stats import ItemStats
 from src.logger.logger import logger
 
 
@@ -79,6 +80,7 @@ class ShopItem(object):
         elif self.check_if_exists is not None:
             if self.item_last_price.price != self.price:
                 self.insert_new_item_price()
+                self.evaluate_stats()
 
                 # logger(str(self), self.check_if_exists.__repr__(), self.item_last_price.__repr__())
 
@@ -112,3 +114,11 @@ class ShopItem(object):
                 self.insert_new_item_image()
                 return
             return
+
+    def evaluate_stats(self):
+        stat = ItemStats(item_id=self.check_if_exists.id)
+        stat.fetch_min_max()
+        stat.fetch_last()
+        stat.fetch_count_of_min_price()
+        stat.good_deal()
+        stat.insert()

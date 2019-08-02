@@ -74,4 +74,6 @@ class Argos(object):
             element = last_element.get_attribute('href')
         except (NoSuchElementException, IndexError):
             element = None
+        if self.driver.current_url == element:
+            return None
         return element
