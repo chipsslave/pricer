@@ -7,7 +7,7 @@ class ItemStats(object):
     db_table = 'item_stats'
 
     def __init__(self, id=None, item_id=None, min_price=None, max_price=None, avg_price=None, last_price=None,
-                 last_delta=None, count_min_price=None, great_deal=None):
+                 last_delta=None, last_date=None, last_time=None, count_min_price=None, great_deal=None):
         self.id = 0 if id is None else id
         self.item_id = item_id
         self.min_price = min_price
@@ -15,6 +15,8 @@ class ItemStats(object):
         self.avg_price = avg_price
         self.last_price = last_price
         self.last_delta = last_delta
+        self.last_date = last_date
+        self.last_time = last_time
         self.count_min_price = count_min_price
         self.great_deal = great_deal
 
@@ -41,10 +43,10 @@ class ItemStats(object):
             sql = 'INSERT INTO {} ({}) VALUES ({})'.format(ItemStats.db_table, self.tuple_keys, self.q_marks)
             last_row_id = mutation(sql, (
                 self.id, self.item_id, self.min_price, self.max_price, self.avg_price, self.last_price, self.last_delta,
-                self.count_min_price, self.great_deal)).lastrowid
+                self.last_date, self.last_time, self.count_min_price, self.great_deal)).lastrowid
         except IntegrityError:
-            sql = 'UPDATE item_stats SET min_price = %s, max_price = %s, avg_price = %s, last_price = %s, last_delta = %s, count_min_price = %s, great_deal = %s WHERE item_id = %s'
-            last_row_id = mutation(sql, (self.min_price, self.max_price, self.avg_price, self.last_price, self.last_delta, self.count_min_price, self.great_deal, self.item_id)).lastrowid
+            sql = 'UPDATE item_stats SET min_price = %s, max_price = %s, avg_price = %s, last_price = %s, last_delta = %s, last_date = %s, last_time = %s, count_min_price = %s, great_deal = %s WHERE item_id = %s'
+            last_row_id = mutation(sql, (self.min_price, self.max_price, self.avg_price, self.last_price, self.last_delta, self.last_date, self.last_time, self.count_min_price, self.great_deal, self.item_id)).lastrowid
         finally:
             return last_row_id
 
@@ -81,10 +83,12 @@ class ItemStats(object):
         self.avg_price = round(query_one(sql, (self.item_id,))[0], 2)
 
     def fetch_last(self):
-        sql = 'SELECT price, delta FROM item_prices WHERE item_id = %s ORDER BY date DESC, time DESC'
+        sql = 'SELECT price, delta, date, time FROM item_prices WHERE item_id = %s ORDER BY date DESC, time DESC'
         result = query_one(sql, (self.item_id,))
         self.last_price = result[0]
         self.last_delta = result[1]
+        self.last_date = result[2]
+        self.last_time = result[3]
 
     def fetch_last_price(self):
         sql = 'SELECT price FROM item_prices WHERE item_id = %s ORDER BY date DESC, time DESC'
