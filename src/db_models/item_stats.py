@@ -103,7 +103,7 @@ class ItemStats(object):
         self.count_min_price = query_one(sql, (self.item_id,))[0]
 
     def good_deal(self):
-        if self.count_min_price == 1 and self.last_price == self.min_price and self.max_price != self.min_price:
+        if self.count_min_price == 1 and self.last_price == self.min_price and self.max_price != self.min_price and self.last_delta != 0:
             self.great_deal = 1
         else:
             self.great_deal = 0
