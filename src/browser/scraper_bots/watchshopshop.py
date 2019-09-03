@@ -14,7 +14,7 @@ class WatchShopShop(object):
 
     @property
     def item_boxes(self):
-        element_css = '#AUTODIV_ecommcategoryphtml > div.main-content.listing-content.container-fluid.primary-border > div > div.listing-products-container > div.listing-products-inner > div.row.listing-products'
+        element_css = '#AUTODIV_ecommcategoryphtml > section.product-listing > div > div.row.text-center.text-sm-left'
         class_name = 'listing-product'
         element = self.driver.find_element_by_css_selector(element_css)
         for item in element.find_elements_by_class_name(class_name):
