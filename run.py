@@ -23,6 +23,10 @@ while True:
         if web_driver is None:
             web_driver = WebDriver()
 
+        future = datetime.datetime.now() + datetime.timedelta(minutes=15)
+        date, time = future.strftime("%Y-%m-%d"), future.strftime("%H:%M")
+        store_url.update_lc_date_time(date, time)
+
         web_driver.go_to(store_url.url)
 
         now = datetime.datetime.now()
