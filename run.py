@@ -64,7 +64,8 @@ while True:
             try:
                 HSamuelShop(driver=web_driver.driver, store_id=store_url.store_id, date=date, time=time).process_items()
                 store_url.update_lc_date_time(date, time)
-            except:
+            except Exception as e:
+                print(e)
                 future = datetime.datetime.now() + datetime.timedelta(minutes=15)
                 date, time = future.strftime("%Y-%m-%d"), future.strftime("%H:%M")
                 store_url.update_lc_date_time(date, time)

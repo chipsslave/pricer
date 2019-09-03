@@ -62,10 +62,12 @@ class HSamuelShop(object):
             while self.cur_page_number() < 4:
                 button = self.driver.find_element_by_css_selector('#js-load-next')
                 actions = ActionChains(self.driver)
-                actions.move_to_element(button)
+                actions.move_to_element(button).perform()
                 try:
                     close_button = self.driver.find_element_by_css_selector(close_button_css)
-                    actions.click(close_button)
+                    close_button.click()
+                    close = self.driver.find_element_by_css_selector("#js-cookie-close-icon")
+                    close.click()
                 except:
                     pass
                 actions.click(button)
@@ -117,7 +119,6 @@ class HSamuelShop(object):
 
     def next_page(self):
         button_css = '#js-load-next'
-
         button = self.driver.find_element_by_css_selector(button_css)
         if button.get_attribute('class') == 'load-next':
             current_url = self.driver.current_url
