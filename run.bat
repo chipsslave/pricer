@@ -1,1 +1,0 @@
-%CD%\venv\Scripts\python.exe %CD%\run.py
