@@ -27,7 +27,12 @@ model Page {
   pageStartsAt  Int
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   updatedAt     DateTime @updatedAt
-
+  pageStatus    PageStatus @default(WAITING)
   store         Store @relation(fields: [storeId], references: [id])
   storeId       Int
+}
+
+enum PageStatus {
+  PROCESSING
+  WAITING
 }
