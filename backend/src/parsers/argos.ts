@@ -38,6 +38,7 @@ export async function argos(
       report.errors.push({
         expected: `Elements count ${storePage.itemsPerPage}`,
         received: `Elements count ${report.elementsFound}`,
+        severity: report.elementsFound == 0 ? "high" : "low",
       });
 
     if (report.elementsFound > 0) {

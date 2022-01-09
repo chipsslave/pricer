@@ -23,7 +23,10 @@ export type Report = {
 export type Error = {
   expected: string;
   received: string;
+  severity: Severity;
 };
+
+export type Severity = "low" | "medium" | "high";
 
 // A `main` function so that you can use async/await
 async function main() {
