@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node ./main.ts",
+    "dev": "ts-node ./src/main.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {
@@ -22,6 +22,7 @@
   "dependencies": {
     "@prisma/client": "^3.7.0",
     "moment": "^2.29.1",
+    "node-html-parser": "^5.2.0",
     "puppeteer": "^13.0.1",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-anonymize-ua": "^2.3.3",
