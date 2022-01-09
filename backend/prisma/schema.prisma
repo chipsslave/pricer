@@ -14,7 +14,7 @@ datasource db {
 model Store {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(255) @unique
-  homeUrl   String?  @db.VarChar(512)
+  homeUrl   String   @db.VarChar(512)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
   pages     Page[]
@@ -24,7 +24,7 @@ model Page {
   id            Int      @id @default(autoincrement())
   url           String   @db.VarChar(512) @unique
   itemsPerPage  Int
-  pageStartsAt  Int
+  pageStartsAt  Int      @default(0)
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   updatedAt     DateTime @updatedAt
   pageStatus    PageStatus @default(WAITING)
