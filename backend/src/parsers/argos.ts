@@ -22,7 +22,7 @@ export class Argos {
     this.nextPageUrl = storePage.url;
     this.currentReport = {
       startedAt: moment().toDate(),
-      page: this.nextPageUrl,
+      pageUrl: this.nextPageUrl,
       pageNumber: this.currentPageNumber,
       errors: [],
       nextPageAvailable: false,
@@ -41,7 +41,7 @@ export class Argos {
   resetReport() {
     this.currentReport = {
       startedAt: moment().toDate(),
-      page: this.nextPageUrl,
+      pageUrl: this.nextPageUrl,
       pageNumber: this.currentPageNumber,
       errors: [],
       nextPageAvailable: false,
