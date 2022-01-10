@@ -3,6 +3,7 @@ import { Page as StorePage } from "@prisma/client";
 import { Report, ReportError } from "../main";
 import parse, { HTMLElement } from "node-html-parser";
 import moment from "moment";
+const crypto = require("crypto");
 
 export class Argos {
   storePage: StorePage;
@@ -27,6 +28,8 @@ export class Argos {
       pageNumber: this.currentPageNumber,
       errors: [],
       nextPageAvailable: false,
+      parsedElementItemsSuc: 0,
+      parsedElementItemsFail: 0,
     };
   }
 
@@ -47,12 +50,14 @@ export class Argos {
       pageNumber: this.currentPageNumber,
       errors: [],
       nextPageAvailable: false,
+      parsedElementItemsSuc: 0,
+      parsedElementItemsFail: 0,
     };
   }
 
   async scrape() {
     await this.page.goto(this.nextPageUrl, {
-      waitUntil: "domcontentloaded",
+      waitUntil: ["domcontentloaded", "networkidle2"],
     });
 
     const pageHtml: HTMLElement = parse(await this.page.content());
@@ -74,7 +79,93 @@ export class Argos {
 
     if (this.currentReport.elementsFound > 0) {
       // parse elements here
-      // parse elements here
+      for (const [index, element] of elements.entries()) {
+        const parsedElementItem = {
+          title: element.querySelector("a[class*=Title]")?.text.trim() || null,
+          upc: element.getAttribute("data-product-id")
+            ? `A_${element.getAttribute("data-product-id")?.trim()}`
+            : null,
+          price:
+            Number(
+              element
+                .querySelector("div[class*=PriceText]")
+                ?.text?.trim()
+                .replace(/[^0-9.-]+/g, "")
+            ) || null,
+          url: element.getAttribute("data-product-id")
+            ? `https://www.argos.co.uk/product/${element
+                .getAttribute("data-product-id")
+                ?.trim()}`
+            : null,
+        };
+
+        if (!parsedElementItem.title)
+          this.onError({
+            operation: "parsing title",
+            expected: "result should not be null",
+            received: "result is null",
+            severity: "high",
+            element: element.outerHTML,
+            elementHash: crypto
+              .createHash("md5")
+              .update(element.toString())
+              .digest("hex"),
+            elementIndex: index,
+          });
+
+        if (!parsedElementItem.upc)
+          this.onError({
+            operation: "parsing upc",
+            expected: "result should not be null",
+            received: "result is null",
+            severity: "high",
+            // element: element.toString(),
+            elementHash: crypto
+              .createHash("md5")
+              .update(element.toString())
+              .digest("hex"),
+            elementIndex: index,
+          });
+        if (!parsedElementItem.price)
+          this.onError({
+            operation: "parsing price",
+            expected: "result should more than 0",
+            received: "result is null",
+            severity: "high",
+            // element: element.toString(),
+            elementHash: crypto
+              .createHash("md5")
+              .update(element.toString())
+              .digest("hex"),
+            elementIndex: index,
+          });
+        if (!parsedElementItem.url)
+          this.onError({
+            operation: "parsing url",
+            expected: "result should not be empty string",
+            received: "result is empty string",
+            severity: "high",
+            // element: element.toString(),
+            elementHash: crypto
+              .createHash("md5")
+              .update(element.toString())
+              .digest("hex"),
+            elementIndex: index,
+          });
+
+        if (
+          !parsedElementItem.title ||
+          !parsedElementItem.upc ||
+          !parsedElementItem.price ||
+          !parsedElementItem.url
+        ) {
+          this.currentReport.parsedElementItemsFail += 1;
+        } else {
+          this.currentReport.parsedElementItemsSuc += 1;
+        }
+
+        // console.log({ parsedElementItem });
+      }
     }
 
     this.currentReport.nextPageAvailable = this.checkNextPageAvailable(
