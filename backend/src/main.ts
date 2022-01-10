@@ -13,6 +13,7 @@ const PUPPETEER_ARGS = ["--no-sandbox", "--disable-setuid-sandbox"];
 export type Report = {
   startedAt: Date;
   finishedAt?: Date;
+  page: Page;
   pageUrl: string;
   pageNumber: number;
   errors: ReportError[];
