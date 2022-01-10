@@ -104,12 +104,25 @@ export class Argos {
     pageHtml: HTMLElement,
     currentPageNumber: number
   ): boolean {
+    const resultsCountSpan: HTMLElement | null = pageHtml.querySelector(
+      "span[class^=styles__ResultsCount]"
+    );
+
+    if (
+      !resultsCountSpan &&
+      this.currentPageNumber > this.storePage.pageStartsAt
+    )
+      this.onError({
+        expected: "resultsCountSpan should not return null",
+        received: "resultsCountSpan should not returned null",
+        severity: "high",
+        operation: "Checking if next page is available.",
+      });
     const resultsCount: string =
-      pageHtml
-        .querySelector("span[class^=styles__ResultsCount]")
-        ?.getAttribute("data-search-results") || "63";
+      resultsCountSpan?.getAttribute("data-search-results") ||
+      this.storePage.itemsPerPage.toString();
     const count: number = parseInt(resultsCount);
-    const totalPages = Math.ceil(count / 63);
+    const totalPages = Math.ceil(count / this.storePage.itemsPerPage);
     if (currentPageNumber < totalPages) {
       return true;
     }
