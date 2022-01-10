@@ -19,6 +19,8 @@ export type Report = {
   errors: ReportError[];
   elementsFound?: number;
   nextPageAvailable: boolean;
+  parsedElementItemsSuc: number;
+  parsedElementItemsFail: number;
 };
 
 export type ReportError = {
@@ -26,6 +28,9 @@ export type ReportError = {
   received: string;
   severity: Severity;
   operation: string;
+  element?: string;
+  elementHash?: string;
+  elementIndex?: number;
 };
 
 export type Severity = "low" | "medium" | "high";
