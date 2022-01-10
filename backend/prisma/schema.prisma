@@ -30,9 +30,51 @@ model Page {
   pageStatus    PageStatus @default(WAITING)
   store         Store @relation(fields: [storeId], references: [id])
   storeId       Int
+  reports       Report[]
 }
 
 enum PageStatus {
   PROCESSING
   WAITING
+}
+
+enum ReportErrorSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model ReportError {
+  id            Int                   @id @default(autoincrement())
+  expected      String                @db.VarChar(512)
+  result        String                @db.VarChar(512)
+  severity      ReportErrorSeverity
+  operation     String                @db.VarChar(512)
+  elementIndex  Int?                  @db.Integer
+  report         Report @relation(fields: [reportId], references: [id])
+  reportId       Int
+  element       Element?  @relation(fields: [elementId], references: [id])
+  elementId     Int
+}
+
+model Report {
+  id                        Int         @id @default(autoincrement())
+  startedAt                 DateTime    @default(now()) @db.Timestamp(6)
+  finishedAt                DateTime    @db.Timestamp(6)
+  pageUrl                   String      @db.Text
+  pageNumber                Int         @db.Integer
+  elementsFound             Int         @db.Integer
+  nextPageAvailable         Boolean     @db.Boolean
+  parsedElementItemsSuc     Int         @db.Integer
+  parsedElementItemsFail    Int         @db.Integer
+  reportErrors              ReportError[]
+  page                      Page        @relation(fields: [pageId], references: [id])
+  pageId                    Int
+}
+
+model Element{
+  id            Int        @id @default(autoincrement())
+  element       String     @db.Text @unique
+  elementHash   String     @db.VarChar(512) @unique
+  reportErrors  ReportError[]
 }
