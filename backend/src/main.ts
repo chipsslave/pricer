@@ -4,7 +4,7 @@ import moment from "moment";
 const prisma = new PrismaClient();
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { argos } from "./parsers/argos";
+import { Argos } from "./parsers/argos";
 puppeteer.use(StealthPlugin());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
@@ -15,15 +15,16 @@ export type Report = {
   finishedAt?: Date;
   page: string;
   pageNumber: number;
-  errors: Error[];
+  errors: ReportError[];
   elementsFound?: number;
   nextPageAvailable: boolean;
 };
 
-export type Error = {
+export type ReportError = {
   expected: string;
   received: string;
   severity: Severity;
+  operation: string;
 };
 
 export type Severity = "low" | "medium" | "high";
@@ -40,8 +41,6 @@ async function main() {
   });
 
   if (storePage !== null) {
-    const reports: Report[] = [];
-
     const browser = await puppeteer.launch({
       args: PUPPETEER_ARGS,
       headless: false,
@@ -49,11 +48,9 @@ async function main() {
     const page = await browser.newPage();
 
     if (storePage.store.title === "Argos")
-      await argos(storePage, reports, page);
+      await new Argos(storePage, page).scrape();
 
     await browser.close();
-
-    console.log(...reports);
   }
 }
 
