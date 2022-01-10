@@ -25,7 +25,7 @@ export type Report = {
 
 export type ReportError = {
   expected: string;
-  received: string;
+  result: string;
   severity: Severity;
   operation: string;
   element?: string;
