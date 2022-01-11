@@ -50,11 +50,10 @@ model ReportError {
   result        String                @db.VarChar(512)
   severity      ReportErrorSeverity
   operation     String                @db.VarChar(512)
-  elementIndex  Int?                  @db.Integer
-  report         Report @relation(fields: [reportId], references: [id])
-  reportId       Int
-  element       Element?  @relation(fields: [elementId], references: [id])
-  elementId     Int
+  elementIndex  Int                   @db.Integer @default(0)
+  reports       Report[]
+
+  @@unique(fields: [expected, result, severity, operation, elementIndex], name: "composedId")
 }
 
 model Report {
@@ -70,11 +69,4 @@ model Report {
   reportErrors              ReportError[]
   page                      Page        @relation(fields: [pageId], references: [id])
   pageId                    Int
-}
-
-model Element{
-  id            Int        @id @default(autoincrement())
-  element       String     @db.Text @unique
-  elementHash   String     @db.VarChar(512) @unique
-  reportErrors  ReportError[]
 }
