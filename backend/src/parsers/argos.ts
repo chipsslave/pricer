@@ -4,6 +4,7 @@ import { Report, ReportError } from "../main";
 import parse, { HTMLElement } from "node-html-parser";
 import moment from "moment";
 const crypto = require("crypto");
+import { prisma } from "../prisma";
 
 export class Argos {
   storePage: StorePage;
@@ -26,7 +27,7 @@ export class Argos {
       page: this.storePage,
       pageUrl: this.nextPageUrl,
       pageNumber: this.currentPageNumber,
-      errors: [],
+      reportErrors: [],
       nextPageAvailable: false,
       parsedElementItemsSuc: 0,
       parsedElementItemsFail: 0,
@@ -34,12 +35,73 @@ export class Argos {
   }
 
   onError(error: ReportError) {
-    this.currentReport.errors.push(error);
+    this.currentReport.reportErrors.push(error);
   }
 
-  onReportFinish() {
+  async onReportFinish() {
     this.currentReport.finishedAt = moment().toDate();
-    console.log(this.currentReport);
+    const report = await prisma.report.create({
+      data: {
+        startedAt: this.currentReport.startedAt,
+        finishedAt: this.currentReport.finishedAt,
+        page: { connect: { id: this.storePage.id } },
+        pageUrl: this.currentReport.pageUrl,
+        pageNumber: this.currentReport.pageNumber,
+        elementsFound: this.currentReport.elementsFound || 0,
+        nextPageAvailable: this.currentReport.nextPageAvailable,
+        parsedElementItemsFail: this.currentReport.parsedElementItemsFail,
+        parsedElementItemsSuc: this.currentReport.parsedElementItemsSuc,
+        reportErrors: {
+          connectOrCreate: this.currentReport.reportErrors.map((re) => ({
+            create: {
+              expected: re.expected,
+              result: re.result,
+              severity: re.severity,
+              operation: re.operation,
+              elementIndex: re.elementIndex,
+            },
+            where: {
+              composedId: {
+                expected: re.expected,
+                result: re.result,
+                severity: re.severity,
+                operation: re.operation,
+                elementIndex: re.elementIndex,
+              },
+            },
+          })),
+        },
+      },
+      include: { reportErrors: true },
+    });
+
+    for (const reportError of this.currentReport.reportErrors) {
+      if (reportError.element) {
+        await prisma.element.upsert({
+          where: {
+            elementHash: reportError.element.elementHash,
+          },
+          update: {},
+          create: {
+            element: reportError.element.element,
+            elementHash: reportError.element.elementHash,
+            reportErrors: {
+              connect: {
+                composedId: {
+                  expected: reportError.expected,
+                  result: reportError.result,
+                  severity: reportError.severity,
+                  operation: reportError.operation,
+                  elementIndex: reportError.elementIndex,
+                },
+              },
+            },
+          },
+        });
+      }
+    }
+
+    console.log({ report });
   }
 
   resetReport() {
@@ -48,7 +110,7 @@ export class Argos {
       page: this.storePage,
       pageUrl: this.nextPageUrl,
       pageNumber: this.currentPageNumber,
-      errors: [],
+      reportErrors: [],
       nextPageAvailable: false,
       parsedElementItemsSuc: 0,
       parsedElementItemsFail: 0,
@@ -75,6 +137,7 @@ export class Argos {
         severity: this.currentReport.elementsFound == 0 ? "HIGH" : "LOW",
         operation:
           "Checking if count of parsed elements matches expected count of elements.",
+        elementIndex: 0,
       });
 
     if (this.currentReport.elementsFound > 0) {
@@ -98,6 +161,10 @@ export class Argos {
                 ?.trim()}`
             : null,
         };
+
+        if (index == 3) {
+          parsedElementItem.title = "";
+        }
 
         if (!parsedElementItem.title)
           this.onError({
@@ -180,7 +247,7 @@ export class Argos {
     );
 
     if (!this.currentReport.nextPageAvailable) {
-      this.onReportFinish();
+      await this.onReportFinish();
       this.resetReport();
       this.nextPageAvailable = false;
     }
@@ -191,7 +258,7 @@ export class Argos {
         this.nextPageUrl,
         this.currentPageNumber
       );
-      this.onReportFinish();
+      await this.onReportFinish();
       this.resetReport();
       await this.scrape();
     }
@@ -214,6 +281,7 @@ export class Argos {
         result: "resultsCountSpan should not returned null",
         severity: "HIGH",
         operation: "Checking if next page is available.",
+        elementIndex: 0,
       });
     const resultsCount: string =
       resultsCountSpan?.getAttribute("data-search-results") ||

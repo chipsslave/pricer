@@ -15,7 +15,7 @@ export type Report = {
   page: Page;
   pageUrl: string;
   pageNumber: number;
-  errors: ReportError[];
+  reportErrors: ReportError[];
   elementsFound?: number;
   nextPageAvailable: boolean;
   parsedElementItemsSuc: number;
@@ -28,15 +28,13 @@ export type ReportError = {
   severity: ReportErrorSeverity;
   operation: string;
   element?: ReportErrorElement;
-  elementIndex?: number;
+  elementIndex: number;
 };
 
 export type ReportErrorElement = {
   element: string;
   elementHash: string;
 };
-
-export type Severity = "low" | "medium" | "high";
 
 // A `main` function so that you can use async/await
 async function main() {
