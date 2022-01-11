@@ -44,7 +44,12 @@ async function main() {
       })
     | null = await prisma.page.findFirst({
     include: { store: true },
-    where: { updatedAt: { lte: moment().subtract(3, "hours").toDate() } },
+    where: {
+      AND: {
+        updatedAt: { lte: moment().subtract(3, "hours").toDate() },
+        pageStatus: "WAITING",
+      },
+    },
   });
 
   if (storePage !== null) {
