@@ -111,7 +111,7 @@ export class Argos {
         severity: this.currentReport.elementsFound == 0 ? "HIGH" : "LOW",
         operation:
           "Checking if count of parsed elements matches expected count of elements.",
-        elementIndex: 0,
+        elementIndex: -1,
       });
 
     if (this.currentReport.elementsFound > 0) {
@@ -251,7 +251,7 @@ export class Argos {
         result: "resultsCountSpan should not returned null",
         severity: "HIGH",
         operation: "Checking if next page is available.",
-        elementIndex: 0,
+        elementIndex: -1,
       });
     const resultsCount: string =
       resultsCountSpan?.getAttribute("data-search-results") ||
