@@ -75,32 +75,6 @@ export class Argos {
       include: { reportErrors: true },
     });
 
-    for (const reportError of this.currentReport.reportErrors) {
-      if (reportError.element) {
-        await prisma.element.upsert({
-          where: {
-            elementHash: reportError.element.elementHash,
-          },
-          update: {},
-          create: {
-            element: reportError.element.element,
-            elementHash: reportError.element.elementHash,
-            reportErrors: {
-              connect: {
-                composedId: {
-                  expected: reportError.expected,
-                  result: reportError.result,
-                  severity: reportError.severity,
-                  operation: reportError.operation,
-                  elementIndex: reportError.elementIndex,
-                },
-              },
-            },
-          },
-        });
-      }
-    }
-
     console.log({ report });
   }
 
@@ -161,10 +135,6 @@ export class Argos {
                 ?.trim()}`
             : null,
         };
-
-        if (index == 3) {
-          parsedElementItem.title = "";
-        }
 
         if (!parsedElementItem.title)
           this.onError({
