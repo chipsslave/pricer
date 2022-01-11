@@ -1,7 +1,6 @@
-import { Page, PrismaClient, Store } from "@prisma/client";
+import { Page, ReportErrorSeverity, Store } from "@prisma/client";
+import { prisma } from "./prisma";
 import moment from "moment";
-
-const prisma = new PrismaClient();
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { Argos } from "./parsers/argos";
