@@ -25,11 +25,15 @@ export type Report = {
 export type ReportError = {
   expected: string;
   result: string;
-  severity: Severity;
+  severity: ReportErrorSeverity;
   operation: string;
-  element?: string;
-  elementHash?: string;
+  element?: ReportErrorElement;
   elementIndex?: number;
+};
+
+export type ReportErrorElement = {
+  element: string;
+  elementHash: string;
 };
 
 export type Severity = "low" | "medium" | "high";

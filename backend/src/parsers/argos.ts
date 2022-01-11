@@ -72,7 +72,7 @@ export class Argos {
       this.onError({
         expected: `Elements count ${this.storePage.itemsPerPage}`,
         result: `Elements count ${this.currentReport.elementsFound}`,
-        severity: this.currentReport.elementsFound == 0 ? "high" : "low",
+        severity: this.currentReport.elementsFound == 0 ? "HIGH" : "LOW",
         operation:
           "Checking if count of parsed elements matches expected count of elements.",
       });
@@ -104,12 +104,14 @@ export class Argos {
             operation: "parsing title",
             expected: "result should not be null",
             result: "result is null",
-            severity: "high",
-            element: element.outerHTML,
-            elementHash: crypto
-              .createHash("md5")
-              .update(element.toString())
-              .digest("hex"),
+            severity: "HIGH",
+            element: {
+              element: element.outerHTML,
+              elementHash: crypto
+                .createHash("md5")
+                .update(element.toString())
+                .digest("hex"),
+            },
             elementIndex: index,
           });
 
@@ -118,12 +120,14 @@ export class Argos {
             operation: "parsing upc",
             expected: "result should not be null",
             result: "result is null",
-            severity: "high",
-            // element: element.toString(),
-            elementHash: crypto
-              .createHash("md5")
-              .update(element.toString())
-              .digest("hex"),
+            severity: "HIGH",
+            element: {
+              element: element.outerHTML,
+              elementHash: crypto
+                .createHash("md5")
+                .update(element.toString())
+                .digest("hex"),
+            },
             elementIndex: index,
           });
         if (!parsedElementItem.price)
@@ -131,12 +135,14 @@ export class Argos {
             operation: "parsing price",
             expected: "result should more than 0",
             result: "result is null",
-            severity: "high",
-            // element: element.toString(),
-            elementHash: crypto
-              .createHash("md5")
-              .update(element.toString())
-              .digest("hex"),
+            severity: "HIGH",
+            element: {
+              element: element.outerHTML,
+              elementHash: crypto
+                .createHash("md5")
+                .update(element.toString())
+                .digest("hex"),
+            },
             elementIndex: index,
           });
         if (!parsedElementItem.url)
@@ -144,12 +150,14 @@ export class Argos {
             operation: "parsing url",
             expected: "result should not be empty string",
             result: "result is empty string",
-            severity: "high",
-            // element: element.toString(),
-            elementHash: crypto
-              .createHash("md5")
-              .update(element.toString())
-              .digest("hex"),
+            severity: "HIGH",
+            element: {
+              element: element.outerHTML,
+              elementHash: crypto
+                .createHash("md5")
+                .update(element.toString())
+                .digest("hex"),
+            },
             elementIndex: index,
           });
 
@@ -163,8 +171,6 @@ export class Argos {
         } else {
           this.currentReport.parsedElementItemsSuc += 1;
         }
-
-        // console.log({ parsedElementItem });
       }
     }
 
@@ -206,7 +212,7 @@ export class Argos {
       this.onError({
         expected: "resultsCountSpan should not return null",
         result: "resultsCountSpan should not returned null",
-        severity: "high",
+        severity: "HIGH",
         operation: "Checking if next page is available.",
       });
     const resultsCount: string =
