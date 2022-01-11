@@ -13,7 +13,7 @@ datasource db {
 
 model Store {
   id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255) @unique
+  title     String   @unique @db.VarChar(255)
   homeUrl   String   @db.VarChar(512)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
@@ -21,16 +21,16 @@ model Store {
 }
 
 model Page {
-  id            Int      @id @default(autoincrement())
-  url           String   @db.VarChar(512) @unique
-  itemsPerPage  Int
-  pageStartsAt  Int      @default(0)
-  createdAt     DateTime @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime @updatedAt
-  pageStatus    PageStatus @default(WAITING)
-  store         Store @relation(fields: [storeId], references: [id])
-  storeId       Int
-  reports       Report[]
+  id           Int        @id @default(autoincrement())
+  url          String     @unique @db.VarChar(512)
+  itemsPerPage Int
+  pageStartsAt Int        @default(0)
+  createdAt    DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime   @updatedAt
+  pageStatus   PageStatus @default(WAITING)
+  store        Store      @relation(fields: [storeId], references: [id])
+  storeId      Int
+  reports      Report[]
 }
 
 enum PageStatus {
@@ -45,28 +45,28 @@ enum ReportErrorSeverity {
 }
 
 model ReportError {
-  id            Int                   @id @default(autoincrement())
-  expected      String                @db.VarChar(512)
-  result        String                @db.VarChar(512)
-  severity      ReportErrorSeverity
-  operation     String                @db.VarChar(512)
-  elementIndex  Int                   @db.Integer @default(0)
-  reports       Report[]
+  id           Int                 @id @default(autoincrement())
+  expected     String              @db.VarChar(512)
+  result       String              @db.VarChar(512)
+  severity     ReportErrorSeverity
+  operation    String              @db.VarChar(512)
+  elementIndex Int                 @default(0) @db.Integer
+  reports      Report[]
 
   @@unique(fields: [expected, result, severity, operation, elementIndex], name: "composedId")
 }
 
 model Report {
-  id                        Int         @id @default(autoincrement())
-  startedAt                 DateTime    @default(now()) @db.Timestamp(6)
-  finishedAt                DateTime    @db.Timestamp(6)
-  pageUrl                   String      @db.Text
-  pageNumber                Int         @db.Integer
-  elementsFound             Int         @db.Integer
-  nextPageAvailable         Boolean     @db.Boolean
-  parsedElementItemsSuc     Int         @db.Integer
-  parsedElementItemsFail    Int         @db.Integer
-  reportErrors              ReportError[]
-  page                      Page        @relation(fields: [pageId], references: [id])
-  pageId                    Int
+  id                     Int           @id @default(autoincrement())
+  startedAt              DateTime      @default(now()) @db.Timestamp(6)
+  finishedAt             DateTime      @db.Timestamp(6)
+  pageUrl                String        @db.Text
+  pageNumber             Int           @db.Integer
+  elementsFound          Int           @db.Integer
+  nextPageAvailable      Boolean       @db.Boolean
+  parsedElementItemsSuc  Int           @db.Integer
+  parsedElementItemsFail Int           @db.Integer
+  reportErrors           ReportError[]
+  page                   Page          @relation(fields: [pageId], references: [id])
+  pageId                 Int
 }
