@@ -1,13 +1,11 @@
 import { Page } from "puppeteer";
 import { Page as StorePage } from "@prisma/client";
-import { Report } from "../main";
 import parse, { HTMLElement } from "node-html-parser";
 const crypto = require("crypto");
 import { ReportService } from "../service/report.service";
 
 export class Argos {
   storePage: StorePage;
-  reports: Report[] = [];
   page: Page;
 
   reportService: ReportService;
