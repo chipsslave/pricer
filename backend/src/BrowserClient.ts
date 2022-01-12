@@ -10,7 +10,7 @@ puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
 export class BrowserClient {
   private browser: Browser;
-  private lastPageContent: string;
+  private lastPage: { url: string; content: string };
 
   constructor() {}
 
@@ -37,7 +37,7 @@ export class BrowserClient {
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
     await pages[0].goto(url, options);
-    this.lastPageContent = await pages[0].content();
+    this.lastPage = { url, content: await pages[0].content() };
   }
 
   async getPageHtmlContent(): Promise<string> {
@@ -55,7 +55,7 @@ export class BrowserClient {
     return this.browser;
   }
 
-  getLastPageContent(): string {
-    return this.lastPageContent;
+  getLastPage(): { url: string; content: string } {
+    return this.lastPage;
   }
 }
