@@ -5,12 +5,14 @@ import {
   WaitForOptions,
 } from "puppeteer";
 import puppeteer from "puppeteer-extra";
+import { PageContent } from "./main";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
+import parse, { HTMLElement } from "node-html-parser";
 
 export class BrowserClient {
   private browser: Browser;
-  private lastPage: { url: string; content: string };
+  private lastPage: PageContent;
 
   constructor() {}
 
@@ -37,14 +39,14 @@ export class BrowserClient {
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
     await pages[0].goto(url, options);
-    this.lastPage = { url, content: await pages[0].content() };
+    this.lastPage = { url, content: parse(await pages[0].content()) };
   }
 
-  async getPageHtmlContent(): Promise<string> {
+  async getPageHtmlContent(): Promise<HTMLElement> {
     const pages: Page[] = await this.browser.pages();
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
-    return await pages[0].content();
+    return parse(await pages[0].content());
   }
 
   async close(): Promise<void> {
@@ -55,7 +57,7 @@ export class BrowserClient {
     return this.browser;
   }
 
-  getLastPage(): { url: string; content: string } {
+  getLastPage(): PageContent {
     return this.lastPage;
   }
 }

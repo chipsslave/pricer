@@ -1,13 +1,13 @@
-import { Page, ReportErrorSeverity, Store } from "@prisma/client";
+import { Crawler } from "./crawler";
+import { Page, ReportErrorSeverity } from "@prisma/client";
 import { prisma } from "./prisma";
-import moment from "moment";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { Argos } from "./parsers/argos";
+import { HTMLElement } from "node-html-parser";
 puppeteer.use(StealthPlugin());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
-const PUPPETEER_ARGS = ["--no-sandbox", "--disable-setuid-sandbox"];
+// const PUPPETEER_ARGS = ["--no-sandbox", "--disable-setuid-sandbox"];
 
 export type Report = {
   startedAt: Date;
@@ -20,6 +20,7 @@ export type Report = {
   nextPageAvailable: boolean;
   parsedElementItemsSuc: number;
   parsedElementItemsFail: number;
+  currentElements: HTMLElement[];
 };
 
 export type ReportError = {
@@ -36,34 +37,42 @@ export type ReportErrorElement = {
   elementHash: string;
 };
 
+export type PageContent = {
+  url: string;
+  content: HTMLElement;
+};
+
 // A `main` function so that you can use async/await
 async function main() {
-  const storePage:
-    | (Page & {
-        store: Store;
-      })
-    | null = await prisma.page.findFirst({
-    include: { store: true },
-    where: {
-      AND: {
-        updatedAt: { lte: moment().subtract(3, "hours").toDate() },
-        pageStatus: "WAITING",
-      },
-    },
-  });
+  // const storePage:
+  //   | (Page & {
+  //       store: Store;
+  //     })
+  //   | null = await prisma.page.findFirst({
+  //   include: { store: true },
+  //   where: {
+  //     AND: {
+  //       updatedAt: { lte: moment().subtract(3, "hours").toDate() },
+  //       pageStatus: "WAITING",
+  //     },
+  //   },
+  // });
 
-  if (storePage !== null) {
-    const browser = await puppeteer.launch({
-      args: PUPPETEER_ARGS,
-      headless: false,
-    });
-    const page = await browser.newPage();
+  // if (storePage !== null) {
+  //   const browser = await puppeteer.launch({
+  //     args: PUPPETEER_ARGS,
+  //     headless: false,
+  //   });
+  //   const page = await browser.newPage();
 
-    if (storePage.store.title === "Argos")
-      await new Argos(storePage, page).scrape();
+  //   if (storePage.store.title === "Argos")
+  //     await new Argos(storePage, page).scrape();
 
-    await browser.close();
-  }
+  //   await browser.close();
+  // }
+
+  const crawler: Crawler = new Crawler();
+  await crawler.run();
 }
 
 main()

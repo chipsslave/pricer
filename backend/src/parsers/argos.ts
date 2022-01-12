@@ -29,19 +29,6 @@ export class Argos {
 
     this.reportService.setElementsFoundCount(elements.length);
 
-    if (
-      this.storePage.itemsPerPage !== this.reportService.getElementsFoundCount()
-    )
-      this.reportService.handleError({
-        expected: `Elements count ${this.storePage.itemsPerPage}`,
-        result: `Elements count ${this.reportService.getElementsFoundCount()}`,
-        severity:
-          this.reportService.getElementsFoundCount() == 0 ? "HIGH" : "LOW",
-        operation:
-          "Checking if count of parsed elements matches expected count of elements.",
-        elementIndex: -1,
-      });
-
     if (this.reportService.getElementsFoundCount() > 0) {
       // parse elements here
       for (const [index, element] of elements.entries()) {

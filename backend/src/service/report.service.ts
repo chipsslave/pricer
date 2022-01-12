@@ -1,3 +1,4 @@
+import { HTMLElement } from "node-html-parser";
 import { Report, ReportError } from "../main";
 import moment from "moment";
 import { Page } from "@prisma/client";
@@ -6,7 +7,7 @@ import { prisma } from "../prisma";
 export class ReportService {
   private readonly storePage: Page;
   private report: Report;
-  failedElementHashes: Set<string> = new Set<string>();
+  private failedElementHashes: Set<string> = new Set<string>();
 
   constructor(storePage: Page) {
     this.storePage = storePage;
@@ -19,6 +20,7 @@ export class ReportService {
       nextPageAvailable: false,
       parsedElementItemsSuc: 0,
       parsedElementItemsFail: 0,
+      currentElements: [],
     };
   }
 
@@ -32,6 +34,7 @@ export class ReportService {
       nextPageAvailable: false,
       parsedElementItemsSuc: 0,
       parsedElementItemsFail: 0,
+      currentElements: [],
     };
     this.failedElementHashes.clear();
   }
@@ -102,6 +105,16 @@ export class ReportService {
 
   setElementsFoundCount(elementsCount: number) {
     this.report.elementsFound = elementsCount;
+
+    if (this.storePage.itemsPerPage !== this.getElementsFoundCount())
+      this.handleError({
+        expected: `Elements count ${this.storePage.itemsPerPage}`,
+        result: `Elements count ${this.getElementsFoundCount()}`,
+        severity: this.getElementsFoundCount() == 0 ? "HIGH" : "LOW",
+        operation:
+          "Checking if count of parsed elements matches expected count of elements.",
+        elementIndex: -1,
+      });
   }
 
   getCurrentPageUrl(): string {
@@ -118,5 +131,20 @@ export class ReportService {
 
   getNextPageAvailable(): boolean {
     return this.report.nextPageAvailable;
+  }
+
+  setCurrentReportElements(elements: HTMLElement[]): void {
+    this.report.currentElements = elements;
+    this.report.elementsFound = elements.length;
+
+    if (this.storePage.itemsPerPage !== this.getElementsFoundCount())
+      this.handleError({
+        expected: `Elements count ${this.storePage.itemsPerPage}`,
+        result: `Elements count ${this.getElementsFoundCount()}`,
+        severity: this.getElementsFoundCount() == 0 ? "HIGH" : "LOW",
+        operation:
+          "Checking if count of parsed elements matches expected count of elements.",
+        elementIndex: -1,
+      });
   }
 }
