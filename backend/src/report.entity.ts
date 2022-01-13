@@ -1,4 +1,4 @@
-import { Page, ReportErrorSeverity } from "@prisma/client";
+import { Page, ReportError } from "@prisma/client";
 
 export class ReportDto {
   startedAt: Date;
