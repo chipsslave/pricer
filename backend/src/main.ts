@@ -1,9 +1,11 @@
-import { Crawler } from "./crawler";
+import { ArgosParserServiceComponent } from "./mediator/parserService.component";
+import { BrowserServiceComponent } from "./mediator/browserService.component";
+import { PageServiceComponent } from "./mediator/pageService.component";
 import { Page, ReportErrorSeverity } from "@prisma/client";
 import { prisma } from "./prisma";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { HTMLElement } from "node-html-parser";
+import { Spider } from "./mediator/mediator";
 puppeteer.use(StealthPlugin());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
@@ -20,7 +22,7 @@ export type Report = {
   nextPageAvailable: boolean;
   parsedElementItemsSuc: number;
   parsedElementItemsFail: number;
-  currentElements: HTMLElement[];
+  currentElements: string[];
 };
 
 export type ReportError = {
@@ -39,40 +41,30 @@ export type ReportErrorElement = {
 
 export type PageContent = {
   url: string;
-  content: HTMLElement;
+  content: string;
+};
+
+export type ParsedElementItem = {
+  element: string;
+  elementHash: string;
+  elementIndex: number;
+  item: {
+    title: string | null;
+    upc: string | null;
+    price: number | null;
+    url: string | null;
+  };
 };
 
 // A `main` function so that you can use async/await
 async function main() {
-  // const storePage:
-  //   | (Page & {
-  //       store: Store;
-  //     })
-  //   | null = await prisma.page.findFirst({
-  //   include: { store: true },
-  //   where: {
-  //     AND: {
-  //       updatedAt: { lte: moment().subtract(3, "hours").toDate() },
-  //       pageStatus: "WAITING",
-  //     },
-  //   },
-  // });
-
-  // if (storePage !== null) {
-  //   const browser = await puppeteer.launch({
-  //     args: PUPPETEER_ARGS,
-  //     headless: false,
-  //   });
-  //   const page = await browser.newPage();
-
-  //   if (storePage.store.title === "Argos")
-  //     await new Argos(storePage, page).scrape();
-
-  //   await browser.close();
-  // }
-
-  const crawler: Crawler = new Crawler();
-  await crawler.run();
+  const pageService: PageServiceComponent = new PageServiceComponent();
+  const browserService: BrowserServiceComponent = new BrowserServiceComponent();
+  const parserService: ArgosParserServiceComponent =
+    new ArgosParserServiceComponent();
+  /* @ts-ignore */
+  const spider: Spider = new Spider(pageService, browserService, parserService);
+  await pageService.checkForPage();
 }
 
 main()

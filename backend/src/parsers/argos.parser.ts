@@ -6,6 +6,7 @@ export interface Parser {
     pageHtml: HTMLElement,
     currentPageNumber: number
   ): boolean;
+  parseNextPageUrl(pageUrl: string, currentPageNumber: number): string;
 }
 
 export class ArgosParser implements Parser {
@@ -40,6 +41,11 @@ export class ArgosParser implements Parser {
       return true;
     }
     return false;
+  }
+
+  parseNextPageUrl(pageUrl: string, currentPageNumber: number): string {
+    const pageUrlSplit: string[] = pageUrl.split("page:");
+    return `${pageUrlSplit[0]}page:${currentPageNumber}/`;
   }
 }
 

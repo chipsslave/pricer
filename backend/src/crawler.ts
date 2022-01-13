@@ -4,7 +4,6 @@ import { PageContent } from "./main";
 import argosParser, { Parser } from "./parsers/argos.parser";
 import { HTMLElement } from "node-html-parser";
 import { ReportService } from "./service/report.service";
-import { ParsePageElementsCommand } from "./command/command";
 
 export class Crawler {
   private pageService: PageService;
@@ -66,6 +65,27 @@ export class Crawler {
       // process item elements
     }
 
-    await this.reportService.finish();
+    this.reportService.setNextPageAvailable(
+      this.parser.checkNextPageAvailable(
+        this.browserClient.getLastPage().content,
+        this.reportService.getCurrentPageNumber()
+      )
+    );
+
+    if (!this.reportService.getNextPageAvailable()) {
+      await this.reportService.finish();
+    }
+
+    if (this.reportService.getNextPageAvailable()) {
+      const nextPageNumber = this.reportService.getCurrentPageNumber() + 1;
+
+      const nextPageUrl = this.parser.parseNextPageUrl(
+        this.reportService.getCurrentPageUrl(),
+        nextPageNumber
+      );
+      await this.reportService.finish();
+      this.reportService.reset(nextPageUrl, nextPageNumber);
+      await this.crawlPage();
+    }
   }
 }

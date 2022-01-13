@@ -1,4 +1,3 @@
-import { HTMLElement } from "node-html-parser";
 import { Report, ReportError } from "../main";
 import moment from "moment";
 import { Page } from "@prisma/client";
@@ -11,7 +10,7 @@ export class ReportService {
 
   constructor(storePage: Page) {
     this.storePage = storePage;
-    this.report = this.report = {
+    this.report = {
       startedAt: moment().toDate(),
       page: storePage,
       pageUrl: storePage.url,
@@ -133,7 +132,7 @@ export class ReportService {
     return this.report.nextPageAvailable;
   }
 
-  setCurrentReportElements(elements: HTMLElement[]): void {
+  setCurrentReportElements(elements: string[]): void {
     this.report.currentElements = elements;
     this.report.elementsFound = elements.length;
 
