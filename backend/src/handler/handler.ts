@@ -1,13 +1,13 @@
-interface Handler<T> {
-  setNext(handler: Handler<T>): Handler<T>;
+interface Handler {
+  setNext(handler: Handler): Handler;
 
-  handle(request: T): void;
+  handle(request: string): void;
 }
 
-abstract class AbstractHandler<T> implements Handler<T> {
-  private nextHandler: Handler<T>;
+abstract class AbstractHandler implements Handler {
+  private nextHandler: Handler;
 
-  public setNext(handler: Handler<T>): Handler<T> {
+  public setNext(handler: Handler): Handler {
     this.nextHandler = handler;
     // Returning a handler from here will let us link handlers in a
     // convenient way like this:
@@ -15,7 +15,7 @@ abstract class AbstractHandler<T> implements Handler<T> {
     return handler;
   }
 
-  public handle(request: T): void {
+  public handle(request: string) {
     if (this.nextHandler) {
       this.nextHandler.handle(request);
     }

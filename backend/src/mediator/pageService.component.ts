@@ -1,10 +1,9 @@
-import { BaseSpiderComponent } from "./component";
 import { prisma } from "../prisma";
 import moment from "moment";
 import { StorePage } from "../service/page.service";
 
-export class PageServiceComponent extends BaseSpiderComponent {
-  async checkForPage(): Promise<void> {
+export class PageServiceComponent {
+  async checkForPage(): Promise<StorePage | null> {
     const storePage: StorePage | null = await prisma.page.findFirst({
       include: { store: true },
       where: {
@@ -15,6 +14,6 @@ export class PageServiceComponent extends BaseSpiderComponent {
       },
     });
 
-    if (storePage) this.spider.onStorePageFound(storePage);
+    return storePage;
   }
 }

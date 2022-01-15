@@ -1,119 +1,83 @@
-import { ReportService } from "./../service/report.service";
 import { StorePage } from "../service/page.service";
 import { BrowserServiceComponent } from "./browserService.component";
 import { PageServiceComponent } from "./pageService.component";
-import { PageContent, ParsedElementItem } from "../main";
-import { ArgosParserServiceComponent } from "./parserService.component";
+import { Parser, ParserResult } from "./parserService.component";
+import { Job } from "./jobService.component";
 
-export interface ISpider {
-  onStorePageFound(storePage: StorePage): void;
-  onBrowserLaunched(): void;
-  onPageContentFetched(lastPage: PageContent): void;
-  onParsedItemElements(elements: string[]): void;
-  onItemParsedSuccessfully(item: ParsedElementItem): void;
-  onItemParsedUnsuccessfully(item: ParsedElementItem): void;
-}
-
-export class Spider implements ISpider {
-  private reportService: ReportService;
-
+export class Spider {
   private pageService: PageServiceComponent;
   private browserService: BrowserServiceComponent;
-  private parserService: ArgosParserServiceComponent;
+
+  private parsers: Parser[];
+
+  private storePage: StorePage;
+
+  private job: Job | null;
 
   constructor(
     pageService: PageServiceComponent,
     browserService: BrowserServiceComponent,
-    parserService: ArgosParserServiceComponent
+    parsers: Parser[]
   ) {
     this.pageService = pageService;
-    this.pageService.setSpider(this);
-
     this.browserService = browserService;
-    this.browserService.setSpider(this);
-
-    this.parserService = parserService;
-    this.parserService.setSpider(this);
+    this.parsers = parsers;
   }
 
-  async onStorePageFound(storePage: StorePage): Promise<void> {
-    console.log("onStorePageFound");
-    this.reportService = new ReportService(storePage);
+  getStorePage(): StorePage {
+    return this.storePage;
+  }
+
+  async run(): Promise<void> {
+    const storePage: StorePage | null = await this.pageService.checkForPage();
+    if (!storePage) return;
+    this.storePage = storePage;
+    this.job = new Job(storePage, storePage.url, storePage.pageStartsAt);
+
+    const parser: Parser = this.findParser();
     await this.browserService.launch();
-  }
-  async onBrowserLaunched(): Promise<void> {
-    console.log("onBrowserLaunched");
-    await this.browserService.goTo(this.reportService.getCurrentPageUrl());
-  }
-  onPageContentFetched(lastPage: PageContent): void {
-    console.log("onPageContentFetched", {
-      url: lastPage.url,
-      content: lastPage.content.substring(0, 20),
-    });
-    this.parserService.parseItemElements(lastPage.content);
-  }
-  onParsedItemElements(elements: string[]) {
-    this.reportService.setCurrentReportElements(elements);
-    for (const [index, element] of elements.entries()) {
-      console.log({ index, substring: element.substring(0, 20) });
-      this.parserService.parseItem(element, index);
-    }
-  }
-  onItemParsedSuccessfully(item: ParsedElementItem): void {
-    console.log("onItemParsedSuccessfully", { item });
-    this.reportService.handleSuccess();
-    console.log({ item: item.item });
-  }
-  onItemParsedUnsuccessfully(item: ParsedElementItem): void {
-    console.log("onItemParsedUnsuccessfully", { item });
-    if (!item.item.title)
-      this.reportService.handleError({
-        operation: "parsing title",
-        expected: "result should not be null",
-        result: "result is null",
-        severity: "HIGH",
-        element: {
-          element: item.element,
-          elementHash: item.elementHash,
-        },
-        elementIndex: item.elementIndex,
-      });
+    await this.browserService.goTo(this.storePage.url);
+    parser.setup(
+      this.storePage,
+      await this.browserService.getPageHtmlContent(),
+      this.storePage.url,
+      this.storePage.pageStartsAt
+    );
 
-    if (!item.item.upc)
-      this.reportService.handleError({
-        operation: "parsing upc",
-        expected: "result should not be null",
-        result: "result is null",
-        severity: "HIGH",
-        element: {
-          element: item.element,
-          elementHash: item.elementHash,
-        },
-        elementIndex: item.elementIndex,
-      });
-    if (!item.item.price)
-      this.reportService.handleError({
-        operation: "parsing price",
-        expected: "result should more than 0",
-        result: "result is null",
-        severity: "HIGH",
-        element: {
-          element: item.element,
-          elementHash: item.elementHash,
-        },
-        elementIndex: item.elementIndex,
-      });
-    if (!item.item.url)
-      this.reportService.handleError({
-        operation: "parsing url",
-        expected: "result should not be empty string",
-        result: "result is empty string",
-        severity: "HIGH",
-        element: {
-          element: item.element,
-          elementHash: item.elementHash,
-        },
-        elementIndex: item.elementIndex,
-      });
+    let parserResult: ParserResult = parser.parse();
+    this.job.processParserResults({ ...parserResult });
+    this.job.recordFinishedAt();
+    await this.job.save();
+
+    if (parserResult.nextPage)
+      do {
+        this.job = new Job(
+          storePage,
+          parserResult.nextPage?.pageUrl,
+          parserResult.nextPage.pageNumber
+        );
+        await this.browserService.goTo(parserResult.nextPage.pageUrl);
+        parser.setup(
+          this.storePage,
+          await this.browserService.getPageHtmlContent(),
+          parserResult.nextPage?.pageUrl,
+          parserResult.nextPage.pageNumber
+        );
+        parserResult = parser.parse();
+        this.job.processParserResults({ ...parserResult });
+        this.job.recordFinishedAt();
+        await this.job.save();
+      } while (parserResult.nextPage);
+
+    await this.browserService.close();
+  }
+
+  findParser(): Parser {
+    const parser: Parser | undefined = this.parsers.find((p) =>
+      p.canParse(this.storePage.store.title)
+    );
+
+    if (!parser) throw new Error("No available parser found.");
+    return parser;
   }
 }

@@ -1,5 +1,6 @@
 import parse, { HTMLElement } from "node-html-parser";
 import { Page } from "@prisma/client";
+import { JobError } from "./jobService.component";
 const crypto = require("crypto");
 
 export type ParsedItem = {
@@ -13,7 +14,13 @@ export type ParsedElementItem = {
   elementHash: string;
   elementIndex: number;
   item: ParsedItem;
+  success: boolean;
 };
+
+export type NextPageResult = {
+  pageUrl: string;
+  pageNumber: number;
+} | null;
 
 export type ParserResult = {
   page: Page;
@@ -21,8 +28,8 @@ export type ParserResult = {
   pageNumber: number;
   parsedItems: ParsedElementItem[];
   elementsCount: number;
-  nextPageAvailable: boolean;
-  nextPageUrl: string | null;
+  nextPage: NextPageResult;
+  parserErrors: JobError[];
 };
 
 export interface Parser {
@@ -46,7 +53,11 @@ export abstract class AbstractParser<T> implements Parser {
     this.name = name;
   }
   parse(): ParserResult {
-    throw new Error("Method not implemented.");
+    throw new Error("parse() Method not implemented.");
+  }
+
+  getPageContent(): string {
+    return this.pageContent;
   }
 
   canParse(name: string): boolean {
@@ -63,10 +74,15 @@ export abstract class AbstractParser<T> implements Parser {
       pageUrl,
       pageNumber,
       elementsCount: 0,
-      nextPageAvailable: false,
-      nextPageUrl: null,
+      nextPage: null,
       parsedItems: [],
+      parserErrors: [],
     };
+  }
+
+  itemSuccess(item: ParsedItem): boolean {
+    if (item.price && item.title && item.upc && item.url) return true;
+    return false;
   }
 }
 
@@ -83,6 +99,7 @@ export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
 
   parse(): ParserResult {
     const parsedElements: HTMLElement[] = this.parseItemElements();
+    this.result.elementsCount = parsedElements.length;
     for (const [index, element] of parsedElements.entries()) {
       const parsedItem: ParsedItem = this.parseItem(element);
       this.result.parsedItems.push({
@@ -92,12 +109,15 @@ export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
           .digest("hex"),
         elementIndex: index,
         item: parsedItem,
+        success: this.itemSuccess(parsedItem),
       });
     }
 
     if (this.nextPageAvailable()) {
-      this.result.nextPageUrl = this.parseNextPageUrl();
-      this.result.nextPageAvailable = true;
+      this.result.nextPage = {
+        pageNumber: this.result.pageNumber + 1,
+        pageUrl: this.parseNextPageUrl(),
+      };
     }
     return this.result;
   }
@@ -109,6 +129,10 @@ export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
 }
 
 export class ArgosParserServiceComponent extends NodeHTMLParser {
+  constructor() {
+    super("Argos");
+  }
+
   parseItemElements(): HTMLElement[] {
     const elements: HTMLElement[] = this.pageContentParsed.querySelectorAll(
       "div[class^=ProductCardstyles__Wrapper-]"
@@ -116,10 +140,32 @@ export class ArgosParserServiceComponent extends NodeHTMLParser {
     return elements;
   }
   nextPageAvailable(): boolean {
-    throw new Error("Method not implemented.");
+    const resultsCountSpan: HTMLElement | null =
+      this.pageContentParsed.querySelector("span[class^=styles__ResultsCount]");
+
+    if (
+      !resultsCountSpan &&
+      this.result.pageNumber > this.result.page.pageStartsAt
+    )
+      this.result.parserErrors.push({
+        expected: "resultsCountSpan should not return null",
+        result: "resultsCountSpan should not returned null",
+        severity: "HIGH",
+        operation: "Checking if next page is available.",
+      });
+    const resultsCount: string =
+      resultsCountSpan?.getAttribute("data-search-results") ||
+      this.result.page.itemsPerPage.toString();
+    const count: number = parseInt(resultsCount);
+    const totalPages = Math.ceil(count / this.result.page.itemsPerPage);
+    if (this.result.pageNumber < totalPages) {
+      return true;
+    }
+    return false;
   }
   parseNextPageUrl(): string {
-    throw new Error("Method not implemented.");
+    const pageUrlSplit: string[] = this.result.pageUrl.split("page:");
+    return `${pageUrlSplit[0]}page:${this.result.pageNumber + 1}/`;
   }
 
   parseItem(element: HTMLElement): ParsedItem {

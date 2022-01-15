@@ -1,15 +1,13 @@
-import { ArgosParserServiceComponent } from "./mediator/parserService.component";
 import { BrowserServiceComponent } from "./mediator/browserService.component";
-import { PageServiceComponent } from "./mediator/pageService.component";
-import { Page, ReportErrorSeverity } from "@prisma/client";
+import { Page, JobErrorSeverity } from "@prisma/client";
 import { prisma } from "./prisma";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { PageServiceComponent } from "./mediator/pageService.component";
+import { ArgosParserServiceComponent } from "./mediator/parserService.component";
 import { Spider } from "./mediator/mediator";
 puppeteer.use(StealthPlugin());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
-
-// const PUPPETEER_ARGS = ["--no-sandbox", "--disable-setuid-sandbox"];
 
 export type Report = {
   startedAt: Date;
@@ -28,7 +26,7 @@ export type Report = {
 export type ReportError = {
   expected: string;
   result: string;
-  severity: ReportErrorSeverity;
+  severity: JobErrorSeverity;
   operation: string;
   element?: ReportErrorElement;
   elementIndex: number;
@@ -62,9 +60,10 @@ async function main() {
   const browserService: BrowserServiceComponent = new BrowserServiceComponent();
   const parserService: ArgosParserServiceComponent =
     new ArgosParserServiceComponent();
-  /* @ts-ignore */
-  const spider: Spider = new Spider(pageService, browserService, parserService);
-  await pageService.checkForPage();
+  const spider: Spider = new Spider(pageService, browserService, [
+    parserService,
+  ]);
+  await spider.run();
 }
 
 main()
