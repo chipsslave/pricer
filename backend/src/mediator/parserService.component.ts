@@ -1,68 +1,146 @@
-import { ParsedElementItem } from "./../main";
-import { BaseSpiderComponent } from "./component";
 import parse, { HTMLElement } from "node-html-parser";
+import { Page } from "@prisma/client";
 const crypto = require("crypto");
 
+export type ParsedItem = {
+  title: string | null;
+  upc: string | null;
+  price: number | null;
+  url: string | null;
+};
+
+export type ParsedElementItem = {
+  elementHash: string;
+  elementIndex: number;
+  item: ParsedItem;
+};
+
+export type ParserResult = {
+  page: Page;
+  pageUrl: string;
+  pageNumber: number;
+  parsedItems: ParsedElementItem[];
+  elementsCount: number;
+  nextPageAvailable: boolean;
+  nextPageUrl: string | null;
+};
+
 export interface Parser {
-  parseItemElements(pageContent: string): void;
-  checkNextPageAvailable(pageHtml: string, currentPageNumber: number): void;
-  parseNextPageUrl(pageUrl: string, currentPageNumber: number): void;
-  parseItem(element: string, elementIndex: number): void;
+  canParse(name: string): boolean;
+  setup(
+    page: Page,
+    pageContent: string,
+    pageUrl: string,
+    pageNumber: number
+  ): void;
+  parse(): ParserResult;
 }
 
-export class ArgosParserServiceComponent
-  extends BaseSpiderComponent
-  implements Parser
-{
-  parseItemElements(pageContent: string): void {
-    const contentAsElement: HTMLElement = parse(pageContent);
-    const elements: HTMLElement[] = contentAsElement.querySelectorAll(
+export abstract class AbstractParser<T> implements Parser {
+  private name: string;
+  private pageContent: string;
+  pageContentParsed: T;
+  result: ParserResult;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+  parse(): ParserResult {
+    throw new Error("Method not implemented.");
+  }
+
+  canParse(name: string): boolean {
+    if (this.name === name) {
+      return true;
+    }
+    return false;
+  }
+
+  setup(page: Page, pageContent: string, pageUrl: string, pageNumber: number) {
+    this.pageContent = pageContent;
+    this.result = {
+      page,
+      pageUrl,
+      pageNumber,
+      elementsCount: 0,
+      nextPageAvailable: false,
+      nextPageUrl: null,
+      parsedItems: [],
+    };
+  }
+}
+
+export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
+  setup(
+    page: Page,
+    pageContent: string,
+    pageUrl: string,
+    pageNumber: number
+  ): void {
+    super.setup(page, pageContent, pageUrl, pageNumber);
+    this.pageContentParsed = parse(pageContent);
+  }
+
+  parse(): ParserResult {
+    const parsedElements: HTMLElement[] = this.parseItemElements();
+    for (const [index, element] of parsedElements.entries()) {
+      const parsedItem: ParsedItem = this.parseItem(element);
+      this.result.parsedItems.push({
+        elementHash: crypto
+          .createHash("md5")
+          .update(element.toString())
+          .digest("hex"),
+        elementIndex: index,
+        item: parsedItem,
+      });
+    }
+
+    if (this.nextPageAvailable()) {
+      this.result.nextPageUrl = this.parseNextPageUrl();
+      this.result.nextPageAvailable = true;
+    }
+    return this.result;
+  }
+
+  abstract parseItemElements(): HTMLElement[];
+  abstract nextPageAvailable(): boolean;
+  abstract parseNextPageUrl(): string;
+  abstract parseItem(element: HTMLElement): ParsedItem;
+}
+
+export class ArgosParserServiceComponent extends NodeHTMLParser {
+  parseItemElements(): HTMLElement[] {
+    const elements: HTMLElement[] = this.pageContentParsed.querySelectorAll(
       "div[class^=ProductCardstyles__Wrapper-]"
     );
-    const elementsToStrings: string[] = elements.map((e) => e.toString());
-    this.spider.onParsedItemElements(elementsToStrings);
+    return elements;
   }
-  checkNextPageAvailable(pageHtml: string, currentPageNumber: number): void {
+  nextPageAvailable(): boolean {
     throw new Error("Method not implemented.");
   }
-  parseNextPageUrl(pageUrl: string, currentPageNumber: number): void {
+  parseNextPageUrl(): string {
     throw new Error("Method not implemented.");
   }
 
-  parseItem(element: string, elementIndex: number): void {
-    const htmlElement: HTMLElement = parse(element);
-    const item: ParsedElementItem = {
-      element,
-      elementHash: crypto
-        .createHash("md5")
-        .update(element.toString())
-        .digest("hex"),
-      elementIndex,
-      item: {
-        title:
-          htmlElement.querySelector("a[class*=Title]")?.text.trim() || null,
-        upc: htmlElement.getAttribute("data-product-id")
-          ? `A_${htmlElement.getAttribute("data-product-id")?.trim()}`
-          : null,
-        price:
-          Number(
-            htmlElement
-              .querySelector("div[class*=PriceText]")
-              ?.text?.trim()
-              .replace(/[^0-9.-]+/g, "")
-          ) || null,
-        url: htmlElement.getAttribute("data-product-id")
-          ? `https://www.argos.co.uk/product/${htmlElement
-              .getAttribute("data-product-id")
-              ?.trim()}`
-          : null,
-      },
+  parseItem(element: HTMLElement): ParsedItem {
+    const item: ParsedItem = {
+      title: element.querySelector("a[class*=Title]")?.text.trim() || null,
+      upc: element.getAttribute("data-product-id")
+        ? `A_${element.getAttribute("data-product-id")?.trim()}`
+        : null,
+      price:
+        Number(
+          element
+            .querySelector("div[class*=PriceText]")
+            ?.text?.trim()
+            .replace(/[^0-9.-]+/g, "")
+        ) || null,
+      url: element.getAttribute("data-product-id")
+        ? `https://www.argos.co.uk/product/${element
+            .getAttribute("data-product-id")
+            ?.trim()}`
+        : null,
     };
-
-    if (item.item.title && item.item.upc && item.item.price && item.item.url) {
-      this.spider.onItemParsedSuccessfully(item);
-    } else {
-      this.spider.onItemParsedUnsuccessfully(item);
-    }
+    return item;
   }
 }
