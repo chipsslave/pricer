@@ -110,7 +110,7 @@ export class Job {
   }
 
   async save(): Promise<void> {
-    const job = await prisma.job.create({
+    await prisma.job.create({
       data: {
         startedAt: this.startedAt,
         finishedAt: this.finishedAt,
