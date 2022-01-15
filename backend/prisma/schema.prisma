@@ -49,11 +49,10 @@ model JobError {
   expected     String           @db.VarChar(512)
   result       String           @db.VarChar(512)
   severity     JobErrorSeverity
-  operation    String           @db.VarChar(512)
-  elementIndex Int              @default(0) @db.Integer
+  elementIndex Int              @default(-1) @db.Integer
   jobs         Job[]
 
-  @@unique(fields: [expected, result, severity, operation, elementIndex], name: "composedId")
+  @@unique(fields: [expected, result, severity, elementIndex], name: "composedId")
 }
 
 model Job {
