@@ -18,6 +18,7 @@ model Store {
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
   pages     Page[]
+  items     Item[]
 }
 
 model Page {
@@ -31,6 +32,7 @@ model Page {
   store        Store      @relation(fields: [storeId], references: [id])
   storeId      Int
   jobs         Job[]
+  items        Item[]
 }
 
 enum PageStatus {
@@ -68,4 +70,32 @@ model Job {
   jobErrors              JobError[]
   page                   Page       @relation(fields: [pageId], references: [id])
   pageId                 Int
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(512)
+  upc       String   @unique @db.VarChar(512)
+  url       String   @db.VarChar(512)
+  imageUrl  String?  @db.VarChar(512)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+
+  page   Page @relation(fields: [pageId], references: [id])
+  pageId Int
+
+  store   Store @relation(fields: [storeId], references: [id])
+  storeId Int
+
+  prices Price[]
+}
+
+model Price {
+  id        Int      @id @default(autoincrement())
+  price     Decimal  @db.Money
+  delta     Decimal? @default(0) @db.Money
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+
+  item   Item @relation(fields: [itemId], references: [id])
+  itemId Int
 }
