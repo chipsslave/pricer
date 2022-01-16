@@ -1,7 +1,14 @@
 import moment from "moment";
-import { Page, JobErrorSeverity } from "@prisma/client";
+import { Page, JobErrorSeverity, Price } from "@prisma/client";
 import { ParserResult } from "./parserService.component";
 import { prisma } from "../prisma";
+
+export type ParsedItem = {
+  title: string;
+  upc: string;
+  price: number;
+  url: string;
+};
 
 export type JobError = {
   expected: string;
@@ -23,6 +30,7 @@ export class Job {
   private nextPageAvailable: boolean;
   private parsedElementItemsSuc: number = 0;
   private parsedElementItemsFail: number = 0;
+  private parsedItems: ParsedItem[];
 
   constructor(
     page: Page,
@@ -33,6 +41,7 @@ export class Job {
     this.pageUrl = pageUrl;
     this.pageNumber = pageNumber;
     this.startedAt = moment().toDate();
+    this.parsedItems = [];
   }
 
   recordFinishedAt(): void {
@@ -63,6 +72,12 @@ export class Job {
       if (pr.success) {
         // work on item
         this.parsedElementItemsSuc += 1;
+        this.parsedItems.push({
+          title: pr.item.title || "",
+          upc: pr.item.upc || "",
+          price: pr.item.price || 0,
+          url: pr.item.url || "",
+        });
       } else {
         // record error
         this.parsedElementItemsFail += 1;
@@ -142,5 +157,45 @@ export class Job {
       },
       include: { jobErrors: true },
     });
+
+    for (const parsedItem of this.parsedItems) {
+      const item = await prisma.item.upsert({
+        where: { upc: parsedItem.upc },
+        update: { title: parsedItem.title, url: parsedItem.url },
+        create: {
+          title: parsedItem.title,
+          upc: parsedItem.upc,
+          url: parsedItem.url,
+          storeId: this.page.storeId,
+          pageId: this.page.id,
+        },
+        include: { prices: true },
+      });
+
+      if (item.prices.length == 0) {
+        await prisma.price.create({
+          data: { price: parsedItem.price, itemId: item.id },
+        });
+      } else {
+        const lastPriceId: number = Math.max(...item.prices.map((p) => p.id));
+        const price: Price | undefined = item.prices.find(
+          (p) => p.id === lastPriceId
+        );
+
+        if (!price) return;
+
+        if (parsedItem.price != price.price.toNumber()) {
+          const delta: number =
+            (parsedItem.price / price.price.toNumber() - 1) * 100;
+          await prisma.price.create({
+            data: {
+              itemId: item.id,
+              price: parsedItem.price,
+              delta,
+            },
+          });
+        }
+      }
+    }
   }
 }
