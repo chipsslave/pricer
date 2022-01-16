@@ -31,6 +31,7 @@ export class Spider {
     const storePage: StorePage | null = await this.pageService.checkForPage();
     if (!storePage) return;
     this.storePage = storePage;
+    await this.pageService.updateToProcessing(this.storePage);
     this.job = new Job(storePage, storePage.url, storePage.pageStartsAt);
 
     const parser: Parser = this.findParser();
@@ -67,6 +68,8 @@ export class Spider {
         this.job.recordFinishedAt();
         await this.job.save();
       } while (parserResult.nextPage);
+
+    await this.pageService.updateToWaiting(this.storePage);
 
     await this.browserService.close();
   }
