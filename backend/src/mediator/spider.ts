@@ -1,11 +1,10 @@
-import { StorePage } from "../service/page.service";
+import { PageService, StorePage } from "../service/page.service";
 import { BrowserServiceComponent } from "./browserService.component";
-import { PageServiceComponent } from "./pageService.component";
 import { Parser, ParserResult } from "./parserService.component";
 import { Job } from "./jobService.component";
 
 export class Spider {
-  private pageService: PageServiceComponent;
+  private pageService: PageService;
   private browserService: BrowserServiceComponent;
 
   private parsers: Parser[];
@@ -15,7 +14,7 @@ export class Spider {
   private job: Job | null;
 
   constructor(
-    pageService: PageServiceComponent,
+    pageService: PageService,
     browserService: BrowserServiceComponent,
     parsers: Parser[]
   ) {
