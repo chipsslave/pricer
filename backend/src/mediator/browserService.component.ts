@@ -5,16 +5,11 @@ import {
   WaitForOptions,
 } from "puppeteer";
 import puppeteer from "puppeteer-extra";
-import { PageContent } from "./main";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
-import parse, { HTMLElement } from "node-html-parser";
 
-export class BrowserClient {
+export class BrowserServiceComponent {
   private browser: Browser;
-  private lastPage: PageContent;
-
-  constructor() {}
 
   async launch(
     launchArgs: BrowserLaunchArgumentOptions = {
@@ -39,25 +34,27 @@ export class BrowserClient {
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
     await pages[0].goto(url, options);
-    this.lastPage = { url, content: parse(await pages[0].content()) };
   }
 
-  async getPageHtmlContent(): Promise<HTMLElement> {
+  async getPageHtmlContent(): Promise<string> {
     const pages: Page[] = await this.browser.pages();
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
-    return parse(await pages[0].content());
+    return await pages[0].content();
+  }
+
+  async getPage(): Promise<Page> {
+    const pages: Page[] = await this.browser.pages();
+    if (pages.length === 0)
+      throw new Error("Browser is not launched. RUN launch() first.");
+    return pages[0];
   }
 
   async close(): Promise<void> {
-    await this.browser.close();
+    if (this.browser) await this.browser.close();
   }
 
   getBrowser(): Browser {
     return this.browser;
-  }
-
-  getLastPage(): PageContent {
-    return this.lastPage;
   }
 }

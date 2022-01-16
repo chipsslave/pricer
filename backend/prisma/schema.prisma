@@ -30,7 +30,7 @@ model Page {
   pageStatus   PageStatus @default(WAITING)
   store        Store      @relation(fields: [storeId], references: [id])
   storeId      Int
-  reports      Report[]
+  jobs         Job[]
 }
 
 enum PageStatus {
@@ -38,35 +38,34 @@ enum PageStatus {
   WAITING
 }
 
-enum ReportErrorSeverity {
+enum JobErrorSeverity {
   LOW
   MEDIUM
   HIGH
 }
 
-model ReportError {
-  id           Int                 @id @default(autoincrement())
-  expected     String              @db.VarChar(512)
-  result       String              @db.VarChar(512)
-  severity     ReportErrorSeverity
-  operation    String              @db.VarChar(512)
-  elementIndex Int                 @default(0) @db.Integer
-  reports      Report[]
+model JobError {
+  id           Int              @id @default(autoincrement())
+  expected     String           @db.VarChar(512)
+  result       String           @db.VarChar(512)
+  severity     JobErrorSeverity
+  elementIndex Int              @default(-1) @db.Integer
+  jobs         Job[]
 
-  @@unique(fields: [expected, result, severity, operation, elementIndex], name: "composedId")
+  @@unique(fields: [expected, result, severity, elementIndex], name: "composedId")
 }
 
-model Report {
-  id                     Int           @id @default(autoincrement())
-  startedAt              DateTime      @default(now()) @db.Timestamp(6)
-  finishedAt             DateTime      @db.Timestamp(6)
-  pageUrl                String        @db.Text
-  pageNumber             Int           @db.Integer
-  elementsFound          Int           @db.Integer
-  nextPageAvailable      Boolean       @db.Boolean
-  parsedElementItemsSuc  Int           @db.Integer
-  parsedElementItemsFail Int           @db.Integer
-  reportErrors           ReportError[]
-  page                   Page          @relation(fields: [pageId], references: [id])
+model Job {
+  id                     Int        @id @default(autoincrement())
+  startedAt              DateTime   @default(now()) @db.Timestamp(6)
+  finishedAt             DateTime   @db.Timestamp(6)
+  pageUrl                String     @db.Text
+  pageNumber             Int        @db.Integer
+  elementsFound          Int        @db.Integer
+  nextPageAvailable      Boolean    @db.Boolean
+  parsedElementItemsSuc  Int        @db.Integer
+  parsedElementItemsFail Int        @db.Integer
+  jobErrors              JobError[]
+  page                   Page       @relation(fields: [pageId], references: [id])
   pageId                 Int
 }
