@@ -45,12 +45,14 @@ export interface Parser {
 
 export abstract class AbstractParser<T> implements Parser {
   private name: string;
+  private upcCode: string;
   private pageContent: string;
   pageContentParsed: T;
   result: ParserResult;
 
-  constructor(name: string) {
+  constructor(name: string, upcCode: string) {
     this.name = name;
+    this.upcCode = upcCode;
   }
   parse(): ParserResult {
     throw new Error("parse() Method not implemented.");
@@ -83,6 +85,10 @@ export abstract class AbstractParser<T> implements Parser {
   itemSuccess(item: ParsedItem): boolean {
     if (item.price && item.title && item.upc && item.url) return true;
     return false;
+  }
+
+  getUpcCode() {
+    return this.upcCode;
   }
 }
 
@@ -130,7 +136,7 @@ export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
 
 export class ArgosParserServiceComponent extends NodeHTMLParser {
   constructor() {
-    super("Argos");
+    super("Argos", "A_");
   }
 
   parseItemElements(): HTMLElement[] {
@@ -172,7 +178,9 @@ export class ArgosParserServiceComponent extends NodeHTMLParser {
     const item: ParsedItem = {
       title: element.querySelector("a[class*=Title]")?.text.trim() || null,
       upc: element.getAttribute("data-product-id")
-        ? `A_${element.getAttribute("data-product-id")?.trim()}`
+        ? `${this.getUpcCode()}${element
+            .getAttribute("data-product-id")
+            ?.trim()}`
         : null,
       price:
         Number(
