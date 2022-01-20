@@ -35,7 +35,7 @@ export class BrowserServiceComponent {
     const pages: Page[] = await this.browser.pages();
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
-
+    if (pages[0].isClosed()) throw new Error("Page appears to be closed.");
     await pages[0].goto(url, options);
   }
 
