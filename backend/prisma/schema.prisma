@@ -26,6 +26,7 @@ model Page {
   url          String     @unique @db.VarChar(512)
   itemsPerPage Int
   pageStartsAt Int        @default(0)
+  body         String?    @db.Text
   createdAt    DateTime   @default(now()) @db.Timestamp(6)
   updatedAt    DateTime   @updatedAt
   pageStatus   PageStatus @default(WAITING)
