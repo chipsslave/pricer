@@ -21,6 +21,27 @@ async function main() {
   });
 
   console.log({ argosStore });
+
+  const hsStore: Store = await prisma.store.upsert({
+    where: { title: "H. Samuel" },
+    update: {},
+    create: {
+      title: "H. Samuel",
+      homeUrl: "https://www.hsamuel.co.uk",
+      pages: {
+        create: [
+          {
+            url: "https://4zmivjgj4y-dsn.algolia.net/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.9.1)%3B%20Browser%3B%20instantsearch.js%20(4.33.2)%3B%20Vue%20(2.6.12)%3B%20Vue%20InstantSearch%20(3.7.0)%3B%20JS%20Helper%20(3.6.2)",
+            itemsPerPage: 24,
+            pageStartsAt: 0,
+            body: '{"requests":[{"indexName":"liveA_HSAMUEL_products","params":"query=&maxValuesPerFacet=100&highlightPreTag=__ais-highlight__&highlightPostTag=__%2Fais-highlight__&page=0&hitsPerPage=24&facetingAfterDistinct=true&filters=display_on_website%3Atrue&clickAnalytics=true&facets=%5B%22*%22%5D&tagFilters=&facetFilters=%5B%5B%22category.lvl0%3Awatches%22%5D%2C%5B%22recipient%3Ahim%22%5D%5D"},{"indexName":"liveA_HSAMUEL_products","params":"query=&maxValuesPerFacet=100&highlightPreTag=__ais-highlight__&highlightPostTag=__%2Fais-highlight__&page=0&hitsPerPage=1&facetingAfterDistinct=true&filters=display_on_website%3Atrue&clickAnalytics=false&attributesToRetrieve=%5B%5D&attributesToHighlight=%5B%5D&attributesToSnippet=%5B%5D&tagFilters=&analytics=false&facets=category.lvl0&facetFilters=%5B%5B%22recipient%3Ahim%22%5D%5D"},{"indexName":"liveA_HSAMUEL_products","params":"query=&maxValuesPerFacet=100&highlightPreTag=__ais-highlight__&highlightPostTag=__%2Fais-highlight__&page=0&hitsPerPage=1&facetingAfterDistinct=true&filters=display_on_website%3Atrue&clickAnalytics=false&attributesToRetrieve=%5B%5D&attributesToHighlight=%5B%5D&attributesToSnippet=%5B%5D&tagFilters=&analytics=false&facets=recipient&facetFilters=%5B%5B%22category.lvl0%3Awatches%22%5D%5D"}]}',
+          },
+        ],
+      },
+    },
+  });
+
+  console.log({ hsStore });
 }
 
 main()
