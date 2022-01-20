@@ -15,6 +15,46 @@ async function main() {
             itemsPerPage: 63,
             pageStartsAt: 1,
           },
+          {
+            url: "https://www.argos.co.uk/browse/jewellery-and-watches/watches/mens-watches/c:29307/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/technology/sound-bars/c:30123/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/baby-and-nursery/prams-and-pushchairs/c:29042/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/toys/lego/c:30379/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/jewellery-and-watches/womens-jewellery/womens-bracelets/c:29312/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/jewellery-and-watches/womens-jewellery/womens-necklaces/c:29316/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/jewellery-and-watches/womens-jewellery/womens-earrings/c:29315/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
+          {
+            url: "https://www.argos.co.uk/browse/health-and-beauty/fragrance/perfume/c:29282/opt/page:1/",
+            itemsPerPage: 63,
+            pageStartsAt: 1,
+          },
         ],
       },
     },
