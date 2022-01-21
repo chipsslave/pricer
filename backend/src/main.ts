@@ -8,24 +8,20 @@ puppeteer.use(StealthPlugin());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 var cron = require("node-cron");
 
-const pageService: PageService = new PageService();
-const browserService: BrowserServiceComponent = new BrowserServiceComponent();
-const argosParser: ArgosParserServiceComponent =
-  new ArgosParserServiceComponent();
-const spider: Spider = new Spider(pageService, browserService, [argosParser]);
-
 // A `main` function so that you can use async/await
 // async function main() {
 //   await spider.run();
 // }
 
 cron.schedule("* * * * *", async () => {
-  console.log("running a task every minute");
-  // prisma.$connect();
+  console.log("running a task every 30 seconds");
+  const pageService: PageService = new PageService();
+  const browserService: BrowserServiceComponent = new BrowserServiceComponent();
+  const argosParser: ArgosParserServiceComponent =
+    new ArgosParserServiceComponent();
+  const spider: Spider = new Spider(pageService, browserService, [argosParser]);
   spider.run();
 });
-
-spider.run();
 
 // main()
 //   .catch((e) => {
