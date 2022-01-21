@@ -1,10 +1,14 @@
-import { PageService, StorePage } from "../service/page.service";
+import {
+  StorePage,
+  checkForPage,
+  updateToProcessing,
+  updateToWaiting,
+} from "../service/page.service";
 import { BrowserServiceComponent } from "./browserService.component";
 import { Parser, ParserResult } from "./parserService.component";
 import { Job } from "./jobService.component";
 
 export class Spider {
-  private pageService: PageService;
   private browserService: BrowserServiceComponent;
 
   private parsers: Parser[];
@@ -13,12 +17,7 @@ export class Spider {
 
   private job: Job | null;
 
-  constructor(
-    pageService: PageService,
-    browserService: BrowserServiceComponent,
-    parsers: Parser[]
-  ) {
-    this.pageService = pageService;
+  constructor(browserService: BrowserServiceComponent, parsers: Parser[]) {
     this.browserService = browserService;
     this.parsers = parsers;
   }
@@ -28,10 +27,10 @@ export class Spider {
   }
 
   async run(): Promise<void> {
-    const storePage: StorePage | null = await this.pageService.checkForPage();
+    const storePage: StorePage | null = await checkForPage();
     if (!storePage) return;
     this.storePage = storePage;
-    await this.pageService.updateToProcessing(this.storePage);
+    await updateToProcessing(this.storePage);
     this.job = new Job(storePage, storePage.url, storePage.pageStartsAt);
 
     const parser: Parser = this.findParser();
@@ -69,7 +68,7 @@ export class Spider {
         await this.job.save();
       } while (parserResult.nextPage);
 
-    await this.pageService.updateToWaiting(this.storePage);
+    await updateToWaiting(this.storePage);
 
     await this.browserService.close();
   }
