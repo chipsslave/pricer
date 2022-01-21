@@ -93,8 +93,8 @@ model Item {
 
 model Price {
   id        Int      @id @default(autoincrement())
-  price     Decimal  @db.Money
-  delta     Decimal? @default(0) @db.Money
+  price     Decimal  @db.Decimal(9, 2)
+  delta     Decimal? @default(0) @db.Decimal(6, 2)
   createdAt DateTime @default(now()) @db.Timestamp(6)
 
   item   Item @relation(fields: [itemId], references: [id])
