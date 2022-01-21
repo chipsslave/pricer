@@ -48,7 +48,10 @@ export class Job {
     this.finishedAt = moment().toDate();
   }
 
-  calculateSeverity(expected: number, result: number): JobErrorSeverity {
+  private calculateSeverity(
+    expected: number,
+    result: number
+  ): JobErrorSeverity {
     if (expected === 0) return "HIGH";
     if (result < expected) return "MEDIUM";
     if (result > expected) return "HIGH";
