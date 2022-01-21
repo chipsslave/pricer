@@ -25,6 +25,8 @@ cron.schedule("* * * * *", async () => {
   spider.run();
 });
 
+spider.run();
+
 // main()
 //   .catch((e) => {
 //     throw e;
