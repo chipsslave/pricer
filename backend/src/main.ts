@@ -1,4 +1,5 @@
 import { ArgosSpider } from "./mediator/argos.spider";
+import { HSamuelSpider } from "./mediator/hsamuel.spider";
 import {
   StorePage,
   checkForPage,
@@ -15,7 +16,7 @@ const cron = require("node-cron");
 
 let jobRunning: boolean = false;
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("*/10 * * * * *", async () => {
   if (!jobRunning) {
     console.log(`Running a scheduled task at: ${new Date()}`);
     const storePage: StorePage | null = await checkForPage();
@@ -26,8 +27,14 @@ cron.schedule("* * * * *", async () => {
         await updateToProcessing(storePage);
         if (storePage.store.title === "Argos") {
           console.log("Start crawling.");
-          const argosSpider: ArgosSpider = new ArgosSpider(storePage);
-          await argosSpider.crawl();
+          const spider: ArgosSpider = new ArgosSpider(storePage);
+          await spider.crawl();
+          console.log("Finish crawling.");
+        }
+        if (storePage.store.title === "H. Samuel") {
+          console.log("Start crawling.");
+          const spider: HSamuelSpider = new HSamuelSpider(storePage);
+          await spider.crawl();
           console.log("Finish crawling.");
         }
         await updateToWaiting(storePage);
