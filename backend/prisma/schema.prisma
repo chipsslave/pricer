@@ -23,7 +23,7 @@ model Store {
 
 model Page {
   id           Int        @id @default(autoincrement())
-  url          String     @unique @db.VarChar(512)
+  url          String     @db.VarChar(512)
   itemsPerPage Int
   pageStartsAt Int        @default(0)
   body         String?    @db.Text
