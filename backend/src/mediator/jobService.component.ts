@@ -48,6 +48,14 @@ export class Job {
     this.finishedAt = moment().toDate();
   }
 
+  getPageUrl(): string {
+    return this.pageUrl;
+  }
+
+  getPageNumber(): number {
+    return this.pageNumber;
+  }
+
   private calculateSeverity(
     expected: number,
     result: number
