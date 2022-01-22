@@ -5,25 +5,24 @@ import {
   WaitForOptions,
 } from "puppeteer";
 import puppeteer from "puppeteer-extra";
-import { PageContent } from "./main";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
-import parse, { HTMLElement } from "node-html-parser";
 
 export class BrowserClient {
   private browser: Browser;
-  private lastPage: PageContent;
 
   constructor() {}
 
   async launch(
+    headless: boolean = false,
+    args: string[] = ["--no-sandbox", "--disable-setuid-sandbox"],
     launchArgs: BrowserLaunchArgumentOptions = {
       headless: false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     }
   ): Promise<void> {
     if (!this.browser || (await this.browser.pages()).length === 0) {
-      this.browser = await puppeteer.launch(launchArgs);
+      this.browser = await puppeteer.launch({ ...launchArgs, headless, args });
     }
   }
 
@@ -35,29 +34,39 @@ export class BrowserClient {
         })
       | undefined = { waitUntil: ["domcontentloaded", "networkidle2"] }
   ): Promise<void> {
+    if (!this.browser)
+      throw new Error("Trying to get pages from null browser!");
     const pages: Page[] = await this.browser.pages();
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
+    if (pages[0].isClosed()) throw new Error("Page appears to be closed.");
     await pages[0].goto(url, options);
-    this.lastPage = { url, content: parse(await pages[0].content()) };
   }
 
-  async getPageHtmlContent(): Promise<HTMLElement> {
+  async getPageHtmlContent(): Promise<string> {
+    if (!this.browser)
+      throw new Error("Trying to get pages from null browser!");
     const pages: Page[] = await this.browser.pages();
     if (pages.length === 0)
       throw new Error("Browser is not launched. RUN launch() first.");
-    return parse(await pages[0].content());
+    return await pages[0].content();
+  }
+
+  async getPage(): Promise<Page> {
+    if (!this.browser)
+      throw new Error("Trying to get pages from null browser!");
+    const pages: Page[] = await this.browser.pages();
+    if (pages.length === 0)
+      throw new Error("Browser is not launched. RUN launch() first.");
+    return pages[0];
   }
 
   async close(): Promise<void> {
-    await this.browser.close();
+    if (this.browser) await this.browser.close();
   }
 
   getBrowser(): Browser {
+    if (!this.browser) throw new Error("Trying to return null browser!");
     return this.browser;
-  }
-
-  getLastPage(): PageContent {
-    return this.lastPage;
   }
 }
