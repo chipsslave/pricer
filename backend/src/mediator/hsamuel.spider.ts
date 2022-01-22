@@ -22,13 +22,6 @@ export class HSamuelSpider {
     try {
       if (!this.job) throw new Error("Job is invalid.");
 
-      console.log(
-        this.storePage.body?.replace(
-          "highlight__&page=0",
-          `highlight__&page=${this.job.getPageNumber()}`
-        )
-      );
-
       const response = await fetch(this.job.getPageUrl(), {
         headers: {
           "User-Agent":
