@@ -1,26 +1,44 @@
-import { BrowserServiceComponent } from "./mediator/browserService.component";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { ArgosParserServiceComponent } from "./mediator/parserService.component";
-import { Spider } from "./mediator/spider";
-import { PageService } from "./service/page.service";
-puppeteer.use(StealthPlugin());
-puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
-var cron = require("node-cron");
+import { ArgosSpider } from "./mediator/argos.spider";
+import {
+  StorePage,
+  checkForPage,
+  updateToProcessing,
+  updateToWaiting,
+} from "./service/page.service";
+
+const cron = require("node-cron");
 
 // A `main` function so that you can use async/await
 // async function main() {
 //   await spider.run();
 // }
 
+let jobRunning: boolean = false;
+
 cron.schedule("* * * * *", async () => {
-  console.log("running a task every 30 seconds");
-  const pageService: PageService = new PageService();
-  const browserService: BrowserServiceComponent = new BrowserServiceComponent();
-  const argosParser: ArgosParserServiceComponent =
-    new ArgosParserServiceComponent();
-  const spider: Spider = new Spider(pageService, browserService, [argosParser]);
-  spider.run();
+  if (!jobRunning) {
+    console.log(`Running a scheduled task at: ${new Date()}`);
+    const storePage: StorePage | null = await checkForPage();
+    try {
+      if (storePage) {
+        jobRunning = true;
+        console.log(`Found ${storePage.store.title} ${storePage.url}`);
+        await updateToProcessing(storePage);
+        if (storePage.store.title === "Argos") {
+          console.log("Start crawling.");
+          const argosSpider: ArgosSpider = new ArgosSpider(storePage);
+          await argosSpider.crawl();
+          console.log("Finish crawling.");
+        }
+        await updateToWaiting(storePage);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      if (storePage) await updateToWaiting(storePage);
+      jobRunning = false;
+    }
+  }
 });
 
 // main()
