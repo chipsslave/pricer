@@ -23,7 +23,7 @@ cron.schedule("*/10 * * * * *", async () => {
     try {
       if (storePage) {
         jobRunning = true;
-        console.log(`Found ${storePage.store.title} ${storePage.url}`);
+        console.log(`Found ${storePage.store.title} ${storePage.description}`);
         await updateToProcessing(storePage);
         if (storePage.store.title === "Argos") {
           console.log("Start crawling.");
