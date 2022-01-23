@@ -8,6 +8,7 @@ export type ParsedItem = {
   upc: string;
   price: number;
   url: string;
+  img?: string;
 };
 
 export type JobError = {
@@ -88,6 +89,7 @@ export class Job {
           upc: pr.item.upc || "",
           price: pr.item.price || 0,
           url: pr.item.url || "",
+          img: pr.item.image || undefined,
         });
       } else {
         // record error
@@ -172,11 +174,16 @@ export class Job {
     for (const parsedItem of this.parsedItems) {
       const item = await prisma.item.upsert({
         where: { upc: parsedItem.upc },
-        update: { title: parsedItem.title, url: parsedItem.url },
+        update: {
+          title: parsedItem.title,
+          url: parsedItem.url,
+          imageUrl: parsedItem.img,
+        },
         create: {
           title: parsedItem.title,
           upc: parsedItem.upc,
           url: parsedItem.url,
+          imageUrl: parsedItem.img,
           storeId: this.page.storeId,
           pageId: this.page.id,
         },

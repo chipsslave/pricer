@@ -9,6 +9,7 @@ export type ParsedItem = {
   upc: string | null;
   price: number | null;
   url: string | null;
+  image?: string | null;
 };
 
 export type ParsedElementItem = {
@@ -233,6 +234,7 @@ export class HSamuelParserServiceComponent {
         title: element.long_name || null,
         upc: element.sku_id ? `${this.upcCode}${element.sku_id}` : null,
         url: `https://www.hsamuel.co.uk${element.product_detail_url}`,
+        image: element.image || null,
       };
       this.result.parsedItems.push({
         elementHash: crypto
