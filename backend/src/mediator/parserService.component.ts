@@ -262,14 +262,14 @@ export class HSamuelParserServiceComponent {
   }
 
   nextPageAvailable(): boolean {
-    if (
-      this.pageContentParsed.results[0].page !== undefined &&
-      this.pageContentParsed.results[0].nbPages !== undefined
-    )
-      return (
-        this.pageContentParsed.results[0].page <
-        this.pageContentParsed.results[0].nbPages
-      );
+    // if (
+    //   this.pageContentParsed.results[0].page !== undefined &&
+    //   this.pageContentParsed.results[0].nbPages !== undefined
+    // )
+    //   return (
+    //     this.pageContentParsed.results[0].page <
+    //     this.pageContentParsed.results[0].nbPages
+    //   );
     return false;
   }
 }
