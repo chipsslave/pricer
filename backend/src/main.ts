@@ -1,4 +1,5 @@
 import { ArgosSpider } from "./mediator/argos.spider";
+import { ErnestJonesSpider } from "./mediator/ernestjones.spider";
 import { HSamuelSpider } from "./mediator/hsamuel.spider";
 import {
   StorePage,
@@ -34,6 +35,12 @@ cron.schedule("*/10 * * * * *", async () => {
         if (storePage.store.title === "H. Samuel") {
           console.log("Start crawling.");
           const spider: HSamuelSpider = new HSamuelSpider(storePage);
+          await spider.crawl();
+          console.log("Finish crawling.");
+        }
+        if (storePage.store.title === "Ernest Jones") {
+          console.log("Start crawling.");
+          const spider: ErnestJonesSpider = new ErnestJonesSpider(storePage);
           await spider.crawl();
           console.log("Finish crawling.");
         }
