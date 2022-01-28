@@ -1,10 +1,25 @@
 import { Page, PrismaClient, Store } from "@prisma/client";
 const prisma = new PrismaClient();
 import * as seed from "../src/backup/seed.json";
-import { SeedResult } from "../src/backup/types";
+import { SeedBrand, SeedStore } from "../src/backup/types";
 
 async function main() {
-  const seedResult: SeedResult = seed;
+  const seedResult: { brands: SeedBrand[]; stores: SeedStore[] } = seed;
+
+  for (const brand of seedResult.brands) {
+    brand.models &&
+      (await prisma.brand.create({
+        data: {
+          title: brand.title,
+          models: {
+            createMany: {
+              data: brand.models.map((model) => ({ title: model.title })),
+              skipDuplicates: true,
+            },
+          },
+        },
+      }));
+  }
 
   for (const store of seedResult.stores) {
     const s: Store = await prisma.store.create({
@@ -32,9 +47,8 @@ async function main() {
               updatedAt: page.updatedAt,
               store: { connect: { id: s.id } },
               brand: {
-                connectOrCreate: {
-                  create: { title: page.brand.title },
-                  where: { title: page.brand.title },
+                connect: {
+                  title: page.brand.title,
                 },
               },
             },
@@ -53,58 +67,60 @@ async function main() {
             },
           });
 
-      for (const item of page.items) {
-        if (p.brandId) {
-          await prisma.item.create({
-            data: {
-              title: item.title,
-              upc: item.upc,
-              url: item.url,
-              imageUrl: item.imageUrl,
-              page: { connect: { id: p.id } },
-              store: { connect: { id: s.id } },
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-              brand: { connect: { id: p.brandId } },
-              prices: {
-                createMany: {
-                  data: item.prices.map((price) => {
-                    return {
-                      price: parseFloat(price.price),
-                      delta: parseFloat(price.delta),
-                      createdAt: price.createdAt,
-                    };
-                  }),
-                },
-              },
-            },
-          });
-        } else {
-          await prisma.item.create({
-            data: {
-              title: item.title,
-              upc: item.upc,
-              url: item.url,
-              imageUrl: item.imageUrl,
-              page: { connect: { id: p.id } },
-              store: { connect: { id: s.id } },
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-              prices: {
-                createMany: {
-                  data: item.prices.map((price) => {
-                    return {
-                      price: parseFloat(price.price),
-                      delta: parseFloat(price.delta),
-                      createdAt: price.createdAt,
-                    };
-                  }),
-                },
-              },
-            },
-          });
-        }
-      }
+      p.body;
+
+      // for (const item of page.items) {
+      //   if (p.brandId) {
+      //     await prisma.item.create({
+      //       data: {
+      //         title: item.title,
+      //         upc: item.upc,
+      //         url: item.url,
+      //         imageUrl: item.imageUrl,
+      //         page: { connect: { id: p.id } },
+      //         store: { connect: { id: s.id } },
+      //         createdAt: item.createdAt,
+      //         updatedAt: item.updatedAt,
+      //         brand: { connect: { id: p.brandId } },
+      //         prices: {
+      //           createMany: {
+      //             data: item.prices.map((price) => {
+      //               return {
+      //                 price: parseFloat(price.price),
+      //                 delta: parseFloat(price.delta),
+      //                 createdAt: price.createdAt,
+      //               };
+      //             }),
+      //           },
+      //         },
+      //       },
+      //     });
+      //   } else {
+      //     await prisma.item.create({
+      //       data: {
+      //         title: item.title,
+      //         upc: item.upc,
+      //         url: item.url,
+      //         imageUrl: item.imageUrl,
+      //         page: { connect: { id: p.id } },
+      //         store: { connect: { id: s.id } },
+      //         createdAt: item.createdAt,
+      //         updatedAt: item.updatedAt,
+      //         prices: {
+      //           createMany: {
+      //             data: item.prices.map((price) => {
+      //               return {
+      //                 price: parseFloat(price.price),
+      //                 delta: parseFloat(price.delta),
+      //                 createdAt: price.createdAt,
+      //               };
+      //             }),
+      //           },
+      //         },
+      //       },
+      //     });
+      //   }
+      // }
     }
   }
 }
