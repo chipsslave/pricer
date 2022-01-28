@@ -178,6 +178,7 @@ export class Job {
           title: parsedItem.title,
           url: parsedItem.url,
           imageUrl: parsedItem.img,
+          brandId: { set: this.page.brandId },
         },
         create: {
           title: parsedItem.title,
@@ -186,6 +187,7 @@ export class Job {
           imageUrl: parsedItem.img,
           storeId: this.page.storeId,
           pageId: this.page.id,
+          brandId: this.page.brandId,
         },
         include: { prices: true },
       });

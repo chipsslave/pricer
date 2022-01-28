@@ -18,7 +18,8 @@
     "noUnusedParameters": false,
     "pretty": true,
     "stripInternal": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true
   },
   "include": ["./src/**/*.tsx", "./src/**/*.ts"],
   "exclude": ["node_modules", "dist", "./test/**/*.spec.ts"]

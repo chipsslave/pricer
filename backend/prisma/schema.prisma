@@ -21,8 +21,10 @@ model Store {
   homeUrl   String   @db.VarChar(512)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
-  pages     Page[]
-  items     Item[]
+
+  pages Page[]
+
+  items Item[]
 }
 
 model Page {
@@ -35,10 +37,16 @@ model Page {
   createdAt    DateTime   @default(now()) @db.Timestamp(6)
   updatedAt    DateTime   @updatedAt
   pageStatus   PageStatus @default(WAITING)
-  store        Store      @relation(fields: [storeId], references: [id])
-  storeId      Int
-  jobs         Job[]
-  items        Item[]
+
+  store   Store @relation(fields: [storeId], references: [id])
+  storeId Int
+
+  jobs Job[]
+
+  items Item[]
+
+  brand   Brand? @relation(fields: [brandId], references: [id])
+  brandId Int?
 }
 
 enum PageStatus {
@@ -58,24 +66,27 @@ model JobError {
   result       String           @db.VarChar(512)
   severity     JobErrorSeverity
   elementIndex Int              @default(-1) @db.Integer
-  jobs         Job[]
+
+  jobs Job[]
 
   @@unique(fields: [expected, result, severity, elementIndex], name: "composedId")
 }
 
 model Job {
-  id                     Int        @id @default(autoincrement())
-  startedAt              DateTime   @default(now()) @db.Timestamp(6)
-  finishedAt             DateTime   @db.Timestamp(6)
-  pageUrl                String     @db.Text
-  pageNumber             Int        @db.Integer
-  elementsFound          Int        @db.Integer
-  nextPageAvailable      Boolean    @db.Boolean
-  parsedElementItemsSuc  Int        @db.Integer
-  parsedElementItemsFail Int        @db.Integer
-  jobErrors              JobError[]
-  page                   Page       @relation(fields: [pageId], references: [id])
-  pageId                 Int
+  id                     Int      @id @default(autoincrement())
+  startedAt              DateTime @default(now()) @db.Timestamp(6)
+  finishedAt             DateTime @db.Timestamp(6)
+  pageUrl                String   @db.Text
+  pageNumber             Int      @db.Integer
+  elementsFound          Int      @db.Integer
+  nextPageAvailable      Boolean  @db.Boolean
+  parsedElementItemsSuc  Int      @db.Integer
+  parsedElementItemsFail Int      @db.Integer
+
+  jobErrors JobError[]
+
+  page   Page @relation(fields: [pageId], references: [id])
+  pageId Int
 }
 
 model Item {
@@ -94,6 +105,12 @@ model Item {
   storeId Int
 
   prices Price[]
+
+  brand   Brand? @relation(fields: [brandId], references: [id])
+  brandId Int?
+
+  model   Model? @relation(fields: [modelId], references: [id])
+  modelId Int?
 }
 
 model Price {
@@ -104,4 +121,25 @@ model Price {
 
   item   Item @relation(fields: [itemId], references: [id])
   itemId Int
+}
+
+model Brand {
+  id    Int    @id @default(autoincrement())
+  title String @unique @db.VarChar(256)
+
+  models Model[]
+
+  items Item[]
+
+  pages Page[]
+}
+
+model Model {
+  id    Int    @id @default(autoincrement())
+  title String @unique @db.VarChar(256)
+
+  brand   Brand? @relation(fields: [brandId], references: [id])
+  brandId Int?
+
+  Item Item[]
 }
