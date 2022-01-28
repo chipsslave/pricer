@@ -138,8 +138,10 @@ model Model {
   id    Int    @id @default(autoincrement())
   title String @unique @db.VarChar(256)
 
-  brand   Brand? @relation(fields: [brandId], references: [id])
-  brandId Int?
+  brand   Brand @relation(fields: [brandId], references: [id])
+  brandId Int
 
   Item Item[]
+
+  @@unique(fields: [title, brandId], name: "composedId")
 }
