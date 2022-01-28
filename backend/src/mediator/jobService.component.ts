@@ -179,6 +179,7 @@ export class Job {
           url: parsedItem.url,
           imageUrl: parsedItem.img,
           brandId: { set: this.page.brandId },
+          pageId: { set: this.page.id },
         },
         create: {
           title: parsedItem.title,
