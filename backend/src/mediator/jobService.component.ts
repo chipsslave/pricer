@@ -9,6 +9,8 @@ export type ParsedItem = {
   price: number;
   url: string;
   img?: string;
+  brand?: string;
+  model?: string;
 };
 
 export type JobError = {
@@ -90,6 +92,8 @@ export class Job {
           price: pr.item.price || 0,
           url: pr.item.url || "",
           img: pr.item.image || undefined,
+          brand: pr.item.brand || undefined,
+          model: pr.item.model || undefined,
         });
       } else {
         // record error
@@ -172,14 +176,28 @@ export class Job {
     });
 
     for (const parsedItem of this.parsedItems) {
+      const model =
+        parsedItem.model && this.page.brandId
+          ? await prisma.model.upsert({
+              where: {
+                composedId: {
+                  title: parsedItem.model,
+                  brandId: this.page.brandId,
+                },
+              },
+              create: { title: parsedItem.model, brandId: this.page.brandId },
+              update: { title: parsedItem.model, brandId: this.page.brandId },
+            })
+          : null;
       const item = await prisma.item.upsert({
         where: { upc: parsedItem.upc },
         update: {
           title: parsedItem.title,
           url: parsedItem.url,
           imageUrl: parsedItem.img,
-          brandId: { set: this.page.brandId },
-          pageId: { set: this.page.id },
+          pageId: this.page.id,
+          brandId: this.page.brandId,
+          modelId: model?.id,
         },
         create: {
           title: parsedItem.title,
@@ -189,6 +207,7 @@ export class Job {
           storeId: this.page.storeId,
           pageId: this.page.id,
           brandId: this.page.brandId,
+          modelId: model?.id,
         },
         include: { prices: true },
       });
