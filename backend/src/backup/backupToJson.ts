@@ -1,4 +1,4 @@
-import { Item, Page, Price, Store } from "@prisma/client";
+import { Brand, Item, Model, Page, Price, Store } from "@prisma/client";
 import { prisma } from "../prisma";
 import fs from "node:fs";
 import moment from "moment";
@@ -8,66 +8,76 @@ async function main(): Promise<void> {
     pages: (Page & {
       items: (Item & {
         prices: Price[];
+        brand: Brand | null;
+        model: Model | null;
       })[];
     })[];
   })[] = await prisma.store.findMany({
     include: {
       pages: {
-        include: { items: { include: { prices: true } } },
+        include: {
+          items: { include: { prices: true, brand: true, model: true } },
+        },
       },
     },
   });
 
-  const brands = [
-    { title: "Seiko" },
-    { title: "Tommy Hilfiger" },
-    { title: "Accurist" },
-    { title: "Alpina" },
-    { title: "Bulova" },
-    { title: "Casio" },
-    { title: "Citizen" },
-    { title: "Garmin" },
-    { title: "Hamilton" },
-    { title: "Swatch" },
-    { title: "Timex" },
-    { title: "Tissot" },
-    { title: "Rotary" },
-    { title: "Fitbit" },
-    { title: "Lorus" },
-  ];
+  const brandsDb: (Brand & {
+    models: Model[];
+  })[] = await prisma.brand.findMany({
+    include: {
+      models: true,
+    },
+  });
+
+  const brands = brandsDb.map((brand) => {
+    return {
+      title: brand.title,
+      models: brand.models.map((model) => {
+        return { title: model.title };
+      }),
+    };
+  });
 
   const stores = db.map((store) => ({
     createdAt: store.createdAt,
     updatedAt: store.updatedAt,
     homeUrl: store.homeUrl,
     title: store.title,
-    pages: store.pages.map((page) => ({
-      createdAt: page.createdAt,
-      updatedAt: page.updatedAt,
-      url: page.url,
-      itemsPerPage: page.itemsPerPage,
-      pageStartsAt: page.pageStartsAt,
-      body: page.body,
-      description: page.description,
-      pageStatus: page.pageStatus,
-      store: store.title,
-      brand:
-        brands.find((brand) => page.description.includes(brand.title)) || null,
-      items: page.items.map((item) => ({
+    pages: store.pages.map((page) => {
+      const brand = brands.find((brand) =>
+        page.description.includes(brand.title)
+      );
+
+      return {
         createdAt: page.createdAt,
         updatedAt: page.updatedAt,
-        title: item.title,
-        upc: item.upc,
-        url: item.url,
-        imageUrl: item.imageUrl,
+        url: page.url,
+        itemsPerPage: page.itemsPerPage,
+        pageStartsAt: page.pageStartsAt,
+        body: page.body,
+        description: page.description,
+        pageStatus: page.pageStatus,
         store: store.title,
-        prices: item.prices.map((price) => ({
+        brand: brand ? { title: brand.title } : null,
+        items: page.items.map((item) => ({
           createdAt: page.createdAt,
-          price: price.price,
-          delta: price.delta,
+          updatedAt: page.updatedAt,
+          title: item.title,
+          upc: item.upc,
+          url: item.url,
+          imageUrl: item.imageUrl,
+          store: store.title,
+          brand: { title: brand?.title } || null,
+          model: { title: item.model?.title } || null,
+          prices: item.prices.map((price) => ({
+            createdAt: page.createdAt,
+            price: price.price,
+            delta: price.delta,
+          })),
         })),
-      })),
-    })),
+      };
+    }),
   }));
 
   const results = { brands, stores };
