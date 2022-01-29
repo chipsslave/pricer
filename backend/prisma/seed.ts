@@ -68,7 +68,7 @@ async function main() {
           });
 
       for (const item of page.items) {
-        if (p.brandId) {
+        if (p.brandId && item.model) {
           await prisma.item.create({
             data: {
               title: item.title,
