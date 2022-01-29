@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "ts-node ./src/main.ts",
     "backup": "ts-node ./src/backup/backupToJson.ts",
+    "backuptypes": "ts-node ./src/backup/genTypes.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {
