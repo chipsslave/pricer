@@ -68,8 +68,8 @@ async function main(): Promise<void> {
           url: item.url,
           imageUrl: item.imageUrl,
           store: store.title,
-          brand: { title: brand?.title } || null,
-          model: { title: item.model?.title } || null,
+          brand: brand ? { title: brand?.title } : null,
+          model: item.model ? { title: item.model?.title } : null,
           prices: item.prices.map((price) => ({
             createdAt: page.createdAt,
             price: price.price,
