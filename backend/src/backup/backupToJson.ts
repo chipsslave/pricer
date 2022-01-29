@@ -83,7 +83,7 @@ async function main(): Promise<void> {
   const results = { brands, stores };
 
   fs.writeFile(
-    `${moment().format("HH-mm DD-MM-YYYY")}.json`,
+    `./src/backup/rawJson/${moment().format("HH-mm DD-MM-YYYY")}.json`,
     JSON.stringify(results),
     (err) => {
       if (err) {
