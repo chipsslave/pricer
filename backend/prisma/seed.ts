@@ -1,10 +1,10 @@
 import { Page, PrismaClient, Store } from "@prisma/client";
 const prisma = new PrismaClient();
 import * as seed from "../src/backup/seed.json";
-import { SeedBrand, SeedStore } from "../src/backup/types";
+import { Seed } from "../src/backup/types";
 
 async function main() {
-  const seedResult: { brands: SeedBrand[]; stores: SeedStore[] } = seed;
+  const seedResult: Seed = seed as Seed;
 
   for (const brand of seedResult.brands) {
     brand.models &&
@@ -67,60 +67,66 @@ async function main() {
             },
           });
 
-      p.body;
-
-      // for (const item of page.items) {
-      //   if (p.brandId) {
-      //     await prisma.item.create({
-      //       data: {
-      //         title: item.title,
-      //         upc: item.upc,
-      //         url: item.url,
-      //         imageUrl: item.imageUrl,
-      //         page: { connect: { id: p.id } },
-      //         store: { connect: { id: s.id } },
-      //         createdAt: item.createdAt,
-      //         updatedAt: item.updatedAt,
-      //         brand: { connect: { id: p.brandId } },
-      //         prices: {
-      //           createMany: {
-      //             data: item.prices.map((price) => {
-      //               return {
-      //                 price: parseFloat(price.price),
-      //                 delta: parseFloat(price.delta),
-      //                 createdAt: price.createdAt,
-      //               };
-      //             }),
-      //           },
-      //         },
-      //       },
-      //     });
-      //   } else {
-      //     await prisma.item.create({
-      //       data: {
-      //         title: item.title,
-      //         upc: item.upc,
-      //         url: item.url,
-      //         imageUrl: item.imageUrl,
-      //         page: { connect: { id: p.id } },
-      //         store: { connect: { id: s.id } },
-      //         createdAt: item.createdAt,
-      //         updatedAt: item.updatedAt,
-      //         prices: {
-      //           createMany: {
-      //             data: item.prices.map((price) => {
-      //               return {
-      //                 price: parseFloat(price.price),
-      //                 delta: parseFloat(price.delta),
-      //                 createdAt: price.createdAt,
-      //               };
-      //             }),
-      //           },
-      //         },
-      //       },
-      //     });
-      //   }
-      // }
+      for (const item of page.items) {
+        if (p.brandId) {
+          await prisma.item.create({
+            data: {
+              title: item.title,
+              upc: item.upc,
+              url: item.url,
+              imageUrl: item.imageUrl,
+              page: { connect: { id: p.id } },
+              store: { connect: { id: s.id } },
+              createdAt: item.createdAt,
+              updatedAt: item.updatedAt,
+              brand: { connect: { id: p.brandId } },
+              model: {
+                connectOrCreate: {
+                  where: {
+                    composedId: { brandId: p.brandId, title: item.model.title },
+                  },
+                  create: { brandId: p.brandId, title: item.model.title },
+                },
+              },
+              prices: {
+                createMany: {
+                  data: item.prices.map((price) => {
+                    return {
+                      price: parseFloat(price.price),
+                      delta: parseFloat(price.delta),
+                      createdAt: price.createdAt,
+                    };
+                  }),
+                },
+              },
+            },
+          });
+        } else {
+          await prisma.item.create({
+            data: {
+              title: item.title,
+              upc: item.upc,
+              url: item.url,
+              imageUrl: item.imageUrl,
+              page: { connect: { id: p.id } },
+              store: { connect: { id: s.id } },
+              createdAt: item.createdAt,
+              updatedAt: item.updatedAt,
+              prices: {
+                createMany: {
+                  data: item.prices.map((price) => {
+                    return {
+                      price: parseFloat(price.price),
+                      delta: parseFloat(price.delta),
+                      createdAt: price.createdAt,
+                    };
+                  }),
+                },
+              },
+            },
+          });
+        }
+      }
     }
   }
 }
