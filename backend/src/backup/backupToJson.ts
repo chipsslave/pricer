@@ -61,8 +61,8 @@ async function main(): Promise<void> {
         store: store.title,
         brand: brand ? { title: brand.title } : null,
         items: page.items.map((item) => ({
-          createdAt: page.createdAt,
-          updatedAt: page.updatedAt,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
           title: item.title,
           upc: item.upc,
           url: item.url,
@@ -71,7 +71,7 @@ async function main(): Promise<void> {
           brand: brand ? { title: brand?.title } : null,
           model: item.model ? { title: item.model?.title } : null,
           prices: item.prices.map((price) => ({
-            createdAt: page.createdAt,
+            createdAt: price.createdAt,
             price: price.price,
             delta: price.delta,
           })),
