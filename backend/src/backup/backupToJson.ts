@@ -11,12 +11,14 @@ async function main(): Promise<void> {
         brand: Brand | null;
         model: Model | null;
       })[];
+      brand: Brand | null;
     })[];
   })[] = await prisma.store.findMany({
     include: {
       pages: {
         include: {
           items: { include: { prices: true, brand: true, model: true } },
+          brand: true,
         },
       },
     },
@@ -45,10 +47,6 @@ async function main(): Promise<void> {
     homeUrl: store.homeUrl,
     title: store.title,
     pages: store.pages.map((page) => {
-      const brand = brands.find((brand) =>
-        page.description.includes(brand.title)
-      );
-
       return {
         createdAt: page.createdAt,
         updatedAt: page.updatedAt,
@@ -59,7 +57,7 @@ async function main(): Promise<void> {
         description: page.description,
         pageStatus: page.pageStatus,
         store: store.title,
-        brand: brand ? { title: brand.title } : null,
+        brand: page.brand ? { title: page.brand.title } : null,
         items: page.items.map((item) => ({
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
@@ -68,8 +66,8 @@ async function main(): Promise<void> {
           url: item.url,
           imageUrl: item.imageUrl,
           store: store.title,
-          brand: brand ? { title: brand?.title } : null,
-          model: item.model ? { title: item.model?.title } : null,
+          brand: item.brand ? { title: item.brand.title } : null,
+          model: item.model ? { title: item.model.title } : null,
           prices: item.prices.map((price) => ({
             createdAt: price.createdAt,
             price: price.price,
