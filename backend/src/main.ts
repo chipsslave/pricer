@@ -1,6 +1,7 @@
 import { ArgosSpider } from "./scraper/argos/argos.spider";
 import { ErnestJonesSpider } from "./scraper/ernestjones/ernestjones.spider";
 import { HSamuelSpider } from "./scraper/hsamuel/hsamuel.spider";
+import { Watches2uSpider } from "./scraper/watches2u/watches2u.spider";
 import {
   StorePage,
   checkForPage,
@@ -41,6 +42,12 @@ cron.schedule("*/10 * * * * *", async () => {
         if (storePage.store.title === "Ernest Jones") {
           console.log("Start crawling.");
           const spider: ErnestJonesSpider = new ErnestJonesSpider(storePage);
+          await spider.crawl();
+          console.log("Finish crawling.");
+        }
+        if (storePage.store.title === "Watches 2 U") {
+          console.log("Start crawling.");
+          const spider: Watches2uSpider = new Watches2uSpider(storePage);
           await spider.crawl();
           console.log("Finish crawling.");
         }

@@ -1,14 +1,15 @@
-import { Page, Store } from ".prisma/client";
+import { Brand, Page, Store } from ".prisma/client";
 import { prisma } from "../prisma";
 import moment from "moment";
 
 export type StorePage = Page & {
   store: Store;
+  brand: Brand | null;
 };
 
 export async function checkForPage(): Promise<StorePage | null> {
   return prisma.page.findFirst({
-    include: { store: true },
+    include: { store: true, brand: true },
     where: {
       AND: {
         updatedAt: { lte: moment().subtract(3, "hours").toDate() },
