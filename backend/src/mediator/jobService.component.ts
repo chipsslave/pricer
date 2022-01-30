@@ -1,7 +1,8 @@
 import moment from "moment";
-import { Page, JobErrorSeverity, Price } from "@prisma/client";
+import { Brand, JobErrorSeverity, Model, Price } from "@prisma/client";
 import { ParserResult } from "./parserService.component";
 import { prisma } from "../prisma";
+import { StorePage } from "../service/page.service";
 
 export type ParsedItem = {
   title: string;
@@ -25,7 +26,7 @@ export type JobError = {
 export class Job {
   private startedAt: Date;
   private finishedAt: Date;
-  private page: Page;
+  private page: StorePage;
   private pageUrl: string;
   private pageNumber: number;
   private jobErrors: JobError[] = [];
@@ -36,7 +37,7 @@ export class Job {
   private parsedItems: ParsedItem[];
 
   constructor(
-    page: Page,
+    page: StorePage,
     pageUrl: string = page.url,
     pageNumber: number = page.pageStartsAt
   ) {
@@ -176,19 +177,29 @@ export class Job {
     });
 
     for (const parsedItem of this.parsedItems) {
-      const model =
-        parsedItem.model && this.page.brandId
-          ? await prisma.model.upsert({
-              where: {
-                composedId: {
-                  title: parsedItem.model,
-                  brandId: this.page.brandId,
-                },
-              },
-              create: { title: parsedItem.model, brandId: this.page.brandId },
-              update: { title: parsedItem.model, brandId: this.page.brandId },
-            })
-          : null;
+      const pageBrand: Brand | null = this.page.brand;
+
+      const itemBrand: Brand | null =
+        (parsedItem.brand &&
+          (await prisma.brand.upsert({
+            where: { title: parsedItem.brand },
+            create: { title: parsedItem.brand },
+            update: {},
+          }))) ||
+        null;
+
+      const itemModel: Model | null =
+        (itemBrand &&
+          parsedItem.model &&
+          (await prisma.model.upsert({
+            where: {
+              composedId: { brandId: itemBrand.id, title: parsedItem.model },
+            },
+            create: { brandId: itemBrand.id, title: parsedItem.model },
+            update: {},
+          }))) ||
+        null;
+
       const item = await prisma.item.upsert({
         where: { upc: parsedItem.upc },
         update: {
@@ -196,8 +207,8 @@ export class Job {
           url: parsedItem.url,
           imageUrl: parsedItem.img,
           pageId: this.page.id,
-          brandId: this.page.brandId,
-          modelId: model?.id,
+          brandId: pageBrand?.id || itemBrand?.id,
+          modelId: itemModel?.id,
         },
         create: {
           title: parsedItem.title,
@@ -206,8 +217,8 @@ export class Job {
           imageUrl: parsedItem.img,
           storeId: this.page.storeId,
           pageId: this.page.id,
-          brandId: this.page.brandId,
-          modelId: model?.id,
+          brandId: pageBrand?.id || itemBrand?.id,
+          modelId: itemModel?.id,
         },
         include: { prices: true },
       });
