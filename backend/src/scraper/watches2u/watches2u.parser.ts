@@ -83,8 +83,8 @@ export class Watches2uParserServiceComponent extends NodeHTMLParser {
     );
 
     if (!priceContainer) return null;
-
-    const priceText = priceContainer.structuredText;
+    const reComma = new RegExp(",", "g");
+    const priceText = priceContainer.structuredText.replace(reComma, "");
 
     const containsVoucherDiscount: boolean = priceText.includes("off use");
     const pricesSplit = priceText.split("£");
