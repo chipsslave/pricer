@@ -1,10 +1,8 @@
-import { RootHSamuel } from "./hs.types";
-import { StorePage } from "../service/page.service";
-import { Job } from "./jobService.component";
-import {
-  HSamuelParserServiceComponent,
-  ParserResult,
-} from "./parserService.component";
+import { RootHSamuel } from "./hsamuel.types";
+import { StorePage } from "../../service/page.service";
+import { Job } from "../../mediator/jobService.component";
+import { ParserResult } from "../../mediator/parserService.component";
+import { HSamuelParserServiceComponent } from "./hsamuel.parser";
 const fetch = require("node-fetch");
 
 export class HSamuelSpider {

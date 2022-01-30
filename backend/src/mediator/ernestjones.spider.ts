@@ -1,4 +1,4 @@
-import { RootHSamuel } from "./hs.types";
+import { RootHSamuel } from "../scraper/hsamuel/hsamuel.types";
 import { StorePage } from "../service/page.service";
 import { Job } from "./jobService.component";
 import {

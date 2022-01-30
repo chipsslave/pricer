@@ -1,6 +1,6 @@
 import { ArgosSpider } from "./mediator/argos.spider";
 import { ErnestJonesSpider } from "./mediator/ernestjones.spider";
-import { HSamuelSpider } from "./mediator/hsamuel.spider";
+import { HSamuelSpider } from "./scraper/hsamuel/hsamuel.spider";
 import {
   StorePage,
   checkForPage,
