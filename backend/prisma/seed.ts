@@ -1,4 +1,4 @@
-import { Page, PrismaClient, Store } from "@prisma/client";
+import { Brand, Page, PrismaClient, Store } from "@prisma/client";
 const prisma = new PrismaClient();
 import * as seed from "../src/backup/seed.json";
 import { Seed } from "../src/backup/types";
@@ -32,100 +32,74 @@ async function main() {
     });
 
     for (const page of store.pages) {
-      let p: Page;
-
-      p = page.brand
-        ? await prisma.page.create({
-            data: {
-              url: page.url,
-              itemsPerPage: page.itemsPerPage,
-              pageStartsAt: page.pageStartsAt,
-              body: page.body,
-              description: page.description,
-              pageStatus: "WAITING",
-              createdAt: page.createdAt,
-              updatedAt: page.updatedAt,
-              store: { connect: { id: s.id } },
-              brand: {
+      const p: Page = await prisma.page.create({
+        data: {
+          url: page.url,
+          itemsPerPage: page.itemsPerPage,
+          pageStartsAt: page.pageStartsAt,
+          body: page.body,
+          description: page.description,
+          pageStatus: "WAITING",
+          createdAt: page.createdAt,
+          updatedAt: page.updatedAt,
+          store: { connect: { id: s.id } },
+          brand: page.brand
+            ? {
                 connect: {
                   title: page.brand.title,
                 },
-              },
-            },
-          })
-        : await prisma.page.create({
-            data: {
-              url: page.url,
-              itemsPerPage: page.itemsPerPage,
-              pageStartsAt: page.pageStartsAt,
-              body: page.body,
-              description: page.description,
-              pageStatus: "WAITING",
-              createdAt: page.createdAt,
-              updatedAt: page.updatedAt,
-              store: { connect: { id: s.id } },
-            },
-          });
+              }
+            : undefined,
+        },
+      });
 
       for (const item of page.items) {
-        if (p.brandId && item.model) {
-          await prisma.item.create({
-            data: {
-              title: item.title,
-              upc: item.upc,
-              url: item.url,
-              imageUrl: item.imageUrl,
-              page: { connect: { id: p.id } },
-              store: { connect: { id: s.id } },
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-              brand: { connect: { id: p.brandId } },
-              model: {
-                connectOrCreate: {
-                  where: {
-                    composedId: { brandId: p.brandId, title: item.model.title },
-                  },
-                  create: { brandId: p.brandId, title: item.model.title },
-                },
-              },
-              prices: {
-                createMany: {
-                  data: item.prices.map((price) => {
-                    return {
-                      price: parseFloat(price.price),
-                      delta: parseFloat(price.delta),
-                      createdAt: price.createdAt,
-                    };
-                  }),
-                },
-              },
-            },
-          });
-        } else {
-          await prisma.item.create({
-            data: {
-              title: item.title,
-              upc: item.upc,
-              url: item.url,
-              imageUrl: item.imageUrl,
-              page: { connect: { id: p.id } },
-              store: { connect: { id: s.id } },
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-              prices: {
-                createMany: {
-                  data: item.prices.map((price) => {
-                    return {
-                      price: parseFloat(price.price),
-                      delta: parseFloat(price.delta),
-                      createdAt: price.createdAt,
-                    };
-                  }),
-                },
+        const brand: Brand | null = item.brand
+          ? await prisma.brand.upsert({
+              where: { title: item.brand.title },
+              create: { title: item.brand.title },
+              update: {},
+            })
+          : null;
+
+        await prisma.item.create({
+          data: {
+            title: item.title,
+            upc: item.upc,
+            url: item.url,
+            imageUrl: item.imageUrl,
+            page: { connect: { id: p.id } },
+            store: { connect: { id: s.id } },
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            brand: brand ? { connect: { id: brand.id } } : undefined,
+            model:
+              item.model && brand
+                ? {
+                    connectOrCreate: {
+                      where: {
+                        composedId: {
+                          brandId: brand.id,
+                          title: item.model.title,
+                        },
+                      },
+                      create: { brandId: brand.id, title: item.model.title },
+                    },
+                  }
+                : undefined,
+            prices: {
+              createMany: {
+                data: item.prices.map((price) => {
+                  return {
+                    price: parseFloat(price.price),
+                    delta: parseFloat(price.delta),
+                    createdAt: price.createdAt,
+                  };
+                }),
               },
             },
-          });
-        }
+          },
+        });
       }
     }
   }
