@@ -119,7 +119,7 @@ model Price {
   delta     Decimal? @default(0) @db.Decimal(6, 2)
   createdAt DateTime @default(now()) @db.Timestamp(6)
 
-  item   Item @relation(fields: [itemId], references: [id])
+  item   Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId Int
 }
 
