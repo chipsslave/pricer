@@ -1,10 +1,8 @@
-import { RootHSamuel } from "../scraper/hsamuel/hsamuel.types";
-import { StorePage } from "../service/page.service";
-import { Job } from "./jobService.component";
-import {
-  ErnestJonesParserServiceComponent,
-  ParserResult,
-} from "./parserService.component";
+import { RootHSamuel } from "../hsamuel/hsamuel.types";
+import { StorePage } from "../../service/page.service";
+import { Job } from "../../mediator/jobService.component";
+import { ParserResult } from "../../mediator/parserService.component";
+import { ErnestJonesParserServiceComponent } from "./ernestjones.parser";
 const fetch = require("node-fetch");
 
 export class ErnestJonesSpider {
