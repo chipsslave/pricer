@@ -1,4 +1,4 @@
-import { ArgosSpider } from "./mediator/argos.spider";
+import { ArgosSpider } from "./scraper/argos/argos.spider";
 import { ErnestJonesSpider } from "./scraper/ernestjones/ernestjones.spider";
 import { HSamuelSpider } from "./scraper/hsamuel/hsamuel.spider";
 import {

@@ -1,11 +1,8 @@
-import { BrowserClient } from "../BrowserClient";
-import { StorePage } from "../service/page.service";
-import { Job } from "./jobService.component";
-import {
-  ArgosParserServiceComponent,
-  Parser,
-  ParserResult,
-} from "./parserService.component";
+import { BrowserClient } from "../../BrowserClient";
+import { StorePage } from "../../service/page.service";
+import { Job } from "../../mediator/jobService.component";
+import { Parser, ParserResult } from "../../mediator/parserService.component";
+import { ArgosParserServiceComponent } from "./argos.parser";
 
 export class ArgosSpider {
   private parser: Parser = new ArgosParserServiceComponent();
