@@ -188,14 +188,19 @@ export class Job {
           }))) ||
         null;
 
+      const brandId: number | null | undefined = pageBrand?.id || itemBrand?.id;
+
       const itemModel: Model | null =
-        (itemBrand &&
+        (brandId &&
           parsedItem.model &&
           (await prisma.model.upsert({
             where: {
-              composedId: { brandId: itemBrand.id, title: parsedItem.model },
+              composedId: {
+                brandId,
+                title: parsedItem.model,
+              },
             },
-            create: { brandId: itemBrand.id, title: parsedItem.model },
+            create: { brandId, title: parsedItem.model },
             update: {},
           }))) ||
         null;
