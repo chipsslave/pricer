@@ -20,7 +20,7 @@ export type JobError = {
   severity: JobErrorSeverity;
   operation: string;
   elementHash?: string;
-  elementIndex?: number;
+  elementIndex: number;
 };
 
 export class Job {
@@ -29,7 +29,7 @@ export class Job {
   private page: StorePage;
   private pageUrl: string;
   private pageNumber: number;
-  private jobErrors: JobError[] = [];
+  private jobErrors: Set<JobError> = new Set<JobError>();
   private elementsCount: number;
   private nextPageAvailable: boolean;
   private parsedElementItemsSuc: number = 0;
@@ -60,6 +60,16 @@ export class Job {
     return this.pageNumber;
   }
 
+  getJobErrorsArray(): JobError[] {
+    const array: JobError[] = [];
+
+    for (const entry of this.jobErrors) {
+      array.push(entry);
+    }
+
+    return array;
+  }
+
   private calculateSeverity(
     expected: number,
     result: number
@@ -73,7 +83,7 @@ export class Job {
   processParserResults(parserResult: ParserResult): void {
     this.elementsCount = parserResult.elementsCount;
     if (this.elementsCount != this.page.itemsPerPage)
-      this.jobErrors.push({
+      this.jobErrors.add({
         operation: "checking count of elements",
         expected: `expecting to find ${this.page.itemsPerPage} elements`,
         result: `found ${this.elementsCount} elements`,
@@ -81,6 +91,7 @@ export class Job {
           this.page.itemsPerPage,
           this.elementsCount
         ),
+        elementIndex: -1,
       });
     this.nextPageAvailable = parserResult.nextPage ? true : false;
     parserResult.parsedItems.forEach((pr) => {
@@ -100,7 +111,7 @@ export class Job {
         // record error
         this.parsedElementItemsFail += 1;
         if (!pr.item.title)
-          this.jobErrors.push({
+          this.jobErrors.add({
             operation: "parsing title",
             expected: "result should not be null",
             result: "result is null",
@@ -110,7 +121,7 @@ export class Job {
           });
 
         if (!pr.item.upc)
-          this.jobErrors.push({
+          this.jobErrors.add({
             operation: "parsing upc",
             expected: "result should not be null",
             result: "result is null",
@@ -120,7 +131,7 @@ export class Job {
           });
 
         if (!pr.item.price)
-          this.jobErrors.push({
+          this.jobErrors.add({
             operation: "parsing price",
             expected: "result should not be null",
             result: "result is null",
@@ -130,7 +141,7 @@ export class Job {
           });
 
         if (!pr.item.url)
-          this.jobErrors.push({
+          this.jobErrors.add({
             operation: "parsing url",
             expected: "result should not be null",
             result: "result is null",
@@ -155,20 +166,22 @@ export class Job {
         parsedElementItemsSuc: this.parsedElementItemsSuc,
         parsedElementItemsFail: this.parsedElementItemsFail,
         jobErrors: {
-          connectOrCreate: this.jobErrors.map((je) => ({
-            create: {
-              expected: je.expected,
-              result: je.result,
-              severity: je.severity,
-              elementIndex: je.elementIndex,
-            },
+          connectOrCreate: this.getJobErrorsArray().map((je) => ({
             where: {
               composedId: {
                 expected: je.expected,
                 result: je.result,
                 severity: je.severity,
-                elementIndex: je.elementIndex || -1,
+                elementIndex: je.elementIndex,
+                operation: je.operation,
               },
+            },
+            create: {
+              expected: je.expected,
+              result: je.result,
+              severity: je.severity,
+              elementIndex: je.elementIndex,
+              operation: je.operation,
             },
           })),
         },

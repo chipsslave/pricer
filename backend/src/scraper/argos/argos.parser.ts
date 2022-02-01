@@ -28,6 +28,7 @@ export class ArgosParserServiceComponent extends NodeHTMLParser {
         result: "resultsCountSpan should not returned null",
         severity: "HIGH",
         operation: "Checking if next page is available.",
+        elementIndex: -1,
       });
     const resultsCount: string =
       resultsCountSpan?.getAttribute("data-search-results") ||
