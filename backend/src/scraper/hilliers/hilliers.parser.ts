@@ -33,9 +33,7 @@ export class HilliersParserServiceComponent extends NodeHTMLParser {
   parseItem(element: HTMLElement): ParsedItem {
     const item: ParsedItem = {
       title: element.querySelector("a")?.getAttribute("title")?.trim() || null,
-      upc: `${this.getUpcCode()}${element
-        .querySelector("div.product")
-        ?.getAttribute("id")}`,
+      upc: this.upcCalculator(element),
       price: this.priceCalculator(element),
       url:
         `https://www.hillierjewellers.co.uk${element
@@ -53,6 +51,22 @@ export class HilliersParserServiceComponent extends NodeHTMLParser {
           ?.toUpperCase() || null,
     };
     return item;
+  }
+
+  upcCalculator(itemElement: HTMLElement): string | null {
+    const product_code_random = itemElement
+      .querySelector("div.product")
+      ?.getAttribute("id");
+
+    if (!product_code_random) return null;
+
+    const productCodeSplit: string[] = product_code_random.split("_");
+
+    if (productCodeSplit.length !== 3) return null;
+
+    const upc: string = productCodeSplit[1];
+
+    return `${this.getUpcCode()}${upc}`;
   }
 
   priceCalculator(itemElement: HTMLElement): number | null {
