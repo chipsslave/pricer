@@ -42,13 +42,13 @@ export class HilliersParserServiceComponent extends NodeHTMLParser {
       image:
         `https://www.hillierjewellers.co.uk${element
           .querySelector("img")
-          ?.getAttribute("data-src")}` || null,
-      brand: null,
+          ?.getAttribute("data-src")}` || undefined,
+      brand: undefined,
       model:
         element
           .querySelector("div.product")
           ?.getAttribute("data-productreference")
-          ?.toUpperCase() || null,
+          ?.toUpperCase() || undefined,
     };
     return item;
   }

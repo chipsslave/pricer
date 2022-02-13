@@ -40,13 +40,13 @@ export class ErnestJonesParserServiceComponent {
         title: element.long_name || null,
         upc: element.sku_id ? `${this.upcCode}${element.sku_id}` : null,
         url: `https://www.ernestjones.co.uk${element.product_detail_url}`,
-        image: element.image || null,
+        image: element.image || undefined,
         brand:
           element.brand?.lvl0 ||
           element.brand?.lvl1 ||
           element.brand?.lvl2 ||
-          null,
-        model: element.supplier_model_number || null,
+          undefined,
+        model: element.supplier_model_number || undefined,
       };
       this.result.parsedItems.push({
         elementHash: crypto

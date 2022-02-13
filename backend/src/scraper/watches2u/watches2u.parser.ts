@@ -47,7 +47,7 @@ export class Watches2uParserServiceComponent extends NodeHTMLParser {
         .digest("hex")}`,
       price: this.priceCalculator(element),
       url: this.getUrl(element),
-      image: element.querySelector("img")?.getAttribute("src") || null,
+      image: element.querySelector("img")?.getAttribute("src") || undefined,
       brand: this.detailsCalculator(element).brand,
       model: this.detailsCalculator(element).model,
     };
@@ -56,15 +56,15 @@ export class Watches2uParserServiceComponent extends NodeHTMLParser {
 
   detailsCalculator = (
     itemElement: HTMLElement
-  ): { brand: string | null; model: string | null } => {
+  ): { brand: string | undefined; model: string | undefined } => {
     const detailsContainer = itemElement.querySelector(
       "span[class=xcomponent_products_medium_description]"
     );
     const detailsText = detailsContainer?.structuredText;
 
-    const brand = detailsContainer?.querySelector("span")?.text || null;
+    const brand = detailsContainer?.querySelector("span")?.text || undefined;
 
-    const model = detailsText?.split(brand || "")[0] || null;
+    const model = detailsText?.split(brand || "")[0] || undefined;
 
     return {
       brand,

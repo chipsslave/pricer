@@ -8,9 +8,9 @@ export type ParsedItem = {
   upc: string | null;
   price: number | null;
   url: string | null;
-  image?: string | null;
-  brand?: string | null;
-  model?: string | null;
+  image?: string;
+  brand?: string;
+  model?: string;
 };
 
 export type ParsedElementItem = {

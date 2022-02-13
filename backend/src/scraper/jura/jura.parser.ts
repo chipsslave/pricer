@@ -51,7 +51,7 @@ export class JuraParserServiceComponent extends NodeHTMLParser {
         "https:" +
           element
             .querySelector("div.product__image > a > img")
-            ?.getAttribute("data-src") || null,
+            ?.getAttribute("data-src") || undefined,
       brand: this.detailsCalculator(element).brand,
       model: this.detailsCalculator(element).model,
     };
@@ -60,12 +60,12 @@ export class JuraParserServiceComponent extends NodeHTMLParser {
 
   detailsCalculator = (
     itemElement: HTMLElement
-  ): { brand: string | null; model: string | null } => {
-    const brand = null;
+  ): { brand: string | undefined; model: string | undefined } => {
+    const brand = undefined;
 
     const model =
       itemElement.querySelector("div.product__info > p")?.innerText.trim() ||
-      null;
+      undefined;
 
     return {
       brand,
