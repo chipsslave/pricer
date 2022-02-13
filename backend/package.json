@@ -7,6 +7,7 @@
     "dev": "ts-node ./src/main.ts",
     "backup": "ts-node ./src/backup/backupToJson.ts",
     "backuptypes": "ts-node ./src/backup/genTypes.ts",
+    "fetch": "ts-node ./src/browser/fetchClient.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {
@@ -17,6 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^17.0.8",
+    "@types/node-fetch": "^2.5.12",
     "json-to-ts": "^1.7.0",
     "prisma": "^3.8.1",
     "prisma-docs-generator": "^0.5.0",
