@@ -8,7 +8,7 @@ import puppeteer from "puppeteer-extra";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
-export class BrowserServiceComponent {
+export class PuppeteerClient {
   private browser: Browser | null;
 
   async launch(
@@ -61,9 +61,19 @@ export class BrowserServiceComponent {
     if (this.browser) await this.browser.close();
     this.browser = null;
   }
+}
 
-  getBrowser(): Browser {
-    if (!this.browser) throw new Error("Trying to return null browser!");
-    return this.browser;
-  }
+export async function buildHeadlessBrowser(): Promise<PuppeteerClient> {
+  const browser = new PuppeteerClient();
+  await browser.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  return browser;
+}
+
+export async function buildBrowser(): Promise<PuppeteerClient> {
+  const browser = new PuppeteerClient();
+  await browser.launch();
+  return browser;
 }

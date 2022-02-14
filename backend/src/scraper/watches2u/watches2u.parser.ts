@@ -5,9 +5,9 @@ import {
 import { HTMLElement } from "node-html-parser";
 import crypto from "crypto";
 
-export class Watches2uParserServiceComponent extends NodeHTMLParser {
+export class Watches2uParser extends NodeHTMLParser {
   constructor() {
-    super("Watches 2 U", "W2U_");
+    super("W2U_");
   }
 
   parseItemElements(): HTMLElement[] {

@@ -7,7 +7,7 @@ import crypto from "crypto";
 
 export class JuraParserServiceComponent extends NodeHTMLParser {
   constructor() {
-    super("Jura Watches", "JURA_");
+    super("JURA_");
   }
 
   parseItemElements(): HTMLElement[] {

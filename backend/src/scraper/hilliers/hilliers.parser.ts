@@ -4,9 +4,9 @@ import {
 } from "../../mediator/parserService.component";
 import { HTMLElement } from "node-html-parser";
 
-export class HilliersParserServiceComponent extends NodeHTMLParser {
+export class HilliersParser extends NodeHTMLParser {
   constructor() {
-    super("Hilliers Jewellers", "HILL_");
+    super("HILL_");
   }
 
   parseItemElements(): HTMLElement[] {

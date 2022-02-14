@@ -1,15 +1,18 @@
-import { ArgosSpider } from "./scraper/argos/argos.spider";
-import { ErnestJonesSpider } from "./scraper/ernestjones/ernestjones.spider";
-import { HilliersSpider } from "./scraper/hilliers/hilliers.spider";
-import { HSamuelSpider } from "./scraper/hsamuel/hsamuel.spider";
-import { JuraSpider } from "./scraper/jura/jura.spider";
-import { Watches2uSpider } from "./scraper/watches2u/watches2u.spider";
+import { FetchHtmlSpider } from "./mediator/fetchHtmlSpider";
+import { FetchJsonSpider } from "./mediator/fetchJsonSpider";
+import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones.parser";
+import { HSamuelParser } from "./scraper/hsamuel/hsamuel.parser";
+import { ArgosParser } from "./scraper/argos/argos.parser";
 import {
   StorePage,
   checkForPage,
   updateToProcessing,
   updateToWaiting,
 } from "./service/page.service";
+import { PuppeteerSpider } from "./mediator/puppeteerSpider";
+import { HilliersParser } from "./scraper/hilliers/hilliers.parser";
+import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
+import { JuraParserServiceComponent } from "./scraper/jura/jura.parser";
 
 const cron = require("node-cron");
 
@@ -26,45 +29,41 @@ cron.schedule("*/10 * * * * *", async () => {
     const storePage: StorePage | null = await checkForPage();
     try {
       if (storePage) {
+        console.log("Start crawling.");
         jobRunning = true;
         console.log(`Found ${storePage.store.title} ${storePage.description}`);
         await updateToProcessing(storePage);
         if (storePage.store.title === "Argos") {
-          console.log("Start crawling.");
-          const spider: ArgosSpider = new ArgosSpider(storePage);
-          await spider.crawl();
-          console.log("Finish crawling.");
+          const spider = new PuppeteerSpider(new ArgosParser(), false);
+          spider.setStorePage(storePage);
+          await spider.run();
         }
         if (storePage.store.title === "H. Samuel") {
-          console.log("Start crawling.");
-          const spider: HSamuelSpider = new HSamuelSpider(storePage);
-          await spider.crawl();
-          console.log("Finish crawling.");
+          const spider = new FetchJsonSpider(new HSamuelParser());
+          spider.setStorePage(storePage);
+          await spider.run();
         }
         if (storePage.store.title === "Ernest Jones") {
-          console.log("Start crawling.");
-          const spider: ErnestJonesSpider = new ErnestJonesSpider(storePage);
-          await spider.crawl();
-          console.log("Finish crawling.");
+          const spider = new FetchJsonSpider(new ErnestJonesParser());
+          spider.setStorePage(storePage);
+          await spider.run();
         }
         if (storePage.store.title === "Watches 2 U") {
-          console.log("Start crawling.");
-          const spider: Watches2uSpider = new Watches2uSpider(storePage);
-          await spider.crawl();
-          console.log("Finish crawling.");
+          const spider = new FetchHtmlSpider(new Watches2uParser());
+          spider.setStorePage(storePage);
+          await spider.run();
         }
         if (storePage.store.title === "Jura Watches") {
-          console.log("Start crawling.");
-          const spider: JuraSpider = new JuraSpider(storePage);
-          await spider.crawl();
-          console.log("Finish crawling.");
+          const spider = new FetchHtmlSpider(new JuraParserServiceComponent());
+          spider.setStorePage(storePage);
+          await spider.run();
         }
         if (storePage.store.title === "Hilliers Jewellers") {
-          console.log("Start crawling.");
-          const spider: HilliersSpider = new HilliersSpider(storePage);
-          await spider.crawl();
-          console.log("Finish crawling.");
+          const spider = new FetchHtmlSpider(new HilliersParser());
+          spider.setStorePage(storePage);
+          await spider.run();
         }
+        console.log("Finish crawling.");
         await updateToWaiting(storePage);
       }
     } catch (e) {

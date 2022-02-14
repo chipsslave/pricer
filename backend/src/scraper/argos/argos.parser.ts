@@ -4,9 +4,9 @@ import {
 } from "../../mediator/parserService.component";
 import { HTMLElement } from "node-html-parser";
 
-export class ArgosParserServiceComponent extends NodeHTMLParser {
+export class ArgosParser extends NodeHTMLParser {
   constructor() {
-    super("Argos", "A_");
+    super("A_");
   }
 
   parseItemElements(): HTMLElement[] {

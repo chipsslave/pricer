@@ -35,45 +35,30 @@ export type ParserResult = {
   parserErrors: JobError[];
 };
 
-export interface Parser {
-  canParse(name: string): boolean;
-  setup(
-    page: Page,
-    pageContent: string,
-    pageUrl: string,
-    pageNumber: number
-  ): void;
-  parse(): ParserResult;
+export interface Parser<T> {
+  setup(page: Page, pageUrl: string, pageNumber: number): void;
+  parse(pageContent: T): ParserResult;
+  buildBody(): unknown;
 }
 
-export abstract class AbstractParser<T> implements Parser {
-  private name: string;
+export abstract class AbstractParser<T, PP> implements Parser<T> {
   private upcCode: string;
-  private pageContent: string;
-  pageContentParsed: T;
+  private pageContent: T;
+  pageContentParsed: PP;
   result: ParserResult;
 
-  constructor(name: string, upcCode: string) {
-    this.name = name;
+  constructor(upcCode: string) {
     this.upcCode = upcCode;
   }
-  parse(): ParserResult {
-    throw new Error("parse() Method not implemented.");
+  parse(pageContent: T): ParserResult {
+    throw new Error("Method not implemented.");
   }
 
-  getPageContent(): string {
+  getPageContent(): T {
     return this.pageContent;
   }
 
-  canParse(name: string): boolean {
-    if (this.name === name) {
-      return true;
-    }
-    return false;
-  }
-
-  setup(page: Page, pageContent: string, pageUrl: string, pageNumber: number) {
-    this.pageContent = pageContent;
+  setup(page: Page, pageUrl: string, pageNumber: number) {
     this.result = {
       page,
       pageUrl,
@@ -93,20 +78,22 @@ export abstract class AbstractParser<T> implements Parser {
   getUpcCode() {
     return this.upcCode;
   }
+
+  buildBody(): unknown {
+    throw new Error("Method not implemented.");
+  }
 }
 
-export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
-  setup(
-    page: Page,
-    pageContent: string,
-    pageUrl: string,
-    pageNumber: number
-  ): void {
-    super.setup(page, pageContent, pageUrl, pageNumber);
-    this.pageContentParsed = parse(pageContent);
+export abstract class NodeHTMLParser extends AbstractParser<
+  string,
+  HTMLElement
+> {
+  setup(page: Page, pageUrl: string, pageNumber: number): void {
+    super.setup(page, pageUrl, pageNumber);
   }
 
-  parse(): ParserResult {
+  parse(pageContent: string): ParserResult {
+    this.pageContentParsed = parse(pageContent);
     const parsedElements: HTMLElement[] = this.parseItemElements();
     this.result.elementsCount = parsedElements.length;
     for (const [index, element] of parsedElements.entries()) {
@@ -135,4 +122,44 @@ export abstract class NodeHTMLParser extends AbstractParser<HTMLElement> {
   abstract nextPageAvailable(): boolean;
   abstract parseNextPageUrl(): string;
   abstract parseItem(element: HTMLElement): ParsedItem;
+}
+
+export abstract class JsonParser<T, PP, I> extends AbstractParser<T, PP> {
+  body: unknown;
+
+  constructor(upcCode: string) {
+    super(upcCode);
+  }
+
+  setup(page: Page, pageUrl: string, pageNumber: number): void {
+    super.setup(page, pageUrl, pageNumber);
+  }
+
+  parse(pageContent: T): ParserResult {
+    this.pageContentParsed = pageContent as unknown as PP;
+    const parsedElements: I[] = this.parseItemElements();
+    this.result.elementsCount = parsedElements.length;
+    for (const [index, element] of parsedElements.entries()) {
+      const parsedItem: ParsedItem = this.parseItem(element);
+      this.result.parsedItems.push({
+        elementHash: crypto.createHash("md5").update("").digest("hex"),
+        elementIndex: index,
+        item: parsedItem,
+        success: this.itemSuccess(parsedItem),
+      });
+    }
+
+    if (this.nextPageAvailable()) {
+      this.result.nextPage = {
+        pageNumber: this.result.pageNumber + 1,
+        pageUrl: this.parseNextPageUrl(),
+      };
+    }
+    return this.result;
+  }
+
+  abstract parseItemElements(): I[];
+  abstract nextPageAvailable(): boolean;
+  abstract parseNextPageUrl(): string;
+  abstract parseItem(element: I): ParsedItem;
 }
