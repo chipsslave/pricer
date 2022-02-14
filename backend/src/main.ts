@@ -13,8 +13,21 @@ import { PuppeteerSpider } from "./mediator/puppeteerSpider";
 import { HilliersParser } from "./scraper/hilliers/hilliers.parser";
 import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
 import { JuraParserServiceComponent } from "./scraper/jura/jura.parser";
+import { Parser } from "./mediator/parserService.component";
 
 const cron = require("node-cron");
+
+const puppeteerSpider = new PuppeteerSpider(false);
+// const puppeteerSpiderHeadless = new PuppeteerSpider(true);
+const fetchJsonSpider = new FetchJsonSpider();
+const fetchHtmlSpider = new FetchHtmlSpider();
+
+const argosParser: Parser<string> = new ArgosParser();
+const hSamuelParser: Parser<unknown> = new HSamuelParser();
+const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
+const watches2UParser: Parser<unknown> = new Watches2uParser();
+const juraParser: Parser<unknown> = new JuraParserServiceComponent();
+const hilliersParser: Parser<unknown> = new HilliersParser();
 
 // A `main` function so that you can use async/await
 // async function main() {
@@ -34,34 +47,34 @@ cron.schedule("*/10 * * * * *", async () => {
         console.log(`Found ${storePage.store.title} ${storePage.description}`);
         await updateToProcessing(storePage);
         if (storePage.store.title === "Argos") {
-          const spider = new PuppeteerSpider(new ArgosParser(), false);
-          spider.setStorePage(storePage);
-          await spider.run();
+          puppeteerSpider.setParser(argosParser);
+          puppeteerSpider.setStorePage(storePage);
+          await puppeteerSpider.run();
         }
         if (storePage.store.title === "H. Samuel") {
-          const spider = new FetchJsonSpider(new HSamuelParser());
-          spider.setStorePage(storePage);
-          await spider.run();
+          fetchJsonSpider.setParser(hSamuelParser);
+          fetchJsonSpider.setStorePage(storePage);
+          await fetchJsonSpider.run();
         }
         if (storePage.store.title === "Ernest Jones") {
-          const spider = new FetchJsonSpider(new ErnestJonesParser());
-          spider.setStorePage(storePage);
-          await spider.run();
+          fetchJsonSpider.setParser(ernestJonesParser);
+          fetchJsonSpider.setStorePage(storePage);
+          await fetchJsonSpider.run();
         }
         if (storePage.store.title === "Watches 2 U") {
-          const spider = new FetchHtmlSpider(new Watches2uParser());
-          spider.setStorePage(storePage);
-          await spider.run();
+          fetchHtmlSpider.setParser(watches2UParser);
+          fetchHtmlSpider.setStorePage(storePage);
+          await fetchHtmlSpider.run();
         }
         if (storePage.store.title === "Jura Watches") {
-          const spider = new FetchHtmlSpider(new JuraParserServiceComponent());
-          spider.setStorePage(storePage);
-          await spider.run();
+          fetchHtmlSpider.setParser(juraParser);
+          fetchHtmlSpider.setStorePage(storePage);
+          await fetchHtmlSpider.run();
         }
         if (storePage.store.title === "Hilliers Jewellers") {
-          const spider = new FetchHtmlSpider(new HilliersParser());
-          spider.setStorePage(storePage);
-          await spider.run();
+          fetchHtmlSpider.setParser(hilliersParser);
+          fetchHtmlSpider.setStorePage(storePage);
+          await fetchHtmlSpider.run();
         }
         console.log("Finish crawling.");
         await updateToWaiting(storePage);

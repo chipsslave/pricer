@@ -9,6 +9,10 @@ export class ArgosParser extends NodeHTMLParser {
     super("A_");
   }
 
+  buildBody(): unknown {
+    return null;
+  }
+
   parseItemElements(): HTMLElement[] {
     const elements: HTMLElement[] = this.pageContentParsed.querySelectorAll(
       "div[class^=ProductCardstyles__Wrapper-]"

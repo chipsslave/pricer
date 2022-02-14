@@ -50,9 +50,8 @@ export abstract class AbstractParser<T, PP> implements Parser<T> {
   constructor(upcCode: string) {
     this.upcCode = upcCode;
   }
-  parse(pageContent: T): ParserResult {
-    throw new Error("Method not implemented.");
-  }
+
+  abstract parse(pageContent: T): ParserResult;
 
   getPageContent(): T {
     return this.pageContent;
@@ -79,9 +78,7 @@ export abstract class AbstractParser<T, PP> implements Parser<T> {
     return this.upcCode;
   }
 
-  buildBody(): unknown {
-    throw new Error("Method not implemented.");
-  }
+  abstract buildBody(): unknown;
 }
 
 export abstract class NodeHTMLParser extends AbstractParser<

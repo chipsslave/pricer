@@ -10,6 +10,10 @@ export class Watches2uParser extends NodeHTMLParser {
     super("W2U_");
   }
 
+  buildBody(): unknown {
+    return null;
+  }
+
   parseItemElements(): HTMLElement[] {
     const elements: HTMLElement[] = this.pageContentParsed.querySelectorAll(
       "a[class=xcomponent_products_medium_link]"

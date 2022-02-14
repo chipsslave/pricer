@@ -9,6 +9,10 @@ export class HilliersParser extends NodeHTMLParser {
     super("HILL_");
   }
 
+  buildBody(): unknown {
+    return null;
+  }
+
   parseItemElements(): HTMLElement[] {
     const elements: HTMLElement[] =
       this.pageContentParsed.querySelectorAll("li.col");

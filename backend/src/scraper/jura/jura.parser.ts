@@ -10,6 +10,10 @@ export class JuraParserServiceComponent extends NodeHTMLParser {
     super("JURA_");
   }
 
+  buildBody(): unknown {
+    return null;
+  }
+
   parseItemElements(): HTMLElement[] {
     const elements: HTMLElement[] =
       this.pageContentParsed.querySelectorAll("div.product");
