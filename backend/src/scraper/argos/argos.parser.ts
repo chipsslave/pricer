@@ -1,8 +1,8 @@
+import { HTMLElement } from "node-html-parser";
 import {
   NodeHTMLParser,
   ParsedItem,
-} from "../../mediator/parserService.component";
-import { HTMLElement } from "node-html-parser";
+} from "../../parser/parserService.component";
 
 export class ArgosParser extends NodeHTMLParser {
   constructor() {

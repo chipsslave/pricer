@@ -3,8 +3,8 @@ import {
   updateToProcessing,
   updateToWaiting,
 } from "../service/page.service";
-import { Job } from "./jobService.component";
-import { Parser, ParserResult } from "./parserService.component";
+import { Job } from "../service/jobService.component";
+import { Parser, ParserResult } from "../parser/parserService.component";
 
 export interface Spider<T> {
   setStorePage(storePage: StorePage): void;

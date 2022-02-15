@@ -1,7 +1,7 @@
 import {
   NodeHTMLParser,
   ParsedItem,
-} from "../../mediator/parserService.component";
+} from "../../parser/parserService.component";
 import { HTMLElement } from "node-html-parser";
 import crypto from "crypto";
 

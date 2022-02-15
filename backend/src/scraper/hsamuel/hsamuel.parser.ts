@@ -1,4 +1,4 @@
-import { JsonParser, ParsedItem } from "../../mediator/parserService.component";
+import { JsonParser, ParsedItem } from "../../parser/parserService.component";
 import { Hit, RootHSamuel } from "./hsamuel.types";
 
 export class HSamuelParser extends JsonParser<unknown, RootHSamuel, Hit> {

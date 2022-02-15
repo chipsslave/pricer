@@ -1,5 +1,5 @@
-import { FetchHtmlSpider } from "./mediator/fetchHtmlSpider";
-import { FetchJsonSpider } from "./mediator/fetchJsonSpider";
+import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
+import { FetchJsonSpider } from "./spider/fetchJsonSpider";
 import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones.parser";
 import { HSamuelParser } from "./scraper/hsamuel/hsamuel.parser";
 import { ArgosParser } from "./scraper/argos/argos.parser";
@@ -9,11 +9,11 @@ import {
   updateToProcessing,
   updateToWaiting,
 } from "./service/page.service";
-import { PuppeteerSpider } from "./mediator/puppeteerSpider";
+import { PuppeteerSpider } from "./spider/puppeteerSpider";
 import { HilliersParser } from "./scraper/hilliers/hilliers.parser";
 import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
 import { JuraParserServiceComponent } from "./scraper/jura/jura.parser";
-import { Parser } from "./mediator/parserService.component";
+import { Parser } from "./parser/parserService.component";
 
 const cron = require("node-cron");
 

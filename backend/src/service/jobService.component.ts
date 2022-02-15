@@ -1,8 +1,8 @@
 import moment from "moment";
 import { Brand, JobErrorSeverity, Model, Price } from "@prisma/client";
-import { ParserResult } from "./parserService.component";
+import { ParserResult } from "../parser/parserService.component";
 import { prisma } from "../prisma";
-import { StorePage } from "../service/page.service";
+import { StorePage } from "./page.service";
 
 export type ParsedItem = {
   title: string;

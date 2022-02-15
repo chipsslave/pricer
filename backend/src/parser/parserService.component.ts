@@ -1,6 +1,6 @@
 import parse, { HTMLElement } from "node-html-parser";
 import { Page } from "@prisma/client";
-import { JobError } from "./jobService.component";
+import { JobError } from "../service/jobService.component";
 const crypto = require("crypto");
 
 export type ParsedItem = {
