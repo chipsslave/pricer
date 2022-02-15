@@ -4,13 +4,14 @@ import {
 } from "../../parser/parserService.component";
 import { HTMLElement } from "node-html-parser";
 import crypto from "crypto";
+import { RequestInit } from "node-fetch";
 
 export class JuraParserServiceComponent extends NodeHTMLParser {
   constructor() {
     super("JURA_");
   }
 
-  buildBody(): unknown {
+  buildBody(): RequestInit | null {
     return null;
   }
 

@@ -4,13 +4,14 @@ import {
 } from "../../parser/parserService.component";
 import { HTMLElement } from "node-html-parser";
 import crypto from "crypto";
+import { RequestInit } from "node-fetch";
 
 export class Watches2uParser extends NodeHTMLParser {
   constructor() {
     super("W2U_");
   }
 
-  buildBody(): unknown {
+  buildBody(): RequestInit | null {
     return null;
   }
 

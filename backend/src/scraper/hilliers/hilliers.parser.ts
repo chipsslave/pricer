@@ -3,13 +3,14 @@ import {
   ParsedItem,
 } from "../../parser/parserService.component";
 import { HTMLElement } from "node-html-parser";
+import { RequestInit } from "node-fetch";
 
 export class HilliersParser extends NodeHTMLParser {
   constructor() {
     super("HILL_");
   }
 
-  buildBody(): unknown {
+  buildBody(): RequestInit | null {
     return null;
   }
 

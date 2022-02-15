@@ -1,12 +1,13 @@
 import { JsonParser, ParsedItem } from "../../parser/parserService.component";
 import { Hit, RootHSamuel } from "./hsamuel.types";
+import { RequestInit } from "node-fetch";
 
 export class HSamuelParser extends JsonParser<unknown, RootHSamuel, Hit> {
   constructor() {
     super("HS_");
   }
 
-  buildBody(): unknown {
+  buildBody(): RequestInit | null {
     this.body = {
       headers: {
         "User-Agent":
@@ -20,7 +21,6 @@ export class HSamuelParser extends JsonParser<unknown, RootHSamuel, Hit> {
         "Sec-Fetch-Mode": "cors",
         "Sec-Fetch-Site": "cross-site",
       },
-      referrer: "https://www.hsamuel.co.uk/",
       body: this.result.page.body?.replace(
         "highlight__&page=0",
         `highlight__&page=${this.result.pageNumber}`

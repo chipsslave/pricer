@@ -2,6 +2,7 @@ import parse, { HTMLElement } from "node-html-parser";
 import { Page } from "@prisma/client";
 import { JobError } from "../service/jobService.component";
 const crypto = require("crypto");
+import { RequestInit } from "node-fetch";
 
 export type ParsedItem = {
   title: string | null;
@@ -38,7 +39,7 @@ export type ParserResult = {
 export interface Parser<T> {
   setup(page: Page, pageUrl: string, pageNumber: number): void;
   parse(pageContent: T): ParserResult;
-  buildBody(): unknown;
+  buildBody(): RequestInit | null;
 }
 
 export abstract class AbstractParser<T, PP> implements Parser<T> {
@@ -46,6 +47,7 @@ export abstract class AbstractParser<T, PP> implements Parser<T> {
   private pageContent: T;
   pageContentParsed: PP;
   result: ParserResult;
+  body: RequestInit | null;
 
   constructor(upcCode: string) {
     this.upcCode = upcCode;
@@ -78,7 +80,7 @@ export abstract class AbstractParser<T, PP> implements Parser<T> {
     return this.upcCode;
   }
 
-  abstract buildBody(): unknown;
+  abstract buildBody(): RequestInit | null;
 }
 
 export abstract class NodeHTMLParser extends AbstractParser<
@@ -122,8 +124,6 @@ export abstract class NodeHTMLParser extends AbstractParser<
 }
 
 export abstract class JsonParser<T, PP, I> extends AbstractParser<T, PP> {
-  body: unknown;
-
   constructor(upcCode: string) {
     super(upcCode);
   }

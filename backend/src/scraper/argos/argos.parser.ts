@@ -4,12 +4,14 @@ import {
   ParsedItem,
 } from "../../parser/parserService.component";
 
+import { RequestInit } from "node-fetch";
+
 export class ArgosParser extends NodeHTMLParser {
   constructor() {
     super("A_");
   }
 
-  buildBody(): unknown {
+  buildBody(): RequestInit | null {
     return null;
   }
 
