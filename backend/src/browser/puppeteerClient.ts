@@ -39,7 +39,7 @@ export class PuppeteerClient {
     await pages[0].goto(url, options);
   }
 
-  async getPageHtmlContent(): Promise<string> {
+  async getContent(): Promise<string> {
     if (!this.browser)
       throw new Error("Trying to get pages from null browser!");
     const pages: Page[] = await this.browser.pages();
