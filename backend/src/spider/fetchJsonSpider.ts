@@ -1,12 +1,13 @@
-import { FetchClient } from "../browser/fetchClient";
+import { FetchJsonClient } from "../browser/fetchClient";
 import { BaseSpider } from "./spider";
+import { RequestInit } from "node-fetch";
 
 export class FetchJsonSpider extends BaseSpider<unknown> {
-  private browser: FetchClient = new FetchClient();
+  private browser: FetchJsonClient = new FetchJsonClient();
 
   closeBrowser(): void {}
 
-  async fetchContent(url: string, body?: unknown): Promise<unknown> {
-    return await this.browser.fetchJson(url, body);
+  async fetchContent(url: string, body?: RequestInit): Promise<unknown> {
+    return await this.browser.getContent(url, body);
   }
 }

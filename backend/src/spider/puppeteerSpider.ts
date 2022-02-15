@@ -33,6 +33,6 @@ export class PuppeteerSpider extends BaseSpider<string> {
     await this.setupBrowser();
     if (!this.browser) throw new Error("browser is not set");
     await this.browser.goTo(url);
-    return await this.browser.getPageHtmlContent();
+    return await this.browser.getContent();
   }
 }

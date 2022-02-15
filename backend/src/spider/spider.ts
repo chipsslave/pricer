@@ -5,6 +5,7 @@ import {
 } from "../service/page.service";
 import { Job } from "../service/jobService.component";
 import { Parser, ParserResult } from "../parser/parserService.component";
+import { RequestInit } from "node-fetch";
 
 export interface Spider<T> {
   setStorePage(storePage: StorePage): void;
@@ -28,7 +29,7 @@ export abstract class BaseSpider<T> implements Spider<T> {
   }
 
   abstract closeBrowser(): void | Promise<void>;
-  abstract fetchContent(url: string, body?: unknown): Promise<T>;
+  abstract fetchContent(url: string, body?: RequestInit | null): Promise<T>;
 
   async run(): Promise<void> {
     try {
