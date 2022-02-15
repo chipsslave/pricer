@@ -97,3 +97,23 @@ async function main() {
 }
 
 main();
+
+// async function fixBody() {
+//   const pages = await prisma.page.findMany({
+//     where: { OR: [{ storeId: 2 }, { storeId: 3 }] },
+//   });
+
+//   for (const page of pages) {
+//     console.log(page.url);
+//     const body = page.body;
+//     if (!body) return;
+//     const regx = new RegExp("liveA", "g");
+//     const cleanText = body.replace(regx, "liveB");
+//     await prisma.page.update({
+//       where: { id: page.id },
+//       data: { body: cleanText },
+//     });
+//   }
+// }
+
+// fixBody();
