@@ -5,10 +5,11 @@ import {
   WaitForOptions,
 } from "puppeteer";
 import puppeteer from "puppeteer-extra";
+import { Client } from "./client";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
-export class PuppeteerClient {
+export class PuppeteerClient implements Client<string> {
   private browser: Browser | null;
 
   async launch(
