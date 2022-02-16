@@ -12,7 +12,7 @@ import {
 import { PuppeteerSpider } from "./spider/puppeteerSpider";
 import { HilliersParser } from "./scraper/hilliers/hilliers";
 import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
-import { JuraParserServiceComponent } from "./scraper/jura/jura.parser";
+import { JuraParser } from "./scraper/jura/jura";
 import { Parser } from "./parser/parserService.component";
 import { Parser as NewParser } from "./parser/parser";
 
@@ -28,7 +28,7 @@ const argosParser: NewParser<string> = new ArgosParser();
 const hSamuelParser: Parser<unknown> = new HSamuelParser();
 const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
 const watches2UParser: Parser<unknown> = new Watches2uParser();
-const juraParser: Parser<unknown> = new JuraParserServiceComponent();
+const juraParser: NewParser<string> = new JuraParser();
 const hilliersParser: NewParser<string> = new HilliersParser();
 
 // A `main` function so that you can use async/await
@@ -69,9 +69,9 @@ cron.schedule("*/10 * * * * *", async () => {
           await fetchHtmlSpider.run();
         }
         if (storePage.store.title === "Jura Watches") {
-          fetchHtmlSpider.setParser(juraParser);
-          fetchHtmlSpider.setStorePage(storePage);
-          await fetchHtmlSpider.run();
+          newFetchHtmlSpider.setParser(juraParser);
+          newFetchHtmlSpider.setStorePage(storePage);
+          await newFetchHtmlSpider.run();
         }
         if (storePage.store.title === "Hilliers Jewellers") {
           newFetchHtmlSpider.setParser(hilliersParser);
