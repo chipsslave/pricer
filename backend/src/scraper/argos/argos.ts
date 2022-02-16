@@ -7,6 +7,9 @@ export class ArgosParser extends AbstractParser<
   HTMLElement,
   HTMLElement
 > {
+  constructor() {
+    super("A_");
+  }
   setContent(content: string): void {
     this.content = parse(content);
   }
@@ -27,6 +30,28 @@ export class ArgosParser extends AbstractParser<
         result: "empty array",
         operation: "parseItemElements",
         severity: "HIGH",
+      });
+
+    if (elements.length < this.getConfig().itemElementsCountExpected)
+      this.result.parserErrors.push({
+        elementIndex: -1,
+        expected: `count of ${
+          this.getConfig().itemElementsCountExpected
+        } elements`,
+        result: `count of ${elements.length} elements`,
+        operation: "parseItemElements",
+        severity: "LOW",
+      });
+
+    if (elements.length > this.getConfig().itemElementsCountExpected)
+      this.result.parserErrors.push({
+        elementIndex: -1,
+        expected: `count of ${
+          this.getConfig().itemElementsCountExpected
+        } elements`,
+        result: `count of ${elements.length} elements`,
+        operation: "parseItemElements",
+        severity: "MEDIUM",
       });
 
     return elements;
@@ -153,6 +178,6 @@ export class ArgosParser extends AbstractParser<
   }
 
   parseNextPageNumber(): number {
-    throw new Error("Method not implemented.");
+    return this.getConfig().currentPageNumber + 1;
   }
 }

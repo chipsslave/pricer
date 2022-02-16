@@ -3,9 +3,9 @@ import {
   buildHeadlessBrowser,
   PuppeteerClient,
 } from "../browser/puppeteerClient";
-import { BaseSpider } from "./spider";
+import { NewBaseSpider } from "./newSpider";
 
-export class PuppeteerSpider extends BaseSpider<string> {
+export class PuppeteerSpider extends NewBaseSpider<string> {
   private headless: boolean;
   private browser: PuppeteerClient | null;
 

@@ -1,11 +1,11 @@
 import { RequestInit } from "node-fetch";
-import { JobErrorSeverity } from "@prisma/client";
+import { JobError } from "../service/job";
 
 export type ParsedItem = {
-  title?: string;
-  upc?: string;
-  price?: number;
-  url?: string;
+  title: string;
+  upc: string;
+  price: number;
+  url: string;
   image?: string;
   brand?: string;
   model?: string;
@@ -16,20 +16,16 @@ export type NextPageResult = {
   pageNumber: number;
 } | null;
 
-export type JobError = {
-  expected: string;
-  result: string;
-  severity: JobErrorSeverity;
-  operation: string;
-  elementIndex: number;
-};
-
 export type ParserResult = {
+  pageUrl: string;
+  pageNumber: number;
   parsedItems: ParsedItem[];
   elementsCount: number;
   nextPage: NextPageResult;
   parserErrors: JobError[];
   parsedItemsCount: number;
+  parsedItemsSuccessCount: number;
+  parsedItemsFailCount: number;
 };
 
 export type ParserConfig = {
@@ -38,11 +34,14 @@ export type ParserConfig = {
   currentUrl: string;
 };
 
-export interface Parser {
+export interface Parser<SC> {
   parse(): ParserResult;
+  buildBody(): RequestInit | null;
+  setContent(content: SC): void;
+  setConfig(config: ParserConfig): void;
 }
 
-export abstract class AbstractParser<SC, C, IE> implements Parser {
+export abstract class AbstractParser<SC, C, IE> implements Parser<SC> {
   private config: ParserConfig;
   private upcCode: string;
   content: C;
@@ -60,10 +59,6 @@ export abstract class AbstractParser<SC, C, IE> implements Parser {
 
   abstract nextPageExists(): boolean;
 
-  getContent(): C {
-    return this.content;
-  }
-
   abstract parseTitle(itemElement: IE, index: number): string | undefined;
   abstract parseUpc(itemElement: IE, index: number): string | undefined;
   abstract parsePrice(itemElement: IE, index: number): number | undefined;
@@ -75,21 +70,27 @@ export abstract class AbstractParser<SC, C, IE> implements Parser {
   abstract parseNextPageUrl(): string;
   abstract parseNextPageNumber(): number;
 
-  parseItem(itemElement: IE, index: number): ParsedItem {
-    return {
-      title: this.parseTitle(itemElement, index)?.trim(),
-      upc: this.parseUpc(itemElement, index)?.trim(),
-      price: this.parsePrice(itemElement, index),
-      url: this.parseUrl(itemElement, index)?.trim(),
-      image: this.parseImage(itemElement, index)?.trim(),
-      brand: this.parseBrand(itemElement, index)?.trim(),
-      model: this.parseModel(itemElement, index)?.trim(),
-    };
-  }
+  parseItem(itemElement: IE, index: number): ParsedItem | null {
+    const title = this.parseTitle(itemElement, index)?.trim();
+    const upcString = this.parseUpc(itemElement, index)?.trim();
+    const upc = upcString ? `${this.getUpcCode()}${upcString}` : undefined;
+    const price = this.parsePrice(itemElement, index);
+    const url = this.parseUrl(itemElement, index)?.trim();
+    const image = this.parseImage(itemElement, index)?.trim();
+    const brand = this.parseBrand(itemElement, index)?.trim();
+    const model = this.parseModel(itemElement, index)?.trim();
 
-  itemSuccess(item: ParsedItem): boolean {
-    if (item.price && item.title && item.upc && item.url) return true;
-    return false;
+    if (title && upc && url && price)
+      return {
+        title,
+        upc,
+        price,
+        url,
+        image,
+        brand,
+        model,
+      };
+    return null;
   }
 
   getUpcCode() {
@@ -114,10 +115,14 @@ export abstract class AbstractParser<SC, C, IE> implements Parser {
     this.result.elementsCount = parsedElements.length;
 
     for (const [index, element] of parsedElements.entries()) {
-      const parsedItem: ParsedItem = this.parseItem(element, index);
+      const parsedItem: ParsedItem | null = this.parseItem(element, index);
 
-      if (this.itemSuccess(parsedItem))
+      if (parsedItem) {
         this.result.parsedItems.push(parsedItem);
+        this.result.parsedItemsSuccessCount++;
+      } else {
+        this.result.parsedItemsFailCount++;
+      }
     }
 
     this.result.parsedItemsCount = this.result.parsedItems.length;
@@ -133,11 +138,15 @@ export abstract class AbstractParser<SC, C, IE> implements Parser {
 
   resetResult(): void {
     this.result = {
+      pageUrl: this.config.currentUrl,
+      pageNumber: this.config.currentPageNumber,
       elementsCount: -1,
       nextPage: null,
       parsedItems: [],
       parserErrors: [],
       parsedItemsCount: 0,
+      parsedItemsSuccessCount: 0,
+      parsedItemsFailCount: 0,
     };
   }
 }

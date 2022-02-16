@@ -1,8 +1,8 @@
-import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
+import { FetchHtmlSpider, NewFetchHtmlSpider } from "./spider/fetchHtmlSpider";
 import { FetchJsonSpider } from "./spider/fetchJsonSpider";
 import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones.parser";
 import { HSamuelParser } from "./scraper/hsamuel/hsamuel.parser";
-import { ArgosParser } from "./scraper/argos/argos.parser";
+import { ArgosParser } from "./scraper/argos/argos";
 import {
   StorePage,
   checkForPage,
@@ -10,10 +10,11 @@ import {
   updateToWaiting,
 } from "./service/page.service";
 import { PuppeteerSpider } from "./spider/puppeteerSpider";
-import { HilliersParser } from "./scraper/hilliers/hilliers.parser";
+import { HilliersParser } from "./scraper/hilliers/hilliers";
 import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
 import { JuraParserServiceComponent } from "./scraper/jura/jura.parser";
 import { Parser } from "./parser/parserService.component";
+import { Parser as NewParser } from "./parser/parser";
 
 const cron = require("node-cron");
 
@@ -21,13 +22,14 @@ const puppeteerSpider = new PuppeteerSpider(false);
 // const puppeteerSpiderHeadless = new PuppeteerSpider(true);
 const fetchJsonSpider = new FetchJsonSpider();
 const fetchHtmlSpider = new FetchHtmlSpider();
+const newFetchHtmlSpider = new NewFetchHtmlSpider();
 
-const argosParser: Parser<string> = new ArgosParser();
+const argosParser: NewParser<string> = new ArgosParser();
 const hSamuelParser: Parser<unknown> = new HSamuelParser();
 const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
 const watches2UParser: Parser<unknown> = new Watches2uParser();
 const juraParser: Parser<unknown> = new JuraParserServiceComponent();
-const hilliersParser: Parser<unknown> = new HilliersParser();
+const hilliersParser: NewParser<string> = new HilliersParser();
 
 // A `main` function so that you can use async/await
 // async function main() {
@@ -72,9 +74,9 @@ cron.schedule("*/10 * * * * *", async () => {
           await fetchHtmlSpider.run();
         }
         if (storePage.store.title === "Hilliers Jewellers") {
-          fetchHtmlSpider.setParser(hilliersParser);
-          fetchHtmlSpider.setStorePage(storePage);
-          await fetchHtmlSpider.run();
+          newFetchHtmlSpider.setParser(hilliersParser);
+          newFetchHtmlSpider.setStorePage(storePage);
+          await newFetchHtmlSpider.run();
         }
         console.log("Finish crawling.");
         await updateToWaiting(storePage);
