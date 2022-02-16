@@ -1,4 +1,4 @@
-import { FetchHtmlSpider, NewFetchHtmlSpider } from "./spider/fetchHtmlSpider";
+import { NewFetchHtmlSpider } from "./spider/fetchHtmlSpider";
 import { FetchJsonSpider } from "./spider/fetchJsonSpider";
 import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones.parser";
 import { HSamuelParser } from "./scraper/hsamuel/hsamuel.parser";
@@ -11,7 +11,7 @@ import {
 } from "./service/page.service";
 import { PuppeteerSpider } from "./spider/puppeteerSpider";
 import { HilliersParser } from "./scraper/hilliers/hilliers";
-import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
+import { Watches2UParser } from "./scraper/watches2u/watches2u";
 import { JuraParser } from "./scraper/jura/jura";
 import { Parser } from "./parser/parserService.component";
 import { Parser as NewParser } from "./parser/parser";
@@ -21,13 +21,12 @@ const cron = require("node-cron");
 const puppeteerSpider = new PuppeteerSpider(false);
 // const puppeteerSpiderHeadless = new PuppeteerSpider(true);
 const fetchJsonSpider = new FetchJsonSpider();
-const fetchHtmlSpider = new FetchHtmlSpider();
 const newFetchHtmlSpider = new NewFetchHtmlSpider();
 
 const argosParser: NewParser<string> = new ArgosParser();
 const hSamuelParser: Parser<unknown> = new HSamuelParser();
 const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
-const watches2UParser: Parser<unknown> = new Watches2uParser();
+const watches2UParser: NewParser<string> = new Watches2UParser();
 const juraParser: NewParser<string> = new JuraParser();
 const hilliersParser: NewParser<string> = new HilliersParser();
 
@@ -64,9 +63,9 @@ cron.schedule("*/10 * * * * *", async () => {
           await fetchJsonSpider.run();
         }
         if (storePage.store.title === "Watches 2 U") {
-          fetchHtmlSpider.setParser(watches2UParser);
-          fetchHtmlSpider.setStorePage(storePage);
-          await fetchHtmlSpider.run();
+          newFetchHtmlSpider.setParser(watches2UParser);
+          newFetchHtmlSpider.setStorePage(storePage);
+          await newFetchHtmlSpider.run();
         }
         if (storePage.store.title === "Jura Watches") {
           newFetchHtmlSpider.setParser(juraParser);
