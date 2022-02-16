@@ -65,7 +65,7 @@ export class HilliersParser extends AbstractParser<
       ?.getAttribute("title")
       ?.trim();
 
-    if (!title)
+    if (!title) {
       this.result.parserErrors.push({
         elementIndex: index,
         expected: "not null",
@@ -73,6 +73,8 @@ export class HilliersParser extends AbstractParser<
         operation: "parseTitle",
         severity: "HIGH",
       });
+      return undefined;
+    }
 
     return title;
   }
