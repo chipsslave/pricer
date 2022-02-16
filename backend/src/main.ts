@@ -1,4 +1,4 @@
-import { NewFetchHtmlSpider } from "./spider/fetchHtmlSpider";
+import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
 import { FetchJsonSpider } from "./spider/fetchJsonSpider";
 import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones.parser";
 import { HSamuelParser } from "./scraper/hsamuel/hsamuel.parser";
@@ -21,7 +21,7 @@ const cron = require("node-cron");
 const puppeteerSpider = new PuppeteerSpider(false);
 // const puppeteerSpiderHeadless = new PuppeteerSpider(true);
 const fetchJsonSpider = new FetchJsonSpider();
-const newFetchHtmlSpider = new NewFetchHtmlSpider();
+const fetchHtmlSpider = new FetchHtmlSpider();
 
 const argosParser: NewParser<string> = new ArgosParser();
 const hSamuelParser: Parser<unknown> = new HSamuelParser();
@@ -63,19 +63,19 @@ cron.schedule("*/10 * * * * *", async () => {
           await fetchJsonSpider.run();
         }
         if (storePage.store.title === "Watches 2 U") {
-          newFetchHtmlSpider.setParser(watches2UParser);
-          newFetchHtmlSpider.setStorePage(storePage);
-          await newFetchHtmlSpider.run();
+          fetchHtmlSpider.setParser(watches2UParser);
+          fetchHtmlSpider.setStorePage(storePage);
+          await fetchHtmlSpider.run();
         }
         if (storePage.store.title === "Jura Watches") {
-          newFetchHtmlSpider.setParser(juraParser);
-          newFetchHtmlSpider.setStorePage(storePage);
-          await newFetchHtmlSpider.run();
+          fetchHtmlSpider.setParser(juraParser);
+          fetchHtmlSpider.setStorePage(storePage);
+          await fetchHtmlSpider.run();
         }
         if (storePage.store.title === "Hilliers Jewellers") {
-          newFetchHtmlSpider.setParser(hilliersParser);
-          newFetchHtmlSpider.setStorePage(storePage);
-          await newFetchHtmlSpider.run();
+          fetchHtmlSpider.setParser(hilliersParser);
+          fetchHtmlSpider.setStorePage(storePage);
+          await fetchHtmlSpider.run();
         }
         console.log("Finish crawling.");
         await updateToWaiting(storePage);
