@@ -13,7 +13,7 @@ import { PuppeteerSpider } from "./spider/puppeteerSpider";
 import { HilliersParser } from "./scraper/hilliers/hilliers";
 import { Watches2UParser } from "./scraper/watches2u/watches2u";
 import { JuraParser } from "./scraper/jura/jura";
-import { Parser as NewParser } from "./parser/parser";
+import { Parser } from "./parser/parser";
 
 const cron = require("node-cron");
 
@@ -22,12 +22,12 @@ const puppeteerSpider = new PuppeteerSpider(false);
 const fetchJsonSpider = new FetchJsonSpider();
 const fetchHtmlSpider = new FetchHtmlSpider();
 
-const argosParser: NewParser<string> = new ArgosParser();
-const hSamuelParser: NewParser<unknown> = new HSamuelParser();
-const ernestJonesParser: NewParser<unknown> = new ErnestJonesParser();
-const watches2UParser: NewParser<string> = new Watches2UParser();
-const juraParser: NewParser<string> = new JuraParser();
-const hilliersParser: NewParser<string> = new HilliersParser();
+const argosParser: Parser<string> = new ArgosParser();
+const hSamuelParser: Parser<unknown> = new HSamuelParser();
+const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
+const watches2UParser: Parser<string> = new Watches2UParser();
+const juraParser: Parser<string> = new JuraParser();
+const hilliersParser: Parser<string> = new HilliersParser();
 
 // A `main` function so that you can use async/await
 // async function main() {
