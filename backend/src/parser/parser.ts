@@ -32,6 +32,7 @@ export type ParserConfig = {
   currentPageNumber: number;
   itemElementsCountExpected: number;
   currentUrl: string;
+  body?: string | null;
 };
 
 export interface Parser<SC> {

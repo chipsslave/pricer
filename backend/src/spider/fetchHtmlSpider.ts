@@ -1,8 +1,8 @@
 import { FetchHtmlClient } from "../browser/fetchClient";
 import { RequestInit } from "node-fetch";
-import { NewBaseSpider } from "./newSpider";
+import { BaseSpider } from "./spider";
 
-export class FetchHtmlSpider extends NewBaseSpider<string> {
+export class FetchHtmlSpider extends BaseSpider<string> {
   private browser: FetchHtmlClient = new FetchHtmlClient();
 
   closeBrowser(): void {}
