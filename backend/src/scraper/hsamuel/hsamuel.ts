@@ -165,7 +165,7 @@ export class HSamuelParser extends AbstractParser<unknown, RootHSamuel, Hit> {
       return undefined;
     }
 
-    return `https://www.ernestjones.co.uk${urlHalf}`;
+    return `https://www.hsamuel.co.uk${urlHalf}`;
   }
   parseImage(itemElement: Hit, index: number): string | undefined {
     const image: string | undefined = itemElement.image;
