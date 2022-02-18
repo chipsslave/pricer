@@ -1,6 +1,6 @@
 import { FetchJsonClient } from "../browser/fetchClient";
-import { BaseSpider } from "./spider";
 import { RequestInit } from "node-fetch";
+import { BaseSpider } from "./spider";
 
 export class FetchJsonSpider extends BaseSpider<unknown> {
   private browser: FetchJsonClient = new FetchJsonClient();

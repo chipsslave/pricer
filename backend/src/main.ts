@@ -1,8 +1,8 @@
 import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
 import { FetchJsonSpider } from "./spider/fetchJsonSpider";
-import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones.parser";
-import { HSamuelParser } from "./scraper/hsamuel/hsamuel.parser";
-import { ArgosParser } from "./scraper/argos/argos.parser";
+import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones";
+import { HSamuelParser } from "./scraper/hsamuel/hsamuel";
+import { ArgosParser } from "./scraper/argos/argos";
 import {
   StorePage,
   checkForPage,
@@ -10,10 +10,10 @@ import {
   updateToWaiting,
 } from "./service/page.service";
 import { PuppeteerSpider } from "./spider/puppeteerSpider";
-import { HilliersParser } from "./scraper/hilliers/hilliers.parser";
-import { Watches2uParser } from "./scraper/watches2u/watches2u.parser";
-import { JuraParserServiceComponent } from "./scraper/jura/jura.parser";
-import { Parser } from "./parser/parserService.component";
+import { HilliersParser } from "./scraper/hilliers/hilliers";
+import { Watches2UParser } from "./scraper/watches2u/watches2u";
+import { JuraParser } from "./scraper/jura/jura";
+import { Parser } from "./parser/parser";
 
 const cron = require("node-cron");
 
@@ -25,9 +25,9 @@ const fetchHtmlSpider = new FetchHtmlSpider();
 const argosParser: Parser<string> = new ArgosParser();
 const hSamuelParser: Parser<unknown> = new HSamuelParser();
 const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
-const watches2UParser: Parser<unknown> = new Watches2uParser();
-const juraParser: Parser<unknown> = new JuraParserServiceComponent();
-const hilliersParser: Parser<unknown> = new HilliersParser();
+const watches2UParser: Parser<string> = new Watches2UParser();
+const juraParser: Parser<string> = new JuraParser();
+const hilliersParser: Parser<string> = new HilliersParser();
 
 // A `main` function so that you can use async/await
 // async function main() {

@@ -3,9 +3,9 @@ import {
   updateToProcessing,
   updateToWaiting,
 } from "../service/page.service";
-import { Job } from "../service/jobService.component";
-import { Parser, ParserResult } from "../parser/parserService.component";
+import { Job } from "../service/job";
 import { RequestInit } from "node-fetch";
+import { Parser, ParserResult } from "../parser/parser";
 
 export interface Spider<T> {
   setStorePage(storePage: StorePage): void;
@@ -37,21 +37,24 @@ export abstract class BaseSpider<T> implements Spider<T> {
       if (!this.storePage) throw new Error("storePage is not set");
 
       await updateToProcessing(this.storePage);
-      this.parser.setup(
-        this.storePage,
+
+      this.parser.setConfig({
+        currentPageNumber: this.job.getPageNumber(),
+        currentUrl: this.job.getPageUrl(),
+        itemElementsCountExpected: this.storePage.itemsPerPage,
+        body: this.storePage.body,
+      });
+
+      const urlHtml: T = await this.fetchContent(
         this.job.getPageUrl(),
-        this.job.getPageNumber()
+        this.parser.buildBody()
       );
-      const urlHtml: T = this.parser.buildBody()
-        ? await this.fetchContent(
-            this.job.getPageUrl(),
-            this.parser.buildBody()
-          )
-        : await this.fetchContent(this.job.getPageUrl());
-      const parserResult: ParserResult = this.parser.parse(urlHtml);
-      this.job.processParserResults({ ...parserResult });
+
+      this.parser.setContent(urlHtml);
+
+      const parserResult: ParserResult = this.parser.parse();
       this.job.recordFinishedAt();
-      await this.job.save();
+      await this.job.save(parserResult);
 
       if (parserResult.nextPage) {
         this.job = new Job(
