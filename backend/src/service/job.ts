@@ -91,80 +91,89 @@ export class Job {
     });
 
     for (const parsedItem of parserResult.parsedItems) {
-      const pageBrand: Brand | null = this.page.brand;
+      if (parsedItem.brand === "CALVIN KLEIN")
+        parsedItem.brand = "Calvin Klein";
+      if (parsedItem.brand === "Victorinox Swiss Army")
+        parsedItem.brand = "Victorinox";
+      try {
+        const pageBrand: Brand | null = this.page.brand;
 
-      const itemBrand: Brand | null =
-        (parsedItem.brand &&
-          (await prisma.brand.upsert({
-            where: { title: parsedItem.brand },
-            create: { title: parsedItem.brand },
-            update: {},
-          }))) ||
-        null;
+        const itemBrand: Brand | null =
+          (parsedItem.brand &&
+            (await prisma.brand.upsert({
+              where: { title: parsedItem.brand },
+              create: { title: parsedItem.brand },
+              update: {},
+            }))) ||
+          null;
 
-      const brandId: number | null | undefined = pageBrand?.id || itemBrand?.id;
+        const brandId: number | null | undefined =
+          pageBrand?.id || itemBrand?.id;
 
-      const itemModel: Model | null =
-        (brandId &&
-          parsedItem.model &&
-          (await prisma.model.upsert({
-            where: {
-              composedId: {
-                brandId,
-                title: parsedItem.model,
+        const itemModel: Model | null =
+          (brandId &&
+            parsedItem.model &&
+            (await prisma.model.upsert({
+              where: {
+                composedId: {
+                  brandId,
+                  title: parsedItem.model,
+                },
               },
-            },
-            create: { brandId, title: parsedItem.model },
-            update: {},
-          }))) ||
-        null;
+              create: { brandId, title: parsedItem.model },
+              update: {},
+            }))) ||
+          null;
 
-      const item = await prisma.item.upsert({
-        where: { upc: parsedItem.upc },
-        update: {
-          title: parsedItem.title,
-          url: parsedItem.url,
-          imageUrl: parsedItem.image,
-          pageId: this.page.id,
-          brandId: pageBrand?.id || itemBrand?.id,
-          modelId: itemModel?.id,
-        },
-        create: {
-          title: parsedItem.title,
-          upc: parsedItem.upc,
-          url: parsedItem.url,
-          imageUrl: parsedItem.image,
-          storeId: this.page.storeId,
-          pageId: this.page.id,
-          brandId: pageBrand?.id || itemBrand?.id,
-          modelId: itemModel?.id,
-        },
-        include: { prices: true },
-      });
-
-      if (item.prices.length == 0) {
-        await prisma.price.create({
-          data: { price: parsedItem.price, itemId: item.id },
+        const item = await prisma.item.upsert({
+          where: { upc: parsedItem.upc },
+          update: {
+            title: parsedItem.title,
+            url: parsedItem.url,
+            imageUrl: parsedItem.image,
+            pageId: this.page.id,
+            brandId: pageBrand?.id || itemBrand?.id,
+            modelId: itemModel?.id,
+          },
+          create: {
+            title: parsedItem.title,
+            upc: parsedItem.upc,
+            url: parsedItem.url,
+            imageUrl: parsedItem.image,
+            storeId: this.page.storeId,
+            pageId: this.page.id,
+            brandId: pageBrand?.id || itemBrand?.id,
+            modelId: itemModel?.id,
+          },
+          include: { prices: true },
         });
-      } else {
-        const lastPriceId: number = Math.max(...item.prices.map((p) => p.id));
-        const price: Price | undefined = item.prices.find(
-          (p) => p.id === lastPriceId
-        );
 
-        if (!price) return;
-
-        if (parsedItem.price != price.price.toNumber()) {
-          const delta: number =
-            (parsedItem.price / price.price.toNumber() - 1) * 100;
+        if (item.prices.length == 0) {
           await prisma.price.create({
-            data: {
-              itemId: item.id,
-              price: parsedItem.price,
-              delta,
-            },
+            data: { price: parsedItem.price, itemId: item.id },
           });
+        } else {
+          const lastPriceId: number = Math.max(...item.prices.map((p) => p.id));
+          const price: Price | undefined = item.prices.find(
+            (p) => p.id === lastPriceId
+          );
+
+          if (!price) return;
+
+          if (parsedItem.price != price.price.toNumber()) {
+            const delta: number =
+              (parsedItem.price / price.price.toNumber() - 1) * 100;
+            await prisma.price.create({
+              data: {
+                itemId: item.id,
+                price: parsedItem.price,
+                delta,
+              },
+            });
+          }
         }
+      } catch (e) {
+        console.log("failed on: ", { ...parsedItem });
       }
     }
   }
