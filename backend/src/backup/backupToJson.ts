@@ -82,7 +82,7 @@ async function main(): Promise<void> {
 
   fs.writeFile(
     `./src/backup/rawJson/${moment().format("HH-mm DD-MM-YYYY")}.json`,
-    JSON.stringify(results),
+    JSON.stringify(results, null, 2),
     (err) => {
       if (err) {
         throw err;
