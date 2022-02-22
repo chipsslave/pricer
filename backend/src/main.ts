@@ -14,11 +14,12 @@ import { HilliersParser } from "./scraper/hilliers/hilliers";
 import { Watches2UParser } from "./scraper/watches2u/watches2u";
 import { JuraParser } from "./scraper/jura/jura";
 import { Parser } from "./parser/parser";
+import { WatchHutParser } from "./scraper/watchhut/watchhut";
 
 const cron = require("node-cron");
 
 const puppeteerSpider = new PuppeteerSpider(false);
-// const puppeteerSpiderHeadless = new PuppeteerSpider(true);
+const puppeteerSpiderHeadless = new PuppeteerSpider(true);
 const fetchJsonSpider = new FetchJsonSpider();
 const fetchHtmlSpider = new FetchHtmlSpider();
 
@@ -28,6 +29,7 @@ const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
 const watches2UParser: Parser<string> = new Watches2UParser();
 const juraParser: Parser<string> = new JuraParser();
 const hilliersParser: Parser<string> = new HilliersParser();
+const watchHutParser: Parser<string> = new WatchHutParser();
 
 // A `main` function so that you can use async/await
 // async function main() {
@@ -75,6 +77,11 @@ cron.schedule("*/10 * * * * *", async () => {
           fetchHtmlSpider.setParser(hilliersParser);
           fetchHtmlSpider.setStorePage(storePage);
           await fetchHtmlSpider.run();
+        }
+        if (storePage.store.title === "Watch Hut") {
+          puppeteerSpiderHeadless.setParser(watchHutParser);
+          puppeteerSpiderHeadless.setStorePage(storePage);
+          await puppeteerSpiderHeadless.run();
         }
         console.log("Finish crawling.");
         await updateToWaiting(storePage);
