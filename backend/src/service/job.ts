@@ -95,6 +95,7 @@ export class Job {
         parsedItem.brand = "Calvin Klein";
       if (parsedItem.brand === "Victorinox Swiss Army")
         parsedItem.brand = "Victorinox";
+      if (parsedItem.brand === "Versus") parsedItem.brand = "Versus Versace";
       try {
         const pageBrand: Brand | null = this.page.brand;
 
