@@ -267,19 +267,36 @@ export class WatchHutParser extends AbstractParser<
       return undefined;
     }
 
-    const upc: string | undefined = meta.getAttribute("content")?.trim();
-    if (!upc) {
+    const brand: string | undefined = meta.getAttribute("content")?.trim();
+    if (!brand) {
       this.result.parserErrors.push({
         elementIndex: index,
         expected: "not null",
         result: "null",
-        operation: "parseBrand -> upc",
+        operation: "parseBrand -> brand",
         severity: "HIGH",
       });
       return undefined;
     }
 
-    return upc;
+    if (brand.endsWith("Jewellery")) {
+      const b: string = brand.replace("Jewellery", "").trim();
+
+      if (!b) {
+        this.result.parserErrors.push({
+          elementIndex: index,
+          expected: "not null",
+          result: "null",
+          operation: "parseBrand -> b",
+          severity: "HIGH",
+        });
+        return undefined;
+      }
+
+      return b;
+    }
+
+    return brand;
   }
 
   parseModel(itemElement: HTMLElement, index: number): string | undefined {
