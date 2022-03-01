@@ -91,11 +91,46 @@ export class Job {
     });
 
     for (const parsedItem of parserResult.parsedItems) {
+      if (!parsedItem.brand || !parsedItem.model) {
+        const calculated = await this.calculateBrandAndModel(
+          [parsedItem.title, parsedItem.model].join(" ")
+        );
+
+        if (
+          parsedItem.brand &&
+          calculated.brand &&
+          parsedItem.brand !== calculated.brand
+        ) {
+          console.log("Calculated brand titles do not match.");
+          console.log({ ...parsedItem });
+          console.log("Calculated brand: ", calculated.brand);
+        }
+
+        if (
+          parsedItem.model &&
+          calculated.model &&
+          parsedItem.model !== calculated.model
+        ) {
+          console.log("Calculated model titles do not match.");
+          console.log({ ...parsedItem });
+          console.log("Calculated model: ", calculated.model);
+        }
+
+        if (!parsedItem.brand) {
+          parsedItem.brand = calculated.brand;
+        }
+
+        if (!parsedItem.model) {
+          parsedItem.model = calculated.model;
+        }
+      }
+
       if (parsedItem.brand === "CALVIN KLEIN")
         parsedItem.brand = "Calvin Klein";
       if (parsedItem.brand === "Victorinox Swiss Army")
         parsedItem.brand = "Victorinox";
       if (parsedItem.brand === "Versus") parsedItem.brand = "Versus Versace";
+      if (parsedItem.brand?.startsWith("Garmin")) parsedItem.brand = "Garmin";
       try {
         const pageBrand: Brand | null = this.page.brand;
 
@@ -111,7 +146,7 @@ export class Job {
         const brandId: number | null | undefined =
           pageBrand?.id || itemBrand?.id;
 
-        const itemModel: Model | null =
+        let itemModel: Model | null =
           (brandId &&
             parsedItem.model &&
             (await prisma.model.upsert({
@@ -125,6 +160,12 @@ export class Job {
               update: {},
             }))) ||
           null;
+
+        if (!brandId && parsedItem.model) {
+          itemModel = await prisma.model.findUnique({
+            where: { title: parsedItem.model },
+          });
+        }
 
         const item = await prisma.item.upsert({
           where: { upc: parsedItem.upc },
@@ -177,5 +218,52 @@ export class Job {
         console.log("failed on: ", { ...parsedItem });
       }
     }
+  }
+
+  // async processParsedItem(item: ParsedItem): Promise<void> {
+  //   if (item.brand === "CALVIN KLEIN") item.brand = "Calvin Klein";
+  //   if (item.brand === "Victorinox Swiss Army") item.brand = "Victorinox";
+  //   if (item.brand === "Versus") item.brand = "Versus Versace";
+  //   if (item.brand?.startsWith("Garmin")) item.brand = "Garmin";
+
+  //   const brands = await prisma.brand.findMany({
+  //     select: { id: true, title: true, models: true },
+  //   });
+  // }
+
+  async calculateBrandAndModel(
+    title: string
+  ): Promise<{ brand: string | undefined; model: string | undefined }> {
+    const brands = await prisma.brand.findMany({
+      select: { id: true, title: true, models: true },
+    });
+
+    const result: { brand: string | undefined; model: string | undefined } = {
+      brand: undefined,
+      model: undefined,
+    };
+
+    title = title.toLowerCase();
+
+    let countBrands: number = 0;
+    let countModels: number = 0;
+
+    for (const brand of brands) {
+      if (title.includes(brand.title.toLowerCase())) {
+        countBrands++;
+        result.brand = brand.title;
+        for (const model of brand.models) {
+          if (title.includes(model.title.toLowerCase())) {
+            countModels++;
+            result.model = model.title;
+          }
+        }
+      }
+    }
+
+    if (countBrands > 1) result.brand = undefined;
+    if (countModels > 1) result.model = undefined;
+
+    return result;
   }
 }
