@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node ./src/main.ts",
+    "ej": "ts-node ./src/ej.ts",
     "backup": "ts-node ./src/backup/backupToJson.ts",
     "backuptypes": "ts-node ./src/backup/genTypes.ts",
     "fetch": "ts-node ./src/browser/fetchClient.ts",
