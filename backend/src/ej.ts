@@ -1,4 +1,7 @@
+import moment from "moment";
 import { prisma } from "./prisma";
+import fs from "node:fs";
+// import crypto from "crypto";
 
 const bodies = [
   {
@@ -75,28 +78,30 @@ const bodies = [
   },
 ];
 
-async function main() {
-  for (const body of bodies) {
-    await prisma.page.create({
-      data: {
-        description: `${body.brand} watches`,
-        itemsPerPage: 1000,
-        url: body.url,
-        body: body.body,
-        pageStatus: "PROCESSING",
-        store: { connect: { id: 4 } },
-        brand: {
-          connectOrCreate: {
-            create: { title: body.brand },
-            where: { title: body.brand },
-          },
-        },
-      },
-    });
-  }
-}
+bodies;
 
-main();
+// async function main() {
+//   for (const body of bodies) {
+//     await prisma.page.create({
+//       data: {
+//         description: `${body.brand} watches`,
+//         itemsPerPage: 1000,
+//         url: body.url,
+//         body: body.body,
+//         pageStatus: "PROCESSING",
+//         store: { connect: { id: 4 } },
+//         brand: {
+//           connectOrCreate: {
+//             create: { title: body.brand },
+//             where: { title: body.brand },
+//           },
+//         },
+//       },
+//     });
+//   }
+// }
+
+// main();
 
 // async function fixBody() {
 //   const pages = await prisma.page.findMany({
@@ -117,3 +122,156 @@ main();
 // }
 
 // fixBody();
+
+// async function trimTitles() {
+//   const items = await prisma.item.findMany();
+
+//   for (const item of items) {
+//     const titleTrim: string = item.title.trim();
+
+//     // if (item.storeId === 4) {
+//     //   const upc: string = crypto
+//     //     .createHash("md5")
+//     //     .update(titleTrim)
+//     //     .digest("hex");
+
+//     //   const fullUpc: string = `W2U_${upc}`;
+
+//     //   if (item.upc !== fullUpc) console.log({ old: item.upc, new: fullUpc });
+//     // }
+
+//     await prisma.item.update({
+//       where: { id: item.id },
+//       data: { title: titleTrim },
+//     });
+//   }
+// }
+
+// trimTitles();
+
+// async function trimBrands() {
+//   const items = await prisma.brand.findMany();
+
+//   for (const item of items) {
+//     const titleTrim: string = item.title.trim();
+
+//     // if (item.storeId === 4) {
+//     //   const upc: string = crypto
+//     //     .createHash("md5")
+//     //     .update(titleTrim)
+//     //     .digest("hex");
+
+//     //   const fullUpc: string = `W2U_${upc}`;
+
+//     //   if (item.upc !== fullUpc) console.log({ old: item.upc, new: fullUpc });
+//     // }
+
+//     await prisma.brand.update({
+//       where: { id: item.id },
+//       data: { title: titleTrim },
+//     });
+//   }
+// }
+
+// trimBrands();
+
+// async function trimModels() {
+//   const items = await prisma.model.findMany();
+
+//   for (const item of items) {
+//     const titleTrim: string = item.title.trim();
+
+//     // if (item.storeId === 4) {
+//     //   const upc: string = crypto
+//     //     .createHash("md5")
+//     //     .update(titleTrim)
+//     //     .digest("hex");
+
+//     //   const fullUpc: string = `W2U_${upc}`;
+
+//     //   if (item.upc !== fullUpc) console.log({ old: item.upc, new: fullUpc });
+//     // }
+
+//     await prisma.model.update({
+//       where: { id: item.id },
+//       data: { title: titleTrim },
+//     });
+//   }
+// }
+
+// trimModels();
+
+async function deals() {
+  const startOfToday = moment().startOf("day");
+
+  const prices = await prisma.price.findMany({ include: { item: true } });
+
+  const tPricesWithNegativeDelta = prices.filter((price) => {
+    const createdAt = moment(price.createdAt);
+    const delta = price.delta?.toNumber();
+
+    if (!delta) return false;
+
+    const isToday = startOfToday.isBefore(createdAt);
+    if (isToday && delta < -20) {
+      return true;
+    }
+
+    return false;
+  });
+
+  const items = await prisma.item.findMany({
+    where: { id: { in: tPricesWithNegativeDelta.map((p) => p.itemId) } },
+    include: { prices: true, brand: true, model: true },
+  });
+
+  const brands = items.map((i) => i.brand?.title || "No Brand");
+
+  for (const brand of brands) {
+    fs.writeFile(
+      `./src/deals/${brand}-${moment().format("DD-MM-YYYY")}.json`,
+      JSON.stringify(
+        items.filter((i) => {
+          if (brand === "No Brand" && !i.brand) return true;
+          if (i.brand?.title === brand) return true;
+        }),
+        null,
+        2
+      ),
+      (err) => {
+        if (err) {
+          throw err;
+        }
+        console.log("JSON data is saved.");
+      }
+    );
+  }
+}
+
+deals();
+
+// async function del() {
+//   const prices = await prisma.price.findMany({
+//     where: { item: { storeId: 2 } },
+//   });
+
+//   console.log("1: ", prices.length);
+
+//   for (const price of prices) {
+//     const startOfToday = moment().startOf("day");
+
+//     const isToday = startOfToday.isBefore(moment(price.createdAt));
+
+//     if (isToday) {
+//       await prisma.price.delete({ where: { id: price.id } });
+//     }
+//   }
+
+//   const prices2 = await prisma.price.findMany({
+//     where: { item: { storeId: 2 } },
+//   });
+
+//   console.log("2: ", prices2.length);
+// }
+
+// del();
