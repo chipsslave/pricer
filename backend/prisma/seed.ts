@@ -1,7 +1,7 @@
 import { Brand, Page, PrismaClient, Store } from "@prisma/client";
-const prisma = new PrismaClient();
 import * as seed from "../src/backup/seed.json";
 import { Seed } from "../src/backup/types";
+const prisma = new PrismaClient();
 
 async function main() {
   const seedResult: Seed = seed as Seed;
