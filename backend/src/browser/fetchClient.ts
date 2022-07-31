@@ -1,32 +1,73 @@
 const fetch = require("node-fetch");
-import { Response } from "node-fetch";
+import { RequestInit, Response } from "node-fetch";
+import { ClientErrorMessages, DeepError } from "../error";
 import { Client } from "./client";
-import { RequestInit } from "node-fetch";
 
 async function fetchContent(
   url: string,
   body?: RequestInit
 ): Promise<Response> {
-  const response: Response = body ? await fetch(url, body) : await fetch(url);
-  if (!response.ok) {
-    console.log({ response });
-    throw new Error("Response is not OK.");
-  }
-  return response;
+  return body ? await fetch(url, body) : await fetch(url);
 }
 
-export class FetchHtmlClient implements Client<string> {
-  async getContent(url: string, body?: RequestInit): Promise<string> {
-    return body
-      ? (await fetchContent(url, body)).text()
-      : (await fetchContent(url)).text();
+export class FetchHtmlClient implements Client<string, Response> {
+  async getContent(
+    url: string,
+    body?: RequestInit
+  ): Promise<string | DeepError<Response>> {
+    let response: Response;
+    if (body) {
+      response = await fetchContent(url, body);
+    } else {
+      response = await fetchContent(url);
+    }
+    if (response.ok) {
+      return response.text();
+    }
+
+    if (body) {
+      return {
+        message: ClientErrorMessages.RESPONSE_NOT_OK,
+        resolution: "Check if URL and body is OK",
+        data: response,
+      };
+    } else {
+      return {
+        message: ClientErrorMessages.RESPONSE_NOT_OK,
+        resolution: "Check if URL is OK",
+        data: response,
+      };
+    }
   }
 }
 
-export class FetchJsonClient implements Client<unknown> {
-  async getContent(url: string, body?: RequestInit): Promise<unknown> {
-    return body
-      ? (await fetchContent(url, body)).json()
-      : (await fetchContent(url)).json();
+export class FetchJsonClient implements Client<unknown, Response> {
+  async getContent(
+    url: string,
+    body?: RequestInit
+  ): Promise<unknown | DeepError<Response>> {
+    let response: Response;
+    if (body) {
+      response = await fetchContent(url, body);
+    } else {
+      response = await fetchContent(url);
+    }
+    if (response.ok) {
+      return response.json();
+    }
+
+    if (body) {
+      return {
+        message: ClientErrorMessages.RESPONSE_NOT_OK,
+        resolution: "Check if URL and body is OK",
+        data: response,
+      };
+    } else {
+      return {
+        message: ClientErrorMessages.RESPONSE_NOT_OK,
+        resolution: "Check if URL is OK",
+        data: response,
+      };
+    }
   }
 }

@@ -5,11 +5,12 @@ import {
   WaitForOptions,
 } from "puppeteer";
 import puppeteer from "puppeteer-extra";
+import { DeepError, isError, PuppeteerErrorMessages } from "../error";
 import { Client } from "./client";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
 
-export class PuppeteerClient implements Client<string> {
+export class PuppeteerClient implements Client<string, null> {
   private browser: Browser | null;
 
   async launch(
@@ -30,37 +31,58 @@ export class PuppeteerClient implements Client<string> {
           referer?: string | undefined;
         })
       | undefined = { waitUntil: ["domcontentloaded", "networkidle2"] }
-  ): Promise<void> {
-    if (!this.browser)
-      throw new Error("Trying to get pages from null browser!");
-    const pages: Page[] = await this.browser.pages();
-    if (pages.length === 0)
-      throw new Error("Browser is not launched. RUN launch() first.");
-    if (pages[0].isClosed()) throw new Error("Page appears to be closed.");
-    await pages[0].goto(url, options);
+  ): Promise<void | DeepError<null>> {
+    const healthCheck: Page | DeepError<null> = await this.checkBrowserHealth();
+
+    if (isError(healthCheck)) {
+      return healthCheck;
+    }
+
+    await healthCheck.goto(url, options);
   }
 
-  async getContent(): Promise<string> {
-    if (!this.browser)
-      throw new Error("Trying to get pages from null browser!");
-    const pages: Page[] = await this.browser.pages();
-    if (pages.length === 0)
-      throw new Error("Browser is not launched. RUN launch() first.");
-    return await pages[0].content();
+  async getContent(): Promise<string | DeepError<null>> {
+    const healthCheck: Page | DeepError<null> = await this.checkBrowserHealth();
+
+    if (isError(healthCheck)) {
+      return healthCheck;
+    }
+    return await healthCheck.content();
   }
 
-  async getPage(): Promise<Page> {
-    if (!this.browser)
-      throw new Error("Trying to get pages from null browser!");
-    const pages: Page[] = await this.browser.pages();
-    if (pages.length === 0)
-      throw new Error("Browser is not launched. RUN launch() first.");
-    return pages[0];
+  async getPage(): Promise<Page | DeepError<null>> {
+    const healthCheck: Page | DeepError<null> = await this.checkBrowserHealth();
+
+    if (isError(healthCheck)) {
+      return healthCheck;
+    }
+    return healthCheck;
   }
 
   async close(): Promise<void> {
     if (this.browser) await this.browser.close();
     this.browser = null;
+  }
+
+  async checkBrowserHealth(): Promise<Page | DeepError<null>> {
+    // TODO improve this to go through all open pages.
+    if (!this.browser)
+      return {
+        message: PuppeteerErrorMessages.BROWSER_NULL,
+        resolution: "Start browser instance",
+      };
+    const pages: Page[] = await this.browser.pages();
+    if (pages.length === 0)
+      return {
+        message: PuppeteerErrorMessages.NO_PAGES_FOUND,
+        resolution: "Create page on browser instance.",
+      };
+    if (pages[0].isClosed())
+      return {
+        message: PuppeteerErrorMessages.FIRST_PAGE_CLOSED,
+        resolution: "Try checking other pages.",
+      };
+    return pages[0];
   }
 }
 
