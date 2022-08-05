@@ -1,16 +1,16 @@
+import { RequestInit } from "node-fetch";
+import { Parser, ParserResult } from "../parser/parser";
+import { Job } from "../service/job";
 import {
   StorePage,
   updateToProcessing,
   updateToWaiting,
 } from "../service/page.service";
-import { Job } from "../service/job";
-import { RequestInit } from "node-fetch";
-import { Parser, ParserResult } from "../parser/parser";
 
 export interface Spider<T> {
   setStorePage(storePage: StorePage): void;
   setParser(parser: Parser<T>): void;
-  run(): Promise<void>;
+  crawl(): Promise<void>;
   closeBrowser(): void | Promise<void>;
 }
 
@@ -31,7 +31,7 @@ export abstract class BaseSpider<T> implements Spider<T> {
   abstract closeBrowser(): void | Promise<void>;
   abstract fetchContent(url: string, body?: RequestInit | null): Promise<T>;
 
-  async run(): Promise<void> {
+  async crawl(): Promise<void> {
     try {
       if (!this.job) throw new Error("Job is invalid.");
       if (!this.storePage) throw new Error("storePage is not set");
@@ -62,7 +62,7 @@ export abstract class BaseSpider<T> implements Spider<T> {
           parserResult.nextPage.pageUrl,
           parserResult.nextPage.pageNumber
         );
-        await this.run();
+        await this.crawl();
       }
     } catch (e) {
       console.log(e);
