@@ -1,20 +1,20 @@
-import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
-import { FetchJsonSpider } from "./spider/fetchJsonSpider";
-import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones";
-import { HSamuelParser } from "./scraper/hsamuel/hsamuel";
+import { Parser } from "./parser/parser";
 import { ArgosParser } from "./scraper/argos/argos";
+import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones";
+import { HilliersParser } from "./scraper/hilliers/hilliers";
+import { HSamuelParser } from "./scraper/hsamuel/hsamuel";
+import { JuraParser } from "./scraper/jura/jura";
+import { Watches2UParser } from "./scraper/watches2u/watches2u";
+import { WatchHutParser } from "./scraper/watchhut/watchhut";
 import {
-  StorePage,
   checkForPage,
+  StorePage,
   updateToProcessing,
   updateToWaiting,
 } from "./service/page.service";
+import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
+import { FetchJsonSpider } from "./spider/fetchJsonSpider";
 import { PuppeteerSpider } from "./spider/puppeteerSpider";
-import { HilliersParser } from "./scraper/hilliers/hilliers";
-import { Watches2UParser } from "./scraper/watches2u/watches2u";
-import { JuraParser } from "./scraper/jura/jura";
-import { Parser } from "./parser/parser";
-import { WatchHutParser } from "./scraper/watchhut/watchhut";
 
 const cron = require("node-cron");
 
@@ -51,37 +51,37 @@ cron.schedule("*/10 * * * * *", async () => {
         if (storePage.store.title === "Argos") {
           puppeteerSpider.setParser(argosParser);
           puppeteerSpider.setStorePage(storePage);
-          await puppeteerSpider.run();
+          await puppeteerSpider.crawl();
         }
         if (storePage.store.title === "H. Samuel") {
           fetchJsonSpider.setParser(hSamuelParser);
           fetchJsonSpider.setStorePage(storePage);
-          await fetchJsonSpider.run();
+          await fetchJsonSpider.crawl();
         }
         if (storePage.store.title === "Ernest Jones") {
           fetchJsonSpider.setParser(ernestJonesParser);
           fetchJsonSpider.setStorePage(storePage);
-          await fetchJsonSpider.run();
+          await fetchJsonSpider.crawl();
         }
         if (storePage.store.title === "Watches 2 U") {
           fetchHtmlSpider.setParser(watches2UParser);
           fetchHtmlSpider.setStorePage(storePage);
-          await fetchHtmlSpider.run();
+          await fetchHtmlSpider.crawl();
         }
         if (storePage.store.title === "Jura Watches") {
           fetchHtmlSpider.setParser(juraParser);
           fetchHtmlSpider.setStorePage(storePage);
-          await fetchHtmlSpider.run();
+          await fetchHtmlSpider.crawl();
         }
         if (storePage.store.title === "Hilliers Jewellers") {
           fetchHtmlSpider.setParser(hilliersParser);
           fetchHtmlSpider.setStorePage(storePage);
-          await fetchHtmlSpider.run();
+          await fetchHtmlSpider.crawl();
         }
         if (storePage.store.title === "Watch Hut") {
           puppeteerSpiderHeadless.setParser(watchHutParser);
           puppeteerSpiderHeadless.setStorePage(storePage);
-          await puppeteerSpiderHeadless.run();
+          await puppeteerSpiderHeadless.crawl();
         }
         console.log("Finish crawling.");
         await updateToWaiting(storePage);
