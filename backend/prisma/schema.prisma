@@ -44,6 +44,8 @@ model Page {
 
   jobs Job[]
 
+  runs Run[]
+
   items Item[]
 
   brand   Brand? @relation(fields: [brandId], references: [id])
@@ -72,6 +74,15 @@ model JobError {
   jobs Job[]
 
   @@unique(fields: [expected, result, severity, operation, elementIndex], name: "composedId")
+}
+
+model Run {
+  id                     Int      @id @default(autoincrement())
+  startedAt              DateTime @default(now()) @db.Timestamp(6)
+  finishedAt             DateTime? @db.Timestamp(6)
+
+  page   Page @relation(fields: [pageId], references: [id])
+  pageId Int
 }
 
 model Job {

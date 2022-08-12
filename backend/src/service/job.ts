@@ -1,5 +1,5 @@
-import moment from "moment";
 import { Brand, JobErrorSeverity, Model, Price } from "@prisma/client";
+import moment from "moment";
 import { ParserResult } from "../parser/parser";
 import { prisma } from "../prisma";
 import { StorePage } from "./page.service";
@@ -17,8 +17,8 @@ export class Job {
   private startedAt: Date;
   private finishedAt: Date;
   private page: StorePage;
-  private pageUrl: string;
-  private pageNumber: number;
+  private currentPageUrl: string;
+  private currentPageNumber: number;
   private jobErrors: Set<JobError> = new Set<JobError>();
 
   constructor(
@@ -27,8 +27,8 @@ export class Job {
     pageNumber: number = page.pageStartsAt
   ) {
     this.page = page;
-    this.pageUrl = pageUrl;
-    this.pageNumber = pageNumber;
+    this.currentPageUrl = pageUrl;
+    this.currentPageNumber = pageNumber;
     this.startedAt = moment().toDate();
   }
 
@@ -36,12 +36,12 @@ export class Job {
     this.finishedAt = moment().toDate();
   }
 
-  getPageUrl(): string {
-    return this.pageUrl;
+  getCurrentPageUrl(): string {
+    return this.currentPageUrl;
   }
 
-  getPageNumber(): number {
-    return this.pageNumber;
+  getCurrentPageNumber(): number {
+    return this.currentPageNumber;
   }
 
   getJobErrorsArray(): JobError[] {

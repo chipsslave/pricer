@@ -1,11 +1,7 @@
 import { RequestInit } from "node-fetch";
 import { Parser, ParserResult } from "../parser/parser";
 import { Job } from "../service/job";
-import {
-  StorePage,
-  updateToProcessing,
-  updateToWaiting,
-} from "../service/page.service";
+import { StorePage } from "../service/page.service";
 
 export interface Spider<T> {
   setStorePage(storePage: StorePage): void;
@@ -36,17 +32,15 @@ export abstract class BaseSpider<T> implements Spider<T> {
       if (!this.job) throw new Error("Job is invalid.");
       if (!this.storePage) throw new Error("storePage is not set");
 
-      await updateToProcessing(this.storePage);
-
       this.parser.setConfig({
-        currentPageNumber: this.job.getPageNumber(),
-        currentUrl: this.job.getPageUrl(),
+        currentPageNumber: this.job.getCurrentPageNumber(),
+        currentUrl: this.job.getCurrentPageUrl(),
         itemElementsCountExpected: this.storePage.itemsPerPage,
         body: this.storePage.body,
       });
 
       const urlHtml: T = await this.fetchContent(
-        this.job.getPageUrl(),
+        this.job.getCurrentPageUrl(),
         this.parser.buildBody()
       );
 
@@ -67,7 +61,6 @@ export abstract class BaseSpider<T> implements Spider<T> {
     } catch (e) {
       console.log(e);
     } finally {
-      this.storePage && (await updateToWaiting(this.storePage));
       await this.closeBrowser();
     }
   }
