@@ -1,11 +1,10 @@
+import { Parser, ParserResult } from "../parser/parser";
+import { Job } from "../service/job";
 import {
   StorePage,
   updateToProcessing,
   updateToWaiting,
 } from "../service/page.service";
-import { Job } from "../service/job";
-import { RequestInit } from "node-fetch";
-import { Parser, ParserResult } from "../parser/parser";
 
 export interface Spider<T> {
   setStorePage(storePage: StorePage): void;

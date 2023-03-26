@@ -1,20 +1,20 @@
-import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
-import { FetchJsonSpider } from "./spider/fetchJsonSpider";
-import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones";
-import { HSamuelParser } from "./scraper/hsamuel/hsamuel";
+import { Parser } from "./parser/parser";
 import { ArgosParser } from "./scraper/argos/argos";
+import { ErnestJonesParser } from "./scraper/ernestjones/ernestjones";
+import { HilliersParser } from "./scraper/hilliers/hilliers";
+import { HSamuelParser } from "./scraper/hsamuel/hsamuel";
+import { JuraParser } from "./scraper/jura/jura";
+import { Watches2UParser } from "./scraper/watches2u/watches2u";
+import { WatchHutParser } from "./scraper/watchhut/watchhut";
 import {
   StorePage,
   checkForPage,
   updateToProcessing,
   updateToWaiting,
 } from "./service/page.service";
+import { FetchHtmlSpider } from "./spider/fetchHtmlSpider";
+import { FetchJsonSpider } from "./spider/fetchJsonSpider";
 import { PuppeteerSpider } from "./spider/puppeteerSpider";
-import { HilliersParser } from "./scraper/hilliers/hilliers";
-import { Watches2UParser } from "./scraper/watches2u/watches2u";
-import { JuraParser } from "./scraper/jura/jura";
-import { Parser } from "./parser/parser";
-import { WatchHutParser } from "./scraper/watchhut/watchhut";
 
 const cron = require("node-cron");
 
@@ -23,7 +23,7 @@ const puppeteerSpiderHeadless = new PuppeteerSpider(true);
 const fetchJsonSpider = new FetchJsonSpider();
 const fetchHtmlSpider = new FetchHtmlSpider();
 
-const argosParser: Parser<string> = new ArgosParser();
+const argosParser: Parser<string> = new ArgosParser("A_");
 const hSamuelParser: Parser<unknown> = new HSamuelParser();
 const ernestJonesParser: Parser<unknown> = new ErnestJonesParser();
 const watches2UParser: Parser<string> = new Watches2UParser();
