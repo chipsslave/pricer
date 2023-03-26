@@ -22,7 +22,6 @@ model Store {
   homeUrl   String   @db.VarChar(512)
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
-  upcAbbreviation String @unique @db.VarChar(10)
 
   pages Page[]
 

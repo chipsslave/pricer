@@ -1,3 +1,4 @@
+import { RequestInit } from "node-fetch";
 import parse, { HTMLElement } from "node-html-parser";
 import { AbstractParser } from "../../parser/parser";
 
@@ -6,8 +7,8 @@ export class ArgosParser extends AbstractParser<
   HTMLElement,
   HTMLElement
 > {
-  constructor(upcAbbreviation: string) {
-    super(upcAbbreviation);
+  constructor() {
+    super("A_");
   }
   setContent(content: string): void {
     this.content = parse(content);

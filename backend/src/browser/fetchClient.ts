@@ -1,5 +1,7 @@
 const fetch = require("node-fetch");
+import { Response } from "node-fetch";
 import { Client } from "./client";
+import { RequestInit } from "node-fetch";
 
 async function fetchContent(
   url: string,
