@@ -42,8 +42,8 @@ model Page {
   store   Store @relation(fields: [storeId], references: [id])
   storeId Int
 
-  pageConfig   PageConfig @relation(fields: [pageConfigId], references: [id])
-  pageConfigId Int
+  pageConfig   PageConfig? @relation(fields: [pageConfigId], references: [id])
+  pageConfigId Int?
 
   jobs Job[]
 
@@ -61,6 +61,7 @@ model PageConfig {
   updatedAt           DateTime     @updatedAt
   loggingLevel        LoggingLevel @default(INFO)
   maxNumberOfAttempts Int          @default(5)
+  upcAbbreviation     String
 
   pages Page[]
 }
