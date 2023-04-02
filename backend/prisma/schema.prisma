@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
@@ -42,6 +42,9 @@ model Page {
   store   Store @relation(fields: [storeId], references: [id])
   storeId Int
 
+  pageConfig   PageConfig @relation(fields: [pageConfigId], references: [id])
+  pageConfigId Int
+
   jobs Job[]
 
   items Item[]
@@ -50,9 +53,26 @@ model Page {
   brandId Int?
 }
 
+model PageConfig {
+  id                  Int          @id @default(autoincrement())
+  itemsPerPage        Int
+  pageStartsAt        Int          @default(0)
+  createdAt           DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime     @updatedAt
+  loggingLevel        LoggingLevel @default(INFO)
+  maxNumberOfAttempts Int          @default(5)
+
+  pages Page[]
+}
+
 enum PageStatus {
   PROCESSING
   WAITING
+}
+
+enum LoggingLevel {
+  INFO
+  DEBUG
 }
 
 enum JobErrorSeverity {
