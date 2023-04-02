@@ -53,6 +53,8 @@ async function main() {
         },
       });
 
+      console.log(`Total items: ${page.items.length}`);
+      let count = 0;
       for (const item of page.items) {
         const brand: Brand | null = item.brand
           ? await prisma.brand.upsert({
@@ -100,6 +102,7 @@ async function main() {
             },
           },
         });
+        console.log(`Finished item ${count++} out of ${page.items.length}`);
       }
     }
   }
