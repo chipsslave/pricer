@@ -2,6 +2,8 @@ import moment, { Moment } from "moment";
 import { HTMLElement, parse } from "node-html-parser";
 import { Browser, HTTPResponse, Page } from "puppeteer";
 import puppeteer from "puppeteer-extra";
+import { PricerLogger, PrismaLogger } from "./logger/logger";
+import { NewArgosParser, NewParser } from "./parser/newParser";
 import { StorePage } from "./service/page.service";
 puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 puppeteer.use(require("puppeteer-extra-plugin-anonymize-ua")());
@@ -22,9 +24,12 @@ export const UsernameCheckerServices: UsernameCheckerServiceType = {
 export async function main(storePage: StorePage) {
   const startedAt: Date = moment().toDate();
   let browser: Browser | undefined;
+  let errorCaught = false;
+
+  const logger: PricerLogger = new PrismaLogger(storePage);
 
   try {
-    const browser: Browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
@@ -49,16 +54,38 @@ export async function main(storePage: StorePage) {
 
     const parsedContent: HTMLElement = parse(content);
 
-    console.log(parsedContent);
+    const newParser: NewParser<HTMLElement> = new NewArgosParser(
+      parsedContent,
+      storePage,
+      logger
+    );
+
+    // parse if next page is available
+    const nextPageExists: boolean = newParser.nextPageExists();
+    logger.log(`next page exists -> ${nextPageExists}`);
+    // parse a list of items
+
+    // parse individual items
+    // if item is correctly parsed place it in list
+    // if item is incorrectly parsed place it in list
+
+    // console.log(parsedContent);
   } catch (e) {
     console.log(e);
+    errorCaught = true;
   } finally {
+    if (errorCaught) {
+      // increase attempts
+    } else {
+      // set attempts to 0
+      // update page updatedAt field to current time
+    }
     await browser?.close();
     const finishedAt: Moment = moment();
-    console.log(
+    logger.log(
       `Job Started at ${startedAt} and finished ${finishedAt.toDate()}`
     );
     const timeTaken = moment.duration(finishedAt.diff(startedAt)).humanize();
-    console.log(`Time taken: ${timeTaken}`);
+    logger.log(`Time taken: ${timeTaken}`);
   }
 }
