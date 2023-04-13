@@ -62,7 +62,7 @@ export async function main(storePage: StorePage) {
 
     // parse if next page is available
     const nextPageExists: boolean = newParser.nextPageExists();
-    logger.log(`next page exists -> ${nextPageExists}`);
+    logger.debug(`next page exists -> ${nextPageExists}`);
     // parse a list of items
 
     // parse individual items
@@ -82,10 +82,10 @@ export async function main(storePage: StorePage) {
     }
     await browser?.close();
     const finishedAt: Moment = moment();
-    logger.log(
+    logger.info(
       `Job Started at ${startedAt} and finished ${finishedAt.toDate()}`
     );
     const timeTaken = moment.duration(finishedAt.diff(startedAt)).humanize();
-    logger.log(`Time taken: ${timeTaken}`);
+    logger.info(`Time taken: ${timeTaken}`);
   }
 }

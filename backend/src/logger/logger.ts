@@ -3,7 +3,9 @@ import { getLogger, Logger } from "log4js";
 import { StorePage } from "../service/page.service";
 
 export interface PricerLogger {
-  log(message: string): void;
+  info(message: string): void;
+  debug(message: string): void;
+  error(message: string): void;
   getStorePage(): StorePage;
   getLoggingLevel(): LoggingLevel;
 }
@@ -17,8 +19,18 @@ export abstract class AbstractLogger implements PricerLogger {
     this.log4j = getLogger();
   }
 
-  log(message: string): void {
-    throw new Error("Method not implemented.");
+  info(message: string): void {
+    this.log4j.info(message);
+  }
+
+  debug(message: string): void {
+    if (this.getLoggingLevel() === "DEBUG") {
+      this.log4j.debug(message);
+    }
+  }
+
+  error(message: string): void {
+    this.log4j.error(message);
   }
 
   getStorePage(): StorePage {
@@ -31,12 +43,17 @@ export abstract class AbstractLogger implements PricerLogger {
 }
 
 export class PrismaLogger extends AbstractLogger {
-  log(message: string): void {
-    if (this.getLoggingLevel() === "INFO") {
-      this.log4j.info(message);
-    }
+  info(message: string): void {
+    this.log4j.info(message);
+  }
+
+  debug(message: string): void {
     if (this.getLoggingLevel() === "DEBUG") {
       this.log4j.debug(message);
     }
+  }
+
+  error(message: string): void {
+    this.log4j.error(message);
   }
 }

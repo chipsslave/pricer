@@ -34,35 +34,37 @@ export abstract class NewParser<C> {
 
 export class NewArgosParser extends NewParser<HTMLElement> {
   nextPageExists(): boolean {
-    this.getLogger().log("Checking if next page exists.");
+    this.getLogger().info("Checking if next page exists.");
     const resultsCountSpan: HTMLElement | null = this.getPage().querySelector(
       "span[class^=styles__ResultsCount]"
     );
 
-    this.getLogger().log(`resultsCountSpan evaluated to: ${resultsCountSpan}`);
+    this.getLogger().debug(
+      `resultsCountSpan evaluated to: ${resultsCountSpan}`
+    );
 
     const resultsCount: string | undefined = resultsCountSpan?.getAttribute(
       "data-search-results"
     );
 
-    this.getLogger().log(`resultsCount evaluated to: ${resultsCount}`);
+    this.getLogger().debug(`resultsCount evaluated to: ${resultsCount}`);
 
     const count: number = resultsCount
       ? parseInt(resultsCount)
       : this.getExpectedItemCountPerPage();
 
-    this.getLogger().log(`count evaluated to: ${count}`);
+    this.getLogger().debug(`count evaluated to: ${count}`);
 
     const totalPages = Math.ceil(count / this.getExpectedItemCountPerPage());
 
-    this.getLogger().log(`totalPages evaluated to: ${totalPages}`);
+    this.getLogger().debug(`totalPages evaluated to: ${totalPages}`);
 
     if (1 < totalPages) {
-      this.getLogger().log("Next page exists.");
+      this.getLogger().debug("Next page exists.");
       return true;
     }
 
-    this.getLogger().log("Next page does not exist.");
+    this.getLogger().debug("Next page does not exist.");
     return false;
   }
 }
