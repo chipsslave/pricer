@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Price" ALTER COLUMN "delta" DROP NOT NULL,
-ALTER COLUMN "delta" SET DEFAULT 0;
