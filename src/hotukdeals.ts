@@ -3,7 +3,7 @@ import { Browser } from "puppeteer";
 import { saveToFile } from "./utils/saveToFile";
 
 export async function run() {
-  let browser: Browser;
+  let browser: Browser | undefined;
   try {
     browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
