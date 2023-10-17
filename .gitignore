@@ -143,3 +143,5 @@ dist
 
 backend/prisma/docs
 backend/postgres-data
+
+htmls
