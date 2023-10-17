@@ -1,5 +1,7 @@
-console.log("Hello via Bun!");
-
+import Cron from "croner";
 import { run } from "./src/hotukdeals";
 
-await run();
+const job = Cron('*/3 * * * *', async () => {
+    console.log('Running ');
+    await run();
+});

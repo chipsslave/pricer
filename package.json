@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "croner": "^7.0.3",
     "puppeteer": "^21.3.8"
   },
   "trustedDependencies": [
