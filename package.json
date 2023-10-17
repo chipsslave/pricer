@@ -10,5 +10,11 @@
   },
   "dependencies": {
     "puppeteer": "^21.3.8"
+  },
+  "trustedDependencies": [
+    "puppeteer"
+  ],
+  "scripts": {
+    "postinstall": "bunx @puppeteer/browsers install chrome@117.0.5938.149 --path $HOME/.cache/puppeteer"
   }
 }
